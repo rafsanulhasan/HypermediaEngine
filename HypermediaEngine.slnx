@@ -1,4 +1,33 @@
 <Solution>
-  <Project Path="src\HypermediaEngine\HypermediaEngine.csproj" />
-  <Project Path="tests\HypermediaEngine.Tests\HypermediaEngine.Tests.csproj" />
+  <Folder Name="/samples/">
+    <Project Path="samples/AppHost/Sample.AppHost.csproj" />
+    <Project Path="samples/DotNetRestAPI/DotNetRestAPI.csproj" />
+    <Project Path="samples/ServiceDefaults/DotNetSample.ServiceDefaults.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="Directory.Packages.props" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/src/" />
+  <Folder Name="/src/EntityTagCaching/">
+    <File Path="src/EntityTagCaching/Directory.Build.props" />
+    <Project Path="src/EntityTagCaching/AspNetCore/EntityTagCaching.AspNetCore.csproj" />
+    <Project Path="src/EntityTagCaching/CodeGeneration/EntityTagCaching.CodeGeneration.csproj" />
+    <Project Path="src/EntityTagCaching/Core/EntityTagCaching.Core.csproj" />
+  </Folder>
+  <Folder Name="/src/HyperediaEngine/">
+    <File Path="src/HypermediaEngine/Directory.Build.props" />
+    <Project Path="src/HypermediaEngine/AspNerCore.Mvc/HypermediaEngine.AsNetCore.Mvc.csproj" />
+    <Project Path="src/HypermediaEngine/AspNetCore/HypermediaEngine.AspNetCore.csproj" />
+    <Project Path="src/HypermediaEngine/Core/HypermediaEngine.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <File Path="tests/Directory.Build.props" />
+    <Project Path="tests\HypermediaEngine.Tests\HypermediaEngine.Tests.csproj" />
+  </Folder>
 </Solution>

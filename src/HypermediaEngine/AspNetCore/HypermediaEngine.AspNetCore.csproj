@@ -1,0 +1,95 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<AssemblyName>$(AssemblyName).AspNetCore</AssemblyName>
+		<PackageId>$(AssemblyName).AspNetCore</PackageId>
+		<Description>A Hypermedia Engine that allows developers to make .NET APIs HATEOAS compatible. It works with objects and arrays, automatically generates links and metadata.</Description>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Asp.Versioning.Http" />
+		<PackageReference Include="LanguageExt.Core" />
+		<PackageReference Include="Marten" />
+		<PackageReference Include="Microsoft.AspNetCore.Http" />
+		<PackageReference Include="Microsoft.AspNetCore.Routing" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.DynamicLinq" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+		<PackageReference Include="Microsoft.Extensions.Options" />
+		<PackageReference Include="Microsoft.Net.Http.Headers" />
+		<PackageReference Include="Scrutor.AspnetCore" />
+		<PackageReference Include="System.Linq.Dynamic.Core" />
+		<PackageReference Include="Z.Expressions.Eval" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\EntityTagCaching\Core\EntityTagCaching.Core.csproj" />
+		<ProjectReference Include="..\Core\HypermediaEngine.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Responses\Handlers\ObjectResponseHandlers.SimpleObject.cs">
+			<DependentUpon>Responses\Handlers\ObjectResponseHandlers.cs</DependentUpon>
+		</Compile>
+		<Compile Update="Responses\Handlers\ObjectResponseHandlers.T.cs">
+			<DependentUpon>Responses\Handlers\ObjectResponseHandlers.cs</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Responses\Handlers\ObjectMetadataHandlers.ApiVersion.cs">
+			<DependentUpon>Responses\Handlers\ObjectMetadataHandlers.cs</DependentUpon>
+		</Compile>
+		<Compile Update="Responses\Handlers\ObjectMetadataHandlers.EntityTag.cs">
+			<DependentUpon>Responses\Handlers\ObjectMetadataHandlers.cs</DependentUpon>
+		</Compile>
+		<Compile Update="Responses\Handlers\ObjectMetadataHandlers.EntityVersion.cs">
+			<DependentUpon>Responses\Handlers\ObjectMetadataHandlers.cs</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Responses\Handlers\ObjectLinkHandlers.RelatedEndpoint.cs">
+			<DependentUpon>Responses\Handlers\ObjectLinkHandlers.cs</DependentUpon>
+		</Compile>
+		<Compile Update="Responses\Handlers\ObjectLinkHandlers.Self	Endpoint.cs">
+			<DependentUpon>Responses\Handlers\ObjectLinkHandlers.cs</DependentUpon>
+		</Compile>
+		<Compile Update="Responses\Handlers\ObjectLinkHandlers.StateTransitionsEndpoint.cs">
+			<DependentUpon>Responses\Handlers\ObjectLinkHandlers.cs</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Responses\Handlers\CollectionResponseHandler.Queryable{T}.cs">
+			<DependentUpon>Responses\Handlers\CollectionResponseHandler.cs</DependentUpon>
+		</Compile>		
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Responses\Handlers\CollectionMetadataHandlers.ApiVersion.cs">
+			<DependentUpon>Responses\Handlers\CollectionMetadataHandlers.cs</DependentUpon>
+		</Compile>
+		<Compile Update="Responses\Handlers\CollectionMetadataHandlers.EntityTag.cs">
+			<DependentUpon>Responses\Handlers\CollectionMetadataHandlers.cs</DependentUpon>
+		</Compile>
+		<Compile Update="Responses\Handlers\CollectionMetadataHandlers.EntityVersion.cs">
+			<DependentUpon>Responses\Handlers\CollectionMetadataHandlers.cs</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Responses\Handlers\CollectionLinkHandlers.PageEndpoint.cs">
+			<DependentUpon>Responses\Handlers\CollectionLinkHandlers.cs</DependentUpon>
+		</Compile>
+		<Compile Update="Responses\Handlers\CollectionLinkHandlers.RelatedEndpoint.cs">
+			<DependentUpon>Responses\Handlers\CollectionLinkHandlers.cs</DependentUpon>
+		</Compile>
+		<Compile Update="Responses\Handlers\CollectionLinkHandlers.StateTransitionsEndpoint.cs">
+			<DependentUpon>Responses\Handlers\CollectionLinkHandlers.cs</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+</Project>

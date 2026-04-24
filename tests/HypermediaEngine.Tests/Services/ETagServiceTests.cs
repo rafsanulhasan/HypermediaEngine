@@ -1,85 +1,102 @@
+using EntityTagCaching.Services;
+
+using Microsoft.Extensions.DependencyInjection;
+
+using NSubstitute;
+
+using NUnit.Framework;
+
+using Shouldly;
+
+using System.Security.Cryptography;
+using System.Text.Json;
+
 namespace HypermediaEngine.Tests.Services;
 
-using HypermediaEngine.Services;
-using FluentAssertions;
-using Xunit;
-
-public class ETagServiceTests
+public sealed class ETagServiceTests
 {
     private readonly ETagService _service;
 
     public ETagServiceTests()
     {
-        _service = new ETagService();
+        IServiceProvider serviceProvider = Substitute.For<IServiceProvider>();
+        serviceProvider.GetService<JsonSerializerOptions>().Returns(new JsonSerializerOptions());
+        serviceProvider.GetService<ETagHasher>().Returns(SHA256.HashData);
+        serviceProvider.GetService<ETagAsyncHasher>().Returns(SHA256.HashDataAsync);
+        _service = new ETagService(serviceProvider);
     }
 
-    [Fact]
+    [TestCase]
     public void GenerateETag_ShouldReturnNonEmptyString()
     {
         var resource = new { Id = 1, Name = "Test" };
-        var etag = _service.GenerateETag(resource);
-        etag.Should().NotBeNullOrEmpty();
+        string etag = _service.GenerateETag(resource);
+        etag.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [TestCase]
     public void GenerateETag_ShouldReturnQuotedETag()
     {
         var resource = new { Id = 1, Name = "Test" };
-        var etag = _service.GenerateETag(resource);
-        etag.Should().StartWith("\"").And.EndWith("\"");
+        string etag = _service.GenerateETag(resource);
+        Assert.Multiple(() =>
+        {
+            etag.ShouldStartWith("\"");
+            etag.ShouldEndWith("\"");
+        });
     }
 
-    [Fact]
+    [TestCase]
     public void GenerateETag_ShouldBeDeterministic()
     {
         var resource = new { Id = 1, Name = "Test" };
-        var etag1 = _service.GenerateETag(resource);
-        var etag2 = _service.GenerateETag(resource);
-        etag1.Should().Be(etag2);
+        string etag1 = _service.GenerateETag(resource);
+        string etag2 = _service.GenerateETag(resource);
+        etag1.ShouldBe(etag2);
     }
 
-    [Fact]
+    [TestCase]
     public void GenerateETag_ShouldDifferForDifferentResources()
     {
         var resource1 = new { Id = 1, Name = "Test" };
         var resource2 = new { Id = 2, Name = "Other" };
-        var etag1 = _service.GenerateETag(resource1);
-        var etag2 = _service.GenerateETag(resource2);
-        etag1.Should().NotBe(etag2);
+        string etag1 = _service.GenerateETag(resource1);
+        string etag2 = _service.GenerateETag(resource2);
+        etag1.ShouldNotBe(etag2);
     }
 
-    [Fact]
+    [TestCase]
     public void GenerateETag_ShouldThrowForNullResource()
     {
-        var act = () => _service.GenerateETag(null!);
-        act.Should().Throw<ArgumentNullException>();
+        Func<object> act = () => _service.GenerateETag(null!);
+        act.ShouldThrow<ArgumentNullException>();
     }
 
-    [Fact]
+    [TestCase]
     public void IsETagStale_ShouldReturnTrueWhenIfNoneMatchIsNull()
     {
-        var result = _service.IsETagStale("\"abc\"", null);
-        result.Should().BeTrue();
+        bool result = _service.IsETagStale("\"abc\"", null);
+        result.ShouldBeTrue();
     }
 
-    [Fact]
+    [TestCase]
     public void IsETagStale_ShouldReturnFalseWhenETagMatches()
     {
-        var result = _service.IsETagStale("\"abc\"", "\"abc\"");
-        result.Should().BeFalse();
+        bool result = _service.IsETagStale("\"abc\"", "\"abc\"");
+        result.ShouldBeFalse();
     }
 
-    [Fact]
+    [TestCase]
     public void IsETagStale_ShouldReturnTrueWhenETagDoesNotMatch()
     {
-        var result = _service.IsETagStale("\"abc\"", "\"xyz\"");
-        result.Should().BeTrue();
+        bool result = _service.IsETagStale("\"abc\"", "\"xyz\"");
+        result.ShouldBeTrue();
     }
 
-    [Fact]
+    [TestCase]
     public void IsETagStale_ShouldBeCaseInsensitive()
     {
-        var result = _service.IsETagStale("\"ABC\"", "\"abc\"");
-        result.Should().BeFalse();
+        bool result = _service.IsETagStale("\"ABC\"", "\"abc\"");
+        result.ShouldBeFalse();
     }
 }

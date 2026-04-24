@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<AssemblyName>$(AssemblyName).Core</AssemblyName>
+		<PackageId>$(AssemblyName).Core</PackageId>
+		<Description>A Hypermedia Engine that allows developers to make .NET APIs HATEOAS compatible. It works with objects and arrays, automatically generates links and metadata.</Description>
+	</PropertyGroup>
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+		<PackageReference Include="Ardalis.GuardClauses" />
+		<PackageReference Include="Ardalis.SmartEnum" />
+		<PackageReference Include="Ardalis.SmartEnum.GuardClauses" />
+		<PackageReference Include="Ardalis.SmartEnum.SystemTextJson" />
+		<PackageReference Include="LanguageExt.Core" />
+		<PackageReference Include="Microsoft.AspNetCore.Http" />
+		<PackageReference Include="Microsoft.AspNetCore.Http.Extensions" />
+		<PackageReference Include="Microsoft.AspNetCore.Routing.Abstractions" />
+		<PackageReference Include="Microsoft.Extensions.Http" />
+		<PackageReference Include="Microsoft.OpenApi" />
+		<PackageReference Include="OneOf" />
+		<PackageReference Include="OneOf.Serialization.SystemTextJson" />
+		<PackageReference Include="OneOf.SourceGenerator" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="EntityTagCaching.AspNetCore" />
+		<InternalsVisibleTo Include="Microsoft.AspNetCore.Http" />
+		<InternalsVisibleTo Include="HypermediaEngine.AspNetCore" />
+		<InternalsVisibleTo Include="HypermediaEngine.AspNetCore.Mvc" />
+		<InternalsVisibleTo Include="HypermediaEngine.Tests" />
+		<InternalsVisibleTo Include="System.Text.Json" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\EntityTagCaching\Core\EntityTagCaching.Core.csproj" />
+	</ItemGroup>
+
+</Project>

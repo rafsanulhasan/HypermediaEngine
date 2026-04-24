@@ -1,0 +1,18 @@
+<Project>
+	<PropertyGroup>
+		<LangVersion>14.0</LangVersion>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>true</ImplicitUsings>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<DocumentationFile>$(MSBuildProjectPath)\bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+		
+		<AssemblyName>EntityTagCaching</AssemblyName>
+		<RootNamespace>EntityTagCaching</RootNamespace>
+		<Version>1.0.0</Version>
+	</PropertyGroup>
+	<PropertyGroup>
+		<Authors>EntityTagCaching Contributors</Authors>
+		<PackageVersion>1.0.0</PackageVersion>
+		<PackageTags>etag;entity tag;caching;http caching;client-side caching;</PackageTags>
+	</PropertyGroup>
+</Project>

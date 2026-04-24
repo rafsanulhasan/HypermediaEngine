@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<LangVersion>14.0</LangVersion>
+		<AssemblyName>$(AssemblyName).Core</AssemblyName>
+		<PackageId>$(AssemblyName).Core</PackageId>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Ardalis.SmartEnum" />
+		<PackageReference Include="LanguageExt.Core" />
+		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" PrivateAssets="All" />
+		<PackageReference Include="Microsoft.Extensions.Primitives" />
+	</ItemGroup>
+
+</Project>

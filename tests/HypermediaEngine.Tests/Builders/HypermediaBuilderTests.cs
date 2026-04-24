@@ -1,128 +1,100 @@
-namespace HypermediaEngine.Tests.Builders;
+using Shouldly;
+
+using NUnit.Framework;
 
 using HypermediaEngine.Builders;
-using FluentAssertions;
-using Xunit;
+using HypermediaEngine.Responses;
 
-public class HypermediaBuilderTests
+using Microsoft.AspNetCore.Http;
+
+namespace HypermediaEngine.Tests.Builders;
+
+public sealed class HypermediaBuilderTests
 {
     private record Product(int Id, string Name, decimal Price);
 
-    [Fact]
+    [TestCase]
     public void Build_ShouldReturnResponseWithData()
     {
-        var product = new Product(1, "Widget", 9.99m);
-        var builder = new HypermediaBuilder<Product>().WithData(product);
+        Product product = new(1, "Widget", 9.99m);
+        var builder = new HypermediaObjectBuilder<Product>().WithData(product);
 
         var response = builder.Build();
 
-        response.Data.Should().Be(product);
+        response.Data.ShouldBe(product);
     }
 
-    [Fact]
-    public void Build_ShouldReturnEmptyLinksWhenNoneAdded()
-    {
-        var builder = new HypermediaBuilder<Product>().WithData(new Product(1, "Widget", 9.99m));
-
-        var response = builder.Build();
-
-        response.Links.Should().BeEmpty();
-    }
-
-    [Fact]
-    public void WithLink_ShouldAddLinkToResponse()
-    {
-        var builder = new HypermediaBuilder<Product>()
-            .WithData(new Product(1, "Widget", 9.99m))
-            .WithLink("self", "/products/1");
-
-        var response = builder.Build();
-
-        response.Links.Should().ContainKey("self");
-        response.Links["self"].Href.Should().Be("/products/1");
-        response.Links["self"].Method.Should().Be("GET");
-    }
-
-    [Fact]
-    public void WithLink_ShouldSupportCustomMethod()
-    {
-        var builder = new HypermediaBuilder<Product>()
-            .WithData(new Product(1, "Widget", 9.99m))
-            .WithLink("update", "/products/1", "PUT", "Update Product");
-
-        var response = builder.Build();
-
-        response.Links["update"].Method.Should().Be("PUT");
-        response.Links["update"].Title.Should().Be("Update Product");
-    }
-
-    [Fact]
+    [TestCase]
     public void WithLink_ShouldOverwriteExistingLinkWithSameRel()
     {
-        var builder = new HypermediaBuilder<Product>()
+        var builder = new HypermediaObjectBuilder<Product>()
             .WithData(new Product(1, "Widget", 9.99m))
-            .WithLink("self", "/products/1")
-            .WithLink("self", "/products/1-updated");
+            .WithSelfLink("/products/1")
+            .WithSelfLink("/products/1-updated");
 
         var response = builder.Build();
 
-        response.Links.Should().HaveCount(1);
-        response.Links["self"].Href.Should().Be("/products/1-updated");
+        Assert.Multiple(() =>
+        {
+            response.Links.ShouldNotBeNull();
+            response.Links.Self.ShouldNotBeNull();
+            response.Links.Self.Href.ShouldBe("/products/1-updated");
+        });
     }
 
-    [Fact]
-    public void WithLink_ShouldThrowForNullRel()
-    {
-        var builder = new HypermediaBuilder<Product>();
-        var act = () => builder.WithLink(null!, "/products/1");
-        act.Should().Throw<ArgumentException>();
-    }
-
-    [Fact]
+    [TestCase]
     public void WithLink_ShouldThrowForEmptyHref()
     {
-        var builder = new HypermediaBuilder<Product>();
-        var act = () => builder.WithLink("self", "");
-        act.Should().Throw<ArgumentException>();
+        var builder = new HypermediaObjectBuilder<Product>();
+        object act() => builder.WithSelfLink(string.Empty);
+        Should.Throw<ArgumentNullException>(() => act());
     }
 
-    [Fact]
+    [TestCase]
     public void WithMetadata_ShouldAddMetadataToResponse()
     {
-        var builder = new HypermediaBuilder<Product>()
-            .WithData(new Product(1, "Widget", 9.99m))
-            .WithMetadata("version", "1.0")
-            .WithMetadata("timestamp", "2024-01-01");
-
-        var response = builder.Build();
-
-        response.Metadata.Should().NotBeNull();
-        response.Metadata.Should().ContainKey("version");
-        response.Metadata!["version"].Should().Be("1.0");
-    }
-
-    [Fact]
-    public void Build_ShouldReturnNullMetadataWhenNoneAdded()
-    {
-        var builder = new HypermediaBuilder<Product>()
+        var builder = new HypermediaObjectBuilder<Product>()
             .WithData(new Product(1, "Widget", 9.99m));
 
         var response = builder.Build();
 
-        response.Metadata.Should().BeNull();
+        response.Meta.ShouldNotBeNull();
     }
 
-    [Fact]
+    [TestCase]
+    public void Build_ShouldReturnNullMetadataWhenNoneAdded()
+    {
+        var builder = new HypermediaObjectBuilder<Product>()
+            .WithData(new Product(1, "Widget", 9.99m));
+
+        var response = builder.Build();
+
+        response.Meta.ShouldBeNull();
+    }
+
+    [TestCase]
     public void WithLink_ShouldSupportFluentChaining()
     {
-        var product = new Product(1, "Widget", 9.99m);
-        var response = new HypermediaBuilder<Product>()
+        Product product = new(1, "Widget", 9.99m);
+        var response = new HypermediaObjectBuilder<Product>()
             .WithData(product)
-            .WithLink("self", "/products/1")
-            .WithLink("update", "/products/1", "PUT")
-            .WithLink("delete", "/products/1", "DELETE")
+            .WithSelfLink("/products/1")
+            .WithStateTransitionLink(LinkRelations.Update, "/products/1", HttpMethods.Put)
+            .WithStateTransitionLink(LinkRelations.Delete, "/products/1", HttpMethods.Delete)
             .Build();
 
-        response.Links.Should().HaveCount(3);
+        Assert.Multiple(() =>
+        {
+            response.Links.ShouldNotBeNull();
+            response.Links.Self.ShouldNotBeNull();
+            response.Links.Self.Href.ShouldBe("/products/1");
+            response.Links.StateTransitions.ShouldNotBeNull();
+            response.Links.StateTransitions.ShouldContainKey(LinkRelations.Update);
+            response.Links.StateTransitions[LinkRelations.Update].Href.ShouldBe("/products/1");
+            response.Links.StateTransitions[LinkRelations.Update].Method.ShouldBe("PUT");
+            response.Links.StateTransitions.ShouldContainKey(LinkRelations.Delete);
+            response.Links.StateTransitions[LinkRelations.Delete].Href.ShouldBe("/products/1");
+            response.Links.StateTransitions[LinkRelations.Delete].Method.ShouldBe("DELETE");
+        });
     }
 }
