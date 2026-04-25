@@ -1,6 +1,7 @@
 ﻿using HypermediaEngine.Attributes;
 using HypermediaEngine.Helpers;
 using HypermediaEngine.Http;
+using HypermediaEngine.OpenApi.OperationTransformers;
 using HypermediaEngine.Requests;
 using HypermediaEngine.Responses;
 
@@ -19,71 +20,57 @@ public static class RouteHandlerBuilderHelpers
 {
     extension(RouteHandlerBuilder builder)
     {
-        public RouteHandlerBuilder ProducesHal<T>(
-            int statusCode = StatusCodes.Status200OK,
-            bool isList = false,
-            bool isMarten = false
-        ) where T : notnull
-        {
-            if (!isList)
-            {
-                builder
-                    .Produces<HypermediaObjectResponse<T>>(
-                        statusCode,
-                        contentType: HalMediaTypeNames.Application.HalJson)
-                    .AddHalResponsesOpenApiOperationTransformers<T>(
-                        statusCode,
-                        withHalExample: false,
-                        withJsonExample: true);
-
-                builder.Produces<T>(
-                    statusCode,
-                    contentType: MediaTypeNames.Application.Json);
-            }
-            else
-            {
-                Type listUnderlyingType = typeof(T);
-                Type halResponseType = typeof(HypermediaCollectionResponse<>).MakeGenericType(listUnderlyingType);
-                builder
-                    .Produces(
-                        statusCode,
-                        responseType: halResponseType,
-                        contentType: HalMediaTypeNames.Application.HalJson)
-                    .AddHalResponsesOpenApiOperationTransformers(
-                        listUnderlyingType,
-                        statusCode,
-                        withHalExample: false,
-                        withJsonExample: true,
-                        isList: true);
-
-                builder.Produces<List<T>>(
-                    statusCode,
-                    contentType: MediaTypeNames.Application.Json);
-            }
+        public RouteHandlerBuilder ProducesJsonHal<T>(bool isList = false) 
+            where T : notnull
+        {   
             builder
+                .ProducesJsonHalOnly<T>(isList)
                 .Produces(StatusCodes.Status404NotFound)
                 .AddEndpointFilter<ProducesHalAttribute<T>>()
+                .AddOpenApiOperationTransformer(async (operation, context, ct) =>
+                {
+                    JsonHalOperationTransformer<T> jsonHalOperationTransformer = new(isList, withExample: false);
+                    await jsonHalOperationTransformer
+                        .TransformAsync(operation, context, ct)
+                        .ConfigureAwait(false); 
+                })
                 .AddHalOpenApiOperationRequestParameterTransformer(false);
             return builder;
         }
 
-        public RouteHandlerBuilder ProducesHalResponse<T>(int statusCode = StatusCodes.Status200OK)
+        public RouteHandlerBuilder ProducesHal<T>(bool isList = false)
             where T : class
         {
             builder
-                .Produces<HypermediaObjectResponse<T>>(
-                    statusCode,
-                    contentType: HalMediaTypeNames.Application.HalJson)
-                .Produces<T>(
-                    statusCode,
-                    contentType: MediaTypeNames.Application.Json)
+                .ProducesHalOnly<T>(isList)
                 .Produces(StatusCodes.Status404NotFound)
                 .AddEndpointFilter<ProducesHalResponseAttribute<T, HypermediaObjectResponse<T>>>()
-                .AddHalResponsesOpenApiOperationTransformers<T>(
-                    statusCode,
-                    withHalExample: true,
-                    withJsonExample: false)
+                .AddOpenApiOperationTransformer(async (operation, context, ct) =>
+                {
+                    HalOperationTransformer<T> halOperationTransformer = new(isList, withExample: false);
+                    await halOperationTransformer
+                        .TransformAsync(operation, context, ct)
+                        .ConfigureAwait(false); 
+                })
                 .AddHalOpenApiOperationRequestParameterTransformer(true);
+            return builder;
+        }
+
+        public RouteHandlerBuilder ProducesHalJsonHal<T>(bool isList = false) 
+            where T : notnull
+        {   
+            builder
+                .ProducesHalJsonOnly<T>(isList)
+                .Produces(StatusCodes.Status404NotFound)
+                .AddEndpointFilter<ProducesHalAttribute<T>>()
+                .AddOpenApiOperationTransformer(async (operation, context, ct) =>
+                {
+                    HalJsonOperationTransformer<T> halJsonOperationTransformer = new(isList, withExample: false);
+                    await halJsonOperationTransformer
+                        .TransformAsync(operation, context, ct)
+                        .ConfigureAwait(false); 
+                })
+                .AddHalOpenApiOperationRequestParameterTransformer(false);
             return builder;
         }
 
