@@ -5,7 +5,7 @@ using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
-namespace HypermediaEngine.OpenApi;
+namespace HypermediaEngine.OpenApi.SchemaTransformers;
 
 internal sealed class SmartEnumSchemaTransformer
     : IOpenApiSchemaTransformer
@@ -61,7 +61,7 @@ internal sealed class SmartEnumSchemaTransformer
                     .Where(n => !string.IsNullOrWhiteSpace(n))
                     .Select(n => n!),
             ];
-        return;
+        context.AddSchema(type, schema);
     }
 
     private static bool ShouldProcessType(Type type, [NotNullWhen(true)] Type? baseType)

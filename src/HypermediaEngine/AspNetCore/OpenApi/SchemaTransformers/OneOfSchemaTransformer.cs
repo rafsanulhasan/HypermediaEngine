@@ -4,7 +4,7 @@ using Microsoft.OpenApi;
 using System.Globalization;
 using System.Text;
 
-namespace HypermediaEngine.OpenApi;
+namespace HypermediaEngine.OpenApi.SchemaTransformers;
 
 internal sealed class OneOfSchemaTransformer
     : IOpenApiSchemaTransformer
@@ -59,6 +59,7 @@ internal sealed class OneOfSchemaTransformer
         }
         schema.Title = schemaTitleBuilder.ToString();
         schema.Discriminator = discriminator;
+        context.AddSchema(type, schema);
     }
 }
 

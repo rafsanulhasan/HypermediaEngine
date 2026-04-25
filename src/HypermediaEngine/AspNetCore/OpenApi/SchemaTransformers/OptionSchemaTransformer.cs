@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
 
-namespace HypermediaEngine.OpenApi;
+namespace HypermediaEngine.OpenApi.SchemaTransformers;
 
 internal sealed class OptionSchemaTransformer
     : IOpenApiSchemaTransformer
