@@ -108,7 +108,7 @@ app
 
         return Enumerable.Range(1, 20).Select(_ => faker.Generate()).ToArray();
     })
-    .ProducesHal<WeatherForecast>(StatusCodes.Status200OK, isList: true)
+    .ProducesJsonHal<WeatherForecast>(isList: true)
     .WithPagingParams()
     .WithFilterAndSortingParams()
     .WithName("Weather")
