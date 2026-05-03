@@ -22,9 +22,9 @@ public static class QueryableHelpers
 
         public IQueryable<T> ApplySorting(IReadOnlyList<SortField>? sorts)
         {
-            if (sorts is  null or { Count:0})
+            if (sorts is null or { Count: 0 })
             {
-                return queryable; 
+                return queryable;
             }
 
             foreach (SortField sort in sorts)

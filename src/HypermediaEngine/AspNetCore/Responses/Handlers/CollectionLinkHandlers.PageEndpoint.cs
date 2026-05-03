@@ -3,6 +3,7 @@
 using HypermediaEngine.Abstractions;
 using HypermediaEngine.Helpers;
 using HypermediaEngine.Requests.Paging;
+using HypermediaEngine.Responses.Metadata;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;

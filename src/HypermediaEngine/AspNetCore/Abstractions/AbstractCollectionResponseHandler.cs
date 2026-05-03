@@ -1,36 +1,33 @@
-﻿using Asp.Versioning;
-
+﻿using HypermediaEngine.Attributes;
+using HypermediaEngine.Requests;
+using HypermediaEngine.Requests.Paging;
 using HypermediaEngine.Responses;
-
-using LanguageExt;
+using HypermediaEngine.Responses.Handlers;
+using HypermediaEngine.Responses.Metadata;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace HypermediaEngine.Abstractions;
 
-public abstract class AbstractCollectionResponseHandler<T>
-    : IResponseHandler where T : notnull
+internal abstract class AbstractCollectionResponseHandler<T, TCollection>(
+    IHttpContextAccessor httpContextAccessor,
+    IEnumerable<AbstractCollectionMetadataHandler<T>> metadataHandlers,
+    IEnumerable<AbstractCollectionLinkHandler<T>> linkHandlers,
+    IHypermediaCollectionBuilder<T> builder,
+    ICollectionResponseHandler<T>? nextHandler = null
+) : ICollectionResponseHandler<T>
+    where T : notnull
+    where TCollection : IEnumerable<T>
 {
-    protected IResponseHandler? _nextHandler;
+    protected ICollectionResponseHandler<T>? _nextHandler = nextHandler;
     private bool _disposedValue;
 
-    protected AbstractCollectionResponseHandler(
-        IHttpContextAccessor httpContextAccessor,
-        IResponseHandler? nextHandler = null)
-    {
-        HttpContext = httpContextAccessor.HttpContext;
-        _nextHandler = nextHandler;
-    }
-
     protected internal EndpointFilterInvocationContext? EndpointFilterInvocationContext { get; set; }
-    protected internal HttpContext? HttpContext { get; set; }
-    protected internal IHypermediaCollectionBuilder<T>? Builder { get; set; }
+    protected internal HttpContext? HttpContext { get; set; } = httpContextAccessor.HttpContext;
+    protected internal IHypermediaCollectionBuilder<T> Builder { get; set; } = builder;
     protected internal ListResponseMetadata? Meta { get; set; }
-
-    protected internal bool IsHandled { get; set; }
-    protected internal object? Response { get; set; }
+    protected internal QueryParams? QueryParams { get; set; }
 
     protected CancellationTokenSource CancellationTokenSource => HttpContext?.RequestAborted is not null
         ? CancellationTokenSource.CreateLinkedTokenSource(HttpContext.RequestAborted)
@@ -38,59 +35,73 @@ public abstract class AbstractCollectionResponseHandler<T>
 
     public async ValueTask<object?> HandleResponseAsync(object? response)
     {
+        return response switch
+        {
+            null => null,
+            TCollection collection => await HandleCollectionResponseAsync(collection).ConfigureAwait(false),
+            Ok<TCollection> ok when ok.Value is not null
+                => await HandleCollectionResponseAsync(ok.Value).ConfigureAwait(false),
+            JsonHttpResult<TCollection> json when json.Value is not null
+                => await HandleCollectionResponseAsync(json.Value).ConfigureAwait(false),
+             _ when _nextHandler is not null => await _nextHandler.HandleResponseAsync(response).ConfigureAwait(false),
+             _ => response,
+        };
+    }
+
+    public abstract ValueTask<object?> HandleCollectionResponseAsync(TCollection response);
+
+    protected void ApplyMetadata(IEnumerable<T> response, ListResponseMetadata metadata)
+    {
+        foreach (AbstractCollectionMetadataHandler<T> handler in metadataHandlers)
+        {
+            Builder = handler.Handle(response, metadata);
+        }
+    }
+
+    protected void ApplyLinks()
+    {
+        Endpoint endpoint = HttpContext!.GetEndpoint()
+                         ?? throw new InvalidOperationException("Endpoint is not available.");
+        PagingMetadata pagingMetadata = Builder!.Metadata?.Paging ?? new PagingMetadata()
+        {
+            CurrentPage = 1,
+            PageSize = 10,
+        };
+        foreach (AbstractCollectionLinkHandler<T> handler in linkHandlers)
+        {
+            AbstractCollectionLinkHandler<T> configured = handler
+                .WithHttpContext(HttpContext!)
+                .WithBuilder(Builder);
+            if (configured is CollectionPageEndpointLinkHandler<T> pageHandler)
+            {
+                configured = pageHandler.WithMetadata(pagingMetadata);
+            }
+            Builder = configured.Handle(endpoint.Metadata.GetOrderedMetadata<HateoasStateTransitionAttribute>());
+            Builder = configured.Handle(endpoint.Metadata.GetOrderedMetadata<HateoasRelatedAttribute>());
+        }
+    }
+
+    protected async ValueTask<AbstractCollectionResponseHandler<T, TCollection>> WithPopulatedQueryParamsAsync()
+    {
         if (HttpContext is null)
         {
-            throw new InvalidOperationException("HttpContext is not available.");
+            return this;
         }
-        IServiceProvider sp = HttpContext.RequestServices;
-
-
-        Option<string> apiVersion = sp.GetService<IApiVersionReader>() is IApiVersionReader reader
-                                  ? reader.Read(HttpContext.Request).Distinct(StringComparer.Ordinal).FirstOrDefault() is string version && !string.IsNullOrWhiteSpace(version)
-                                    ? Option<string>.Some(version)
-                                    : Option<string>.None
-                                  : Option<string>.None;
-        object? result = response switch
+        try
         {
-            T[] array when response.GetType().IsAssignableTo(typeof(Array)) => await HandleCollectionResponse(array).ConfigureAwait(false),
-            IEnumerable<T> typedResponse => await HandleCollectionResponse(typedResponse).ConfigureAwait(false),
-            Ok<IEnumerable<T>> okTypedResponse => await HandleCollectionResponse(okTypedResponse.Value).ConfigureAwait(false),
-            JsonHttpResult<IEnumerable<T>> jsonHttpResult => await HandleCollectionResponse(jsonHttpResult.Value).ConfigureAwait(false),
-            _ when _nextHandler is not null => await _nextHandler.HandleResponseAsync(response).ConfigureAwait(false),
-            _ => response,
-        };
-        return result;
-    }
-
-    public abstract ValueTask<object?> HandleCollectionResponse(IEnumerable<T> response);
-    public abstract ValueTask<object?> HandleQueryableResponse(IQueryable<T> response);
-
-    internal ValueTask<object?> HandleOkTypedResponse(Ok<IEnumerable<T>> response)
-    {
-        return response is { Value: IEnumerable<T> typedValue }
-            ? HandleCollectionResponse(typedValue)
-            : throw new ArgumentNullException(nameof(response));
-    }
-
-    internal ValueTask<object?> HandleJsonTypedResponse(JsonHttpResult<IEnumerable<T>> response)
-    {
-        return response is { Value: IEnumerable<T> typedValue }
-            ? HandleCollectionResponse(typedValue)
-            : throw new ArgumentNullException(nameof(response));
-    }
-
-    internal ValueTask<object?> HandleOkTypedResponse(Ok<IQueryable<T>> response)
-    {
-        return response is { Value: IQueryable<T> typedValue }
-            ? HandleQueryableResponse(typedValue)
-            : throw new ArgumentNullException(nameof(response));
-    }
-
-    internal ValueTask<object?> HandleJsonTypedResponse(JsonHttpResult<IQueryable<T>> response)
-    {
-        return response is { Value: IQueryable<T> typedValue }
-            ? HandleQueryableResponse(typedValue)
-            : throw new ArgumentNullException(nameof(response));
+            QueryBody? body = await HttpContext.Request
+                .ReadFromJsonAsync<QueryBody>(HttpContext.RequestAborted)
+                .ConfigureAwait(false);
+            _ = OffsetOrCursorPaging.TryParse(
+                HttpContext.Request.QueryString.ToString(),
+                out OffsetOrCursorPaging offsetOrCursorPaging);
+            QueryParams = new QueryParams(body: body, paging: offsetOrCursorPaging);
+        }
+        catch (Exception)
+        {
+            QueryParams = new(paging: OffsetOrCursorPaging.Default);
+        }
+        return this;
     }
 
     /// <inheritdoc />
@@ -101,25 +112,19 @@ public abstract class AbstractCollectionResponseHandler<T>
         GC.SuppressFinalize(this);
     }
 
-    internal virtual AbstractCollectionResponseHandler<T> WithHttpContext(HttpContext httpContext)
+    internal virtual AbstractCollectionResponseHandler<T, TCollection> WithHttpContext(HttpContext httpContext)
     {
         HttpContext = httpContext;
         return this;
     }
 
-    internal AbstractCollectionResponseHandler<T> WithResponseBuilder(IHypermediaCollectionBuilder<T> builder)
+    internal AbstractCollectionResponseHandler<T, TCollection> WithResponseBuilder(IHypermediaCollectionBuilder<T> builder)
     {
         Builder = builder;
         return this;
     }
 
-    internal AbstractCollectionResponseHandler<T> WithMeta(ListResponseMetadata meta)
-    {
-        Meta = meta;
-        return this;
-    }
-
-    internal AbstractCollectionResponseHandler<T> WithEndpointInvocationFilterContext(EndpointFilterInvocationContext? context)
+    internal AbstractCollectionResponseHandler<T, TCollection> WithEndpointInvocationFilterContext(EndpointFilterInvocationContext? context)
     {
         if (context is null)
         {
@@ -130,7 +135,7 @@ public abstract class AbstractCollectionResponseHandler<T>
         return this;
     }
 
-    internal AbstractCollectionResponseHandler<T> WithNextHandler(IResponseHandler nextHandler)
+    internal AbstractCollectionResponseHandler<T, TCollection> WithNextHandler(ICollectionResponseHandler<T> nextHandler)
     {
         _nextHandler = nextHandler;
         return this;

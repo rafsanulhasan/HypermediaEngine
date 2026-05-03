@@ -1,4 +1,4 @@
-﻿using EntityTagCaching.Models;
+using EntityTagCaching.Models;
 
 using HypermediaEngine.Abstractions;
 using HypermediaEngine.Requests;
@@ -7,24 +7,26 @@ using HypermediaEngine.Requests.Paging;
 using HypermediaEngine.Responses.Metadata;
 using HypermediaEngine.Responses.Rules;
 
+using Marten.Linq;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace HypermediaEngine.Responses.Handlers;
 
-internal sealed class QueryableResponseHandler<T>(
+internal sealed class MartenQueryableResponseHandler<T>(
     IHttpContextAccessor httpContextAccessor,
-    [FromKeyedServices(CollectonPipelineRules.QueryableRuleName)] ICollectionResponsePipeline<T> queryablePipeline,
+    [FromKeyedServices(CollectonPipelineRules.MartenQueryableRuleName)] ICollectionResponsePipeline<T> queryablePipeline,
     IEnumerable<AbstractCollectionMetadataHandler<T>> metadataHandlers,
     IEnumerable<AbstractCollectionLinkHandler<T>> linkHandlers,
     IHypermediaCollectionBuilder<T> builder,
     ICollectionResponseHandler<T> nextHandler,
-    ILogger<CollectionApiVersionMetadataHandler<T>> logger
-) : AbstractCollectionResponseHandler<T, IQueryable<T>>(httpContextAccessor, metadataHandlers, linkHandlers, builder, nextHandler)
+    ILogger<MartenQueryableResponseHandler<T>> logger
+) : AbstractCollectionResponseHandler<T, IMartenQueryable<T>>(httpContextAccessor, metadataHandlers, linkHandlers, builder, nextHandler)
     where T : notnull
 {
-    public override async ValueTask<object?> HandleCollectionResponseAsync(IQueryable<T> response)
+    public override async ValueTask<object?> HandleCollectionResponseAsync(IMartenQueryable<T> response)
     {
         using var handler = await WithPopulatedQueryParamsAsync().ConfigureAwait(false);
 

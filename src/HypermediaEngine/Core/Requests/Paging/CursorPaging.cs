@@ -1,19 +1,17 @@
-using Microsoft.AspNetCore.Mvc;
-
 namespace HypermediaEngine.Requests.Paging;
 
 public sealed record CursorPaging
 {
-    public CursorPaging(string? cursor, int limit)
+    public CursorPaging(int limit, string? cursor, string? field)
     {
         Cursor = cursor;
         Limit = limit;
+        Field = field;
     }
 
     internal CursorPaging() { }
 
-    [FromQuery]
     public string? Cursor { get; init; }
-    [FromQuery]
     public int Limit { get; init; }
+    public string? Field { get; init; }
 }

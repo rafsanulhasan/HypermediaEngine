@@ -2,15 +2,9 @@
 
 namespace HypermediaEngine.Abstractions;
 
-internal abstract class AbstractCollectionMetadataHandler<T>
+internal abstract class AbstractCollectionMetadataHandler<T>(IHypermediaCollectionBuilder<T> builder)
     : ICollectionMetadataHandler<T> where T : notnull
 {
-    protected internal IHypermediaCollectionBuilder<T>? Builder { get; set; }
+    protected internal IHypermediaCollectionBuilder<T> Builder { get; set; } = builder;
     public abstract IHypermediaCollectionBuilder<T> Handle(IEnumerable<T> result, ListResponseMetadata? metadata = null);
-
-    internal AbstractCollectionMetadataHandler<T> WithBuilder(IHypermediaCollectionBuilder<T> builder)
-    {
-        Builder = builder;
-        return this;
-    }
 }

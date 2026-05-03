@@ -1,6 +1,7 @@
 ﻿namespace HypermediaEngine.Abstractions;
 
-public interface IResponseHandler : IDisposable
+public interface IObjectResponseHandler<T> : IResponseHandler
+    where T : notnull
 {
     ValueTask<object?> HandleResponseAsync(object? response);
 }

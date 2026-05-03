@@ -1,7 +1,7 @@
 using EntityTagCaching.Models;
 
 using HypermediaEngine.Requests.Filtering;
-using HypermediaEngine.Requests.Sorting;
+using HypermediaEngine.Responses.Metadata;
 
 namespace HypermediaEngine.Responses;
 

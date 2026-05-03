@@ -1,9 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
-
 namespace HypermediaEngine.Requests.Paging;
 
-public sealed record OffsetPaging
+public sealed record class OffsetPaging
 {
+    public static readonly OffsetPaging Default = new(page: 1, pageSize: 10);
+
     public OffsetPaging(int page, int pageSize)
     {
         Page = page;
@@ -12,8 +12,6 @@ public sealed record OffsetPaging
 
     internal OffsetPaging() { }
 
-    [FromQuery]
     public int Page { get; set; }
-    [FromQuery]
     public int PageSize { get; set; }
 }

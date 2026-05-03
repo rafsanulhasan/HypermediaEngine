@@ -11,15 +11,17 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace HypermediaEngine.Responses.Handlers;
 
+#pragma warning disable MA0048 // File name must match type name
 internal sealed class CollectionApiVersionMetadataHandler<T>(
-    IHttpContextAccessor contextAccessor
-) : AbstractCollectionMetadataHandler<T> where T : notnull
+    IHttpContextAccessor contextAccessor,
+    IHypermediaCollectionBuilder<T> builder
+) : AbstractCollectionMetadataHandler<T>(builder)
+    where T : notnull
 {
     public override IHypermediaCollectionBuilder<T> Handle(IEnumerable<T> result, ListResponseMetadata? metadata = null)
     {
         HttpContext httpContext = contextAccessor.HttpContext 
                                ?? throw new InvalidOperationException("HttpContext not available");
-        Guard.Against.Null(Builder, message: "Builder not available");
         metadata ??= Builder.Metadata
                   ?? new ListResponseMetadata(EntityTag.Empty);
         IApiVersionReader? reader = httpContext.RequestServices.GetService<IApiVersionReader>();
@@ -45,3 +47,4 @@ internal sealed class CollectionApiVersionMetadataHandler<T>(
         return Builder;
     }
 }
+#pragma warning restore MA0048 // File name must match type name
