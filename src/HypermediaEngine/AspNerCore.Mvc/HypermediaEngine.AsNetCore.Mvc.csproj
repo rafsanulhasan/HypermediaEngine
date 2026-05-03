@@ -19,4 +19,11 @@
 		<PackageReference Include="Microsoft.Net.Http.Headers" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <PackageReference Update="Meziantou.Analyzer">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	</ItemGroup>
+
 </Project>

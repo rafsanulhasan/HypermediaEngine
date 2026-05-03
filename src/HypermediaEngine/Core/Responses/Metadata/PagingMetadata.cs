@@ -4,10 +4,17 @@ using HypermediaEngine.Requests.Paging;
 
 using System.Text.Json.Serialization;
 
-namespace HypermediaEngine.Responses;
+namespace HypermediaEngine.Responses.Metadata;
 
 public sealed record class PagingMetadata
 {
+    public static readonly PagingMetadata Default = new()
+    {
+        CurrentPage = 1,
+        PageSize = 10,
+        Style = PagingStyles.Offset,
+    };
+
     public int TotalCount { get; init; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -25,7 +32,13 @@ public sealed record class PagingMetadata
     public int? CurrentPage { get; init; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string? Cursor { get; init; }
+    public string? ServedCursor { get; init; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? RequestedCursor { get; init; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? CursorField {  get; init; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     [JsonConverter(typeof(SmartEnumNameConverter<PagingStyles, int>))]

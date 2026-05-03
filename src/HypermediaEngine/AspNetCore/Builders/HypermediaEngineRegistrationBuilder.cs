@@ -1,6 +1,10 @@
 ﻿using HypermediaEngine.Abstractions;
 using HypermediaEngine.Responses.Handlers;
+using HypermediaEngine.Responses.Rules;
+using HypermediaEngine.Responses.Rules.EnumerableRules;
 using HypermediaEngine.Services;
+
+using Marten.Linq;
 
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -95,30 +99,24 @@ public sealed class HypermediaEngineRegistrationBuilder(IServiceCollection servi
     internal HypermediaEngineRegistrationBuilder WithResponseBuilders()
     {
         services
-            .AddTransient(typeof(IHypermediaObjectBuilder<>), typeof(HypermediaObjectBuilder<>))
-            .AddTransient(typeof(IHypermediaCollectionBuilder<>), typeof(HypermediaCollectionBuilder<>));
+            .AddScoped(typeof(IHypermediaObjectBuilder<>), typeof(HypermediaObjectBuilder<>))
+            .AddScoped(typeof(IHypermediaCollectionBuilder<>), typeof(HypermediaCollectionBuilder<>));
         return this;
     }
 
-    internal HypermediaEngineRegistrationBuilder WithObjectResponseHandlers()
+    internal HypermediaEngineRegistrationBuilder WithObjectResponseDependencies()
     {
-        services
-            .AddScoped(
-                typeof(IResponseHandler),
-                typeof(SimpleObjectResponseHandler))
-            .AddScoped(
-                typeof(AbstractObjectResponseHandler<>), 
-                typeof(TResponseHandler<>));
-
-        return WithObjectMetadataHandlers().WithObjectLinkHandlers();
+        return WithObjectResponseHandlers()
+                .WithObjectMetadataHandlers()
+                .WithObjectLinkHandlers();
     }
 
-    internal HypermediaEngineRegistrationBuilder WithCollectionResponseHandlers()
+    internal HypermediaEngineRegistrationBuilder WithCollectionResponseDependencies()
     {
-        services.AddScoped(
-            typeof(AbstractCollectionResponseHandler<>),
-            typeof(CollectionResponseHandler<>));
-        return WithCollectionMetadataHandlers().WithCollectionLinkHandlers();
+        return WithCollectionResponseHandlers()
+                .WithCollectionResponsePipelines()
+                .WithCollectionMetadataHandlers()
+                .WithCollectionLinkHandlers();
     }
 
     internal HypermediaEngineRegistrationBuilder WithResponseHandlersResolver()
@@ -139,6 +137,41 @@ public sealed class HypermediaEngineRegistrationBuilder(IServiceCollection servi
     internal IServiceCollection Build()
     {
         return Services.AddScoped(_ => this);
+    }
+
+    private HypermediaEngineRegistrationBuilder WithObjectResponseHandlers()
+    {
+        services
+            .AddScoped(
+                typeof(IResponseHandler),
+                typeof(SimpleObjectResponseHandler))
+            .AddScoped(
+                typeof(AbstractObjectResponseHandler<>),
+                typeof(TResponseHandler<>));
+
+        return this;
+    }
+
+    private HypermediaEngineRegistrationBuilder WithCollectionResponseHandlers()
+    {
+        services
+            .AddScoped(typeof(ICollectionResponseHandler<>), typeof(EnumerableCollectionResponseHandler<>))
+            .Decorate(typeof(ICollectionResponseHandler<>), typeof(QueryableResponseHandler<>))
+            .Decorate(typeof(ICollectionResponseHandler<>), typeof(MartenQueryableResponseHandler<>));
+        return this;
+    }
+
+    private HypermediaEngineRegistrationBuilder WithCollectionResponsePipelines()
+    {
+        services
+            .AddKeyedScoped(
+                typeof(ICollectionResponsePipeline<>),
+                CollectonPipelineRules.CollectionRuleName,
+                typeof(EnumerableFinalPagingRule<>))
+            .Decorate(typeof(ICollectionResponsePipeline<>), typeof(EnumerableSortingRule<>))
+            .Decorate(typeof(ICollectionResponsePipeline<>), typeof(EnumerablePagingRule<>))
+            .Decorate(typeof(ICollectionResponsePipeline<>), typeof(EnumerableFilteringRule<>));
+        return this;
     }
 
     private HypermediaEngineRegistrationBuilder WithObjectMetadataHandlers()
@@ -179,7 +212,7 @@ public sealed class HypermediaEngineRegistrationBuilder(IServiceCollection servi
                 typeof(CollectionApiVersionMetadataHandler<>))
             .AddScoped(
                 typeof(AbstractCollectionMetadataHandler<>),
-                typeof(CollectionETagMetadataHandler<>))            ;
+                typeof(CollectionETagMetadataHandler<>));
         return this;
     }
 

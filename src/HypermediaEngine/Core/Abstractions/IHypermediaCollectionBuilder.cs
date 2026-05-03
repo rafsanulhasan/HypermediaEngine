@@ -1,4 +1,3 @@
-using HypermediaEngine.Requests;
 using HypermediaEngine.Responses;
 
 namespace HypermediaEngine.Abstractions;
@@ -14,6 +13,8 @@ namespace HypermediaEngine.Abstractions;
 public interface IHypermediaCollectionBuilder<T> : IHypermediaBuilder<T>
     where T : notnull
 {
+    IEnumerable<T> Items { get; }
+    IEnumerable<HypermediaObjectResponse<T>> HalItems { get; }
     ListLinkCollection Links { get; }
     ListResponseMetadata? Metadata { get; }
 
@@ -27,21 +28,19 @@ public interface IHypermediaCollectionBuilder<T> : IHypermediaBuilder<T>
     /// contain valid items of type T.</param>
     /// <returns>An instance of <see cref="IHypermediaCollectionBuilder{T}"/> that can be used for further configuration of the hypermedia
     /// response.</returns>
-    IHypermediaCollectionBuilder<T> WithItems(IEnumerable<T> items, QueryParams? query = null);
+    IHypermediaCollectionBuilder<T> WithItems(IEnumerable<T> items);
 
     /// <summary>
-    /// Configures the collection link builder to total filtered items in the hypermedia response.
+    /// Configures the collection link builder to include the specified items in the hypermedia response.
     /// </summary>
-    /// <remarks>Use this method to populate the number of filtered items that will be serialized and returned as part of the
-    /// hypermedia collection paging metadata.</remarks>
-    /// <param name="query">The collection of items to be included in the hypermedia response. This parameter cannot be null and must
+    /// <remarks>Use this method to specify the items that will be serialized and returned as part of the
+    /// hypermedia collection. Ensure that the provided items are properly initialized and meet any criteria required
+    /// for inclusion in the response.</remarks>
+    /// <param name="items">The collection of items to be included in the hypermedia response. This parameter cannot be null and must
     /// contain valid items of type T.</param>
     /// <returns>An instance of <see cref="IHypermediaCollectionBuilder{T}"/> that can be used for further configuration of the hypermedia
     /// response.</returns>
-    Task<IHypermediaCollectionBuilder<T>> WithItemsAsync(
-        IQueryable<T> filteredQuery,
-        QueryParams queryParams,
-        CancellationToken ct);
+    IHypermediaCollectionBuilder<T> WithItems(IEnumerable<HypermediaObjectResponse<T>> items);
 
     /// <summary>
     /// Adds a hypermedia link to the response with the specified relationship, target URL, HTTP method, and optional

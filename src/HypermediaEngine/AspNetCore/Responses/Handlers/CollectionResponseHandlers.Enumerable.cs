@@ -1,4 +1,4 @@
-﻿using EntityTagCaching.Models;
+using EntityTagCaching.Models;
 
 using HypermediaEngine.Abstractions;
 using HypermediaEngine.Requests;
@@ -7,24 +7,26 @@ using HypermediaEngine.Requests.Paging;
 using HypermediaEngine.Responses.Metadata;
 using HypermediaEngine.Responses.Rules;
 
+using Marten.Linq;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace HypermediaEngine.Responses.Handlers;
 
-internal sealed class QueryableResponseHandler<T>(
+#pragma warning disable MA0048 // File name must match type name
+internal sealed class EnumerableCollectionResponseHandler<T>(
     IHttpContextAccessor httpContextAccessor,
-    [FromKeyedServices(CollectonPipelineRules.QueryableRuleName)] ICollectionResponsePipeline<T> queryablePipeline,
+    [FromKeyedServices(CollectonPipelineRules.CollectionRuleName)] ICollectionResponsePipeline<T> enumerablePipeline,
     IEnumerable<AbstractCollectionMetadataHandler<T>> metadataHandlers,
     IEnumerable<AbstractCollectionLinkHandler<T>> linkHandlers,
     IHypermediaCollectionBuilder<T> builder,
-    ICollectionResponseHandler<T> nextHandler,
-    ILogger<CollectionApiVersionMetadataHandler<T>> logger
-) : AbstractCollectionResponseHandler<T, IQueryable<T>>(httpContextAccessor, metadataHandlers, linkHandlers, builder, nextHandler)
+    ILogger<EnumerableCollectionResponseHandler<T>> logger
+) : AbstractCollectionResponseHandler<T, IEnumerable<T>>(httpContextAccessor, metadataHandlers, linkHandlers, builder)
     where T : notnull
 {
-    public override async ValueTask<object?> HandleCollectionResponseAsync(IQueryable<T> response)
+    public override async ValueTask<object?> HandleCollectionResponseAsync(IEnumerable<T> response)
     {
         using var handler = await WithPopulatedQueryParamsAsync().ConfigureAwait(false);
 
@@ -36,11 +38,11 @@ internal sealed class QueryableResponseHandler<T>(
             QueryParams = QueryParams,
         };
 
-        context = await queryablePipeline.Process(context).ConfigureAwait(false);
-
+        context = await enumerablePipeline.Process(context).ConfigureAwait(false);
         Builder = context.FinalItems.Match(
             finalItems => Builder.WithItems(finalItems),
-            () => Builder.WithItems(context.Items));
+            () => Builder.WithItems(context.Items)
+        );
         ListResponseMetadata metadata = new(EntityTag.Empty)
         {
             Filters = context.Filter.Match<FilterNode?>(node => node, () => null),
@@ -53,3 +55,4 @@ internal sealed class QueryableResponseHandler<T>(
         return Builder.Build();
     }
 }
+#pragma warning restore MA0048 // File name must match type name

@@ -24,8 +24,8 @@ public static class DependencyRegistration
             Action<HypermediaEngineRegistrationBuilder>? configureBuilder = null)
         {
             HypermediaEngineRegistrationBuilder hypermediaRegistrationBuilder = new HypermediaEngineRegistrationBuilder(services)
-                                                                                    .WithObjectResponseHandlers()
-                                                                                    .WithCollectionResponseHandlers()
+                                                                                    .WithObjectResponseDependencies()
+                                                                                    .WithCollectionResponseDependencies()
                                                                                     .WithResponseHandlersResolver()
                                                                                     .WithResponseBuilders();
             configureBuilder?.Invoke(hypermediaRegistrationBuilder);

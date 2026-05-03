@@ -10,6 +10,8 @@ namespace HypermediaEngine.Requests.Paging;
 public sealed class OffsetOrCursorPaging
     : OneOfBase<OffsetPaging, CursorPaging>
 {
+    public static readonly OffsetOrCursorPaging Default = new(OffsetPaging.Default);
+
     public OffsetOrCursorPaging(OneOf<OffsetPaging, CursorPaging> input)
         : base(input)
     {
@@ -49,12 +51,15 @@ public sealed class OffsetOrCursorPaging
     public bool IsOffset(out OffsetPaging offsetPaging) => TryPickT0(out offsetPaging, out _);
     public bool IsCursor(out CursorPaging cursorPaging) => TryPickT1(out cursorPaging, out _);
 
+    public static OffsetOrCursorPaging GetOrDefault(OffsetOrCursorPaging? paging)
+        => paging ?? Default;
+
     public static bool TryParse(string input, [NotNull] out OffsetOrCursorPaging result)
     {
         input = input.Trim().Replace("?", string.Empty, StringComparison.OrdinalIgnoreCase);
         Dictionary<string, string> query = input
             .Split(
-                '&', 
+                '&',
                 StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
             .Select(part => part.Split('='))
             .Where(parts => parts.Length == 2)
@@ -70,9 +75,11 @@ public sealed class OffsetOrCursorPaging
 
         if (query.TryGetValue("limit", out string? limitValue)
          && query.TryGetValue("cursor", out string? cursor)
-         && int.TryParse(limitValue, CultureInfo.InvariantCulture, out int limit))
+         && query.TryGetValue("field", out string? field)
+         && int.TryParse(limitValue, CultureInfo.InvariantCulture, out int limit)
+         && !string.IsNullOrWhiteSpace(field))
         {
-            result = new CursorPaging(cursor, limit);
+            result = new CursorPaging(limit, cursor, field);
             return true;
         }
         result = new OffsetPaging(1, 10);
