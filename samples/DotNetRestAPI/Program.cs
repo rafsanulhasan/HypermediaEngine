@@ -9,7 +9,6 @@ using DotNetRestAPI.Controllers;
 
 using HypermediaEngine;
 using HypermediaEngine.OpenApi;
-using HypermediaEngine.Requests;
 
 using LanguageExt;
 
