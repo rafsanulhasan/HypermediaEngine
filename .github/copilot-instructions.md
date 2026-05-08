@@ -85,6 +85,7 @@ This repository maintains parallel behavior across Claude Code and Copilot/VS Co
 - `product-manager`
 - `skill-manager`
 - `agent-manager`
+- `documentation-writer`
 
 ### Synchronization Rules
 

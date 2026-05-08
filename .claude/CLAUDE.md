@@ -72,6 +72,7 @@ Use the same role names across platforms:
 - `product-manager`
 - `skill-manager`
 - `agent-manager`
+- `documentation-writer`
 
 ### Portability Rule
 

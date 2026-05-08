@@ -23,6 +23,7 @@ The same role names are used across platforms to keep delegation predictable:
 - `product-manager`
 - `skill-manager`
 - `agent-manager`
+- `documentation-writer`
 
 ## Portability Rule
 
