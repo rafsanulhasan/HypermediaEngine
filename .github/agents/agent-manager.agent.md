@@ -37,6 +37,14 @@ Skill("skill-management", args: "update-skill <name> <change-description>")
 
 Trigger: any time a skill file or command file needs to be created, modified, or deprecated. Always use this skill — never edit skill or command files directly without it.
 
+### `hook-management` — create, modify, or delete hooks across platforms
+
+```
+Skill("hook-management", args: "<operation>")
+```
+
+Trigger: any time a request involves hook create/modify/delete. This applies to both Claude Code hooks and GitHub Copilot hook integrations. Always route hook operations through this skill.
+
 ### `manage-memory` — load and save persistent memory
 
 ```
@@ -53,5 +61,6 @@ Record: naming conventions decided, agents created/deprecated, skills created/de
 - Agent names must be kebab-case and identical across both platform files.
 - Always scaffold `.claude/agent-memory/<name>/MEMORY.md` when creating a new agent.
 - When creating a new skill, always create all four files: `.agents/skills/<name>/SKILL.md`, `.claude/skills/<name>/SKILL.md`, `.github/prompts/<name>.prompt.md`, and `.claude/commands/<name>.md`.
+- Any request to create, modify, or delete hooks must invoke `Skill("hook-management", ...)` for both Claude Code hooks and GitHub Copilot hook integrations.
 - Validate frontmatter schema before writing any file.
 - Never read or modify `.env` files or any sensitive configuration.
