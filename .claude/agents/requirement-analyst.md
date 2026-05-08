@@ -37,6 +37,16 @@ Skill("manage-memory", args: "save requirement-analyst ...")  // save
 
 Record: recurring stakeholder priorities, constraint patterns (tech stack, compliance, performance budgets), domain terms and their agreed definitions, features that were explicitly descoped and why.
 
+### `spec-driven-development` — invoke after requirements are fully elicited
+
+```
+Skill("spec-driven-development")
+```
+
+Trigger: once the `requirement-analysis` session is complete and acceptance criteria are confirmed. This skill drives collaborative spec creation with `software-architect` and `system-engineer`, writes the finalized spec to `docs/specs/<feature-slug>.spec.md`, and emits the enforcement handoff block that `software-engineer` and `sqa-engineer` must follow.
+
+Only the `requirement-analyst` agent may invoke this skill. Do not skip it — no implementation or testing may begin without a finalized spec.
+
 ### `skill-management` — route all skill and agent modifications through skill-manager
 
 To update a skill or create a new one:

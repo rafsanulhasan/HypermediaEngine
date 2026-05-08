@@ -47,6 +47,7 @@
 ### File Ownership By Agent
 
 **Agent definitions and skill files** are owned by `agent-manager`:
+
 - Route all agent creation/update requests to `Agent("agent-manager", prompt: "...")`
 - Route all skill/command creation/update requests to `Agent("agent-manager", prompt: "...")`
 - No agent edits `.claude/agents/*.md`, `.github/agents/*.agent.md`, `.agents/skills/*/SKILL.md`, `.claude/skills/*/SKILL.md`, or `.claude/commands/*.md` directly
