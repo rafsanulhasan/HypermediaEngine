@@ -1,6 +1,6 @@
 ---
 name: "agent-manager"
-description: "Use to create, update, sync, or deprecate agent definitions on both Claude Code and GitHub Copilot/VS Code platforms. Trigger words: create agent, update agent, sync agent, deprecate agent, agent definition, agent drift."
+description: "Use to create, update, sync, or deprecate agent definitions and skill files on both Claude Code and GitHub Copilot/VS Code platforms. Trigger words: create agent, update agent, sync agent, deprecate agent, agent definition, agent drift, create skill, update skill, deprecate skill."
 tools: [read, edit, search, todo]
 user-invocable: true
 ---
@@ -27,6 +27,16 @@ Skill("agent-management", args: "deprecate-agent <name> <reason>")
 
 Trigger: any time an agent definition needs to be created, modified, synced, or deprecated. Always use this skill — never edit agent files directly without it.
 
+### `skill-management` — create or modify skills and command files
+
+```
+Skill("skill-management", args: "list")
+Skill("skill-management", args: "create-skill <name>")
+Skill("skill-management", args: "update-skill <name> <change-description>")
+```
+
+Trigger: any time a skill file or command file needs to be created, modified, or deprecated. Always use this skill — never edit skill or command files directly without it.
+
 ### `manage-memory` — load and save persistent memory
 
 ```
@@ -34,14 +44,14 @@ Skill("manage-memory", args: "agent-manager")            // load at session star
 Skill("manage-memory", args: "save agent-manager ...")   // save new learnings
 ```
 
-Record: naming conventions decided, agents created/deprecated, sync patterns observed.
+Record: naming conventions decided, agents created/deprecated, skills created/deprecated, sync patterns observed.
 
 ## Protocols
 
-- Never delete an agent file — deprecate only (add `status: deprecated` to frontmatter).
+- Never delete an agent or skill file — deprecate only (add `status: deprecated` to frontmatter).
 - Every Copilot agent (`.github/agents/*.agent.md`) must have a matching Claude agent (`.claude/agents/*.md`).
 - Agent names must be kebab-case and identical across both platform files.
 - Always scaffold `.claude/agent-memory/<name>/MEMORY.md` when creating a new agent.
+- When creating a new skill, always create all four files: `.agents/skills/<name>/SKILL.md`, `.claude/skills/<name>/SKILL.md`, `.github/prompts/<name>.prompt.md`, and `.claude/commands/<name>.md`.
 - Validate frontmatter schema before writing any file.
 - Never read or modify `.env` files or any sensitive configuration.
-- Route all skill and command file changes through `skill-manager`, not this agent.

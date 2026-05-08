@@ -1,6 +1,6 @@
 ---
 name: skill-management
-description: Creates, updates, and lists agent definitions (.claude/agents/*.md), skill files (agents/skills/*/SKILL.md), and command files (.claude/commands/*.md) for the HypermediaEngine multi-agent system. Invoked exclusively by the skill-manager agent.
+description: Creates, updates, and lists agent definitions (.claude/agents/*.md), skill files (agents/skills/*/SKILL.md), and command files (.claude/commands/*.md) for the HypermediaEngine multi-agent system. Invoked exclusively by the agent-manager agent.
 model: claude-sonnet-4-6
 tools: Read, Write, Edit, Glob, Grep, Bash, TodoWrite
 ---

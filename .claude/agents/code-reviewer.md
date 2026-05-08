@@ -49,11 +49,11 @@ Skill("manage-memory", args: "save code-reviewer ...")  // save
 
 Record: recurring violation patterns, components that frequently have coverage gaps, convention shortcuts teams have tried that failed review, design anti-patterns discovered across reviews.
 
-### `skill-management` — route all skill and agent modifications through skill-manager
+### `skill-management` — route all skill and agent modifications through agent-manager
 
 To update a skill or create a new one:
 
 ```
-Agent("skill-manager", prompt: "update-skill review: <change description>")
-Agent("skill-manager", prompt: "create-skill <name>")
+Agent("agent-manager", prompt: "update-skill review: <change description>")
+Agent("agent-manager", prompt: "create-skill <name>")
 ```

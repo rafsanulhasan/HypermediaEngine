@@ -6,7 +6,7 @@ argument-hint: "Mode: list | create-skill <name> | update-skill <name> | create-
 
 This skill creates and maintains the multi-agent system's component files. Every write validates frontmatter schema and ensures all new skills include a Phase 0 context-load pattern.
 
-Every other agent must route agent/skill creation and modification through the `skill-manager` agent rather than editing these files directly.
+Every other agent must route agent/skill creation and modification through the `agent-manager` agent rather than editing these files directly.
 
 ## Modes
 

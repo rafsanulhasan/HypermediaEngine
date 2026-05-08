@@ -56,13 +56,13 @@ Skill("manage-memory", args: "save documentation-writer ...")   // save
 
 Record: directories where README.md files were created, recurring doc gaps, API surface patterns, components with complex configuration.
 
-### `skill-management` — route all skill and agent file changes through skill-manager
+### `skill-management` — route all skill and agent file changes through agent-manager
 
 To update a skill or create a new one:
 
 ```
-Agent("skill-manager", prompt: "update-skill write-documentation: <change description>")
-Agent("skill-manager", prompt: "create-skill <name>")
+Agent("agent-manager", prompt: "update-skill write-documentation: <change description>")
+Agent("agent-manager", prompt: "create-skill <name>")
 ```
 
 Never directly edit `.agents/skills/`, `.claude/skills/`, or `.claude/commands/` files.

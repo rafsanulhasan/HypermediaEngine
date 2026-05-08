@@ -41,13 +41,13 @@ Skill("manage-memory", args: "save product-manager ...")  // save
 
 Record: product priorities and rationale, architectural constraints that affect scheduling, items explicitly descoped and why, recurring stakeholder preferences, release cadence decisions.
 
-### `skill-management` — route all skill and agent modifications through skill-manager
+### `skill-management` — route all skill and agent modifications through agent-manager
 
 To update a skill or create a new one:
 
 ```
-Agent("skill-manager", prompt: "update-skill product-planning: <change description>")
-Agent("skill-manager", prompt: "create-skill <name>")
+Agent("agent-manager", prompt: "update-skill product-planning: <change description>")
+Agent("agent-manager", prompt: "create-skill <name>")
 ```
 
 ## Backlog Schema

@@ -21,7 +21,6 @@ The same role names are used across platforms to keep delegation predictable:
 - `sqa-engineer`
 - `code-reviewer`
 - `product-manager`
-- `skill-manager`
 - `agent-manager`
 - `documentation-writer`
 

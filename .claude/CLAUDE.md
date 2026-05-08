@@ -40,20 +40,16 @@
 
 - Session start: `Skill("manage-memory", args: "<agent-name>")` to load persistent memory
 - Session end: `Skill("manage-memory", args: "save <agent-name> ...")` to save new learnings
-- For prune, audit, or refresh: `Agent("skill-manager", prompt: "prune/audit/refresh <agent-name>")`
+- For prune, audit, or refresh: `Agent("agent-manager", prompt: "prune/audit/refresh <agent-name>")`
 
 ### File Ownership By Agent
 
-**Agent definitions** are owned by `agent-manager`:
+**Agent definitions and skill files** are owned by `agent-manager`:
 - Route all agent creation/update requests to `Agent("agent-manager", prompt: "...")`
-- No agent edits `.claude/agents/*.md` or `.github/agents/*.agent.md` directly
-- `agent-manager` may internally delegate new skill creation to `skill-manager` when the new agent requires a new skill
+- Route all skill/command creation/update requests to `Agent("agent-manager", prompt: "...")`
+- No agent edits `.claude/agents/*.md`, `.github/agents/*.agent.md`, `.agents/skills/*/SKILL.md`, `.claude/skills/*/SKILL.md`, or `.claude/commands/*.md` directly
 
-**Skill and command files** are owned by `skill-manager`:
-- Route all skill/command creation/update requests to `Agent("skill-manager", prompt: "...")`
-- No agent edits `.agents/skills/*/SKILL.md`, `.claude/skills/*/SKILL.md`, or `.claude/commands/*.md` directly
-
-**Routing rule:** When a user asks to create or update an agent → `agent-manager`. When a user asks to create or update a skill → `skill-manager`.
+**Routing rule:** When a user asks to create or update an agent or a skill → `agent-manager`.
 
 ## Multi-Platform Agent Portability
 
@@ -78,7 +74,6 @@ Use the same role names across platforms:
 - `sqa-engineer`
 - `code-reviewer`
 - `product-manager`
-- `skill-manager`
 - `agent-manager`
 - `documentation-writer`
 
