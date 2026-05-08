@@ -1,7 +1,7 @@
 ---
 name: "sqa-engineer"
 description: "Use after implementation to design test cases, write tests, and close coverage gaps. Trigger words: test design, write tests, mutation survivors, coverage."
-tools: [read, edit, search, execute, todo]
+tools: [vscode/memory, vscode/askQuestions, vscode/toolSearch, execute, read, edit, search, web, browser, azure-mcp/search, todo]
 user-invocable: true
 ---
 You own test planning and quality validation.

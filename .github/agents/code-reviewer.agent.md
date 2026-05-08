@@ -1,7 +1,7 @@
 ---
 name: "code-reviewer"
 description: "Use for quality-gate review of branch/PR changes after implementation. Trigger words: review code, pre-merge review, quality gate, findings report."
-tools: [read, search, execute, todo]
+tools: [vscode/memory, vscode/askQuestions, execute, read, edit, search, docker-mcp-gateway/merge_pull_request, azure-mcp/search, github.vscode-pull-request-github/doSearch, github.vscode-pull-request-github/activePullRequest, github.vscode-pull-request-github/pullRequestStatusChecks, github.vscode-pull-request-github/resolveReviewThread, todo]
 user-invocable: true
 ---
 You analyze changes and report actionable findings.
