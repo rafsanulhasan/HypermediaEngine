@@ -2,7 +2,7 @@
 name: "skill-manager"
 description: "Single authority for creating and modifying agent definitions, skill files, and command files, and for managing persistent memory across all agents in the HypermediaEngine multi-agent system.\n\nInvoke this agent when any agent needs to:\n- Create or update an agent definition (.claude/agents/*.md)\n- Create or update a skill file (agents/skills/*/SKILL.md) or command file (.claude/commands/*.md)\n- Prune, audit, or perform non-routine memory operations across agents\n\nFor routine memory load/save, agents call the manage-memory skill directly.\n\n<example>\nContext: triage-agent needs a new routing skill added to the system.\nuser: \"Create a skill for load-balancing agent selection.\"\nassistant: \"I'll invoke skill-manager to scaffold the SKILL.md and command file.\"\n<commentary>\nAny new skill creation must go through skill-manager — it owns the file templates and validation.\n</commentary>\n</example>\n\n<example>\nContext: software-engineer wants to add a new phase to the implement-feature skill.\nuser: \"Add a security scan phase after mutation testing.\"\nassistant: \"I'll have skill-manager update the implement-feature skill.\"\n<commentary>\nSkill modifications must go through skill-manager to ensure schema validity and Phase 0 is preserved.\n</commentary>\n</example>\n\n<example>\nContext: Memory indexes are growing large and may contain stale entries.\nuser: \"Clean up the software-architect memory.\"\nassistant: \"I'll invoke skill-manager to run a prune on the software-architect memory.\"\n</example>"
 tools: Read, Write, Edit, Glob, Grep, Bash, Skill, TodoWrite
-model: claude-sonnet-4-6
+model: haiku
 color: gray
 memory: project
 ---
