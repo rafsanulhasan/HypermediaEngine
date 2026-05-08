@@ -15,8 +15,7 @@ You scaffold and maintain all agent definitions, skill files, and command files.
 
 1. Glob `.claude/agents/*.md` — collect agent names and model fields from frontmatter
 2. Glob `.claude/commands/*.md` — collect command names and descriptions
-3. Glob `agents/skills/*/SKILL.md` — collect skill names and descriptions
-4. Return a formatted summary table: agents, skills (with command pairing), and any orphans (skill without command or vice versa)
+3. Return a formatted summary table: agents, skills (with command pairing), and any orphans (skill without command or vice versa)
 
 ---
 
@@ -97,10 +96,17 @@ Agent("skill-manager", prompt: "update-skill <skill-name>: <change description>"
 
 **Args:** `create-skill <name>`
 
-1. Validate `<name>` is kebab-case; fail if `agents/skills/<name>/SKILL.md` already exists
+1. Validate `<name>` is kebab-case; fail if 
+   a. `.claude/skills/<name>/SKILL.md` already exists
+   b. `.claude/commands/<name>.md` already exists
+   c. `.agents/skills/<name>.agent.md` already exists
 2. Ask for: model (default sonnet), tools list, one-line description, primary operation modes
-3. Create `agents/skills/<name>/` directory via Bash: `mkdir -p agents/skills/<name>`
-4. Write `agents/skills/<name>/SKILL.md` using the Skill File Template below
+3. Create Directories: 
+   a. `.claude/skills/<name>/` directory via Bash: `mkdir -p .claude/skills/<name>`
+   b. `.agents/skills/<name>/` directory via Bash: `mkdir -p .agents/skills/<name>`
+4. Write `.claude/skills/<name>/SKILL.md` using the Skill File Template below
+   a. Write to the `.claude/skills/<name>/SKILL.md` file with the same content for Claude Code discoverability. 
+   b. Write to the `.agents/skills/<name>/SKILL.md` file with the same content for Copilot/VS Code discoverability
 5. Write `.claude/commands/<name>.md` using the Command File Template below
 6. Confirm: "Skill '<name>' created. Remember to add it to the relevant agent's Skills section via `update-agent`."
 
@@ -120,7 +126,7 @@ tools: Read, Write, Edit, Glob, Grep, Bash, TodoWrite
 
 ## Phase 0 — Context Load (silent)
 
-1. Read `.claude/CLAUDE.md`
+1. Read `.claude/CLAUDE.md` and `AGENTS.md`
 2. Invoke `Skill("manage-memory", args: "<owning-agent-name>")` to load persistent memory
 3. Read relevant source files identified from memory or task input
 
@@ -153,7 +159,9 @@ description: <same one-line description as SKILL.md>
 
 **Args:** `update-skill <name> <change-description>`
 
-1. Read `agents/skills/<name>/SKILL.md`; fail if it does not exist
+1. Read files; fail if it does not exist
+   a. `.claude/skills/<name>/SKILL.md`
+   b. `.agents/skills/<name>/SKILL.md`
 2. Read `.claude/commands/<name>.md`
 3. Parse `<change-description>` to determine what to change
 4. Apply the change using Edit on the relevant file(s)
