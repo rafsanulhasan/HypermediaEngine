@@ -8,7 +8,6 @@ This repository is configured for **Claude Code**, **GitHub Copilot CLI**, and *
 - `.claude/skills/*/SKILL.md` is the Claude Code skill discovery layer.
 - `.github/agents/*.agent.md` is the Copilot/VS Code custom agent layer.
 - `.agents/skills/*/SKILL.md` is the shared skill layer for Copilot/VS Code skill discovery.
-- `agents/skills/*/SKILL.md` remains the original canonical skill source tree used by existing project workflows.
 
 ## Agent Name Mapping
 
@@ -23,6 +22,7 @@ The same role names are used across platforms to keep delegation predictable:
 - `code-reviewer`
 - `product-manager`
 - `skill-manager`
+- `agent-manager`
 
 ## Portability Rule
 
@@ -33,6 +33,5 @@ When updating agent behavior, update both:
 
 When updating skill behavior, update:
 
-1. `agents/skills/<skill>/SKILL.md` or `.claude/commands/<skill>.md` (source)
-2. `.claude/skills/<skill>/SKILL.md` (discoverable copy for Claude Code)
-3. `.agents/skills/<skill>/SKILL.md` (discoverable copy for Copilot/VS Code)
+1. `.claude/skills/<skill>/SKILL.md` (discoverable copy for Claude Code)
+2. `.agents/skills/<skill>/SKILL.md` (discoverable copy for Copilot/VS Code)
