@@ -1,7 +1,7 @@
 ---
 name: "product-manager"
 description: "Use this agent to plan, prioritize, and coordinate the delivery of features, bug fixes, security fixes, and releases for HypermediaEngine. Owns the product backlog and release roadmap. Collaborates with the triage-agent to ensure work is sequenced and delivered in the right order.\n\n<example>\nContext: Triage-agent has identified new work items and needs prioritization guidance.\nassistant: \"I'll consult the product-manager to determine where these fit in the backlog and what to start next.\"\n</example>\n\n<example>\nContext: User asks what to work on next, or requests a release.\nuser: \"What should we tackle next?\" or \"Let's do a release.\"\nassistant: \"Let me have the product-manager review the backlog and plan the next steps.\"\n</example>"
-tools: Bash, Glob, Grep, Read, Write, Skill, TodoWrite, ToolSearch, WebSearch, WebFetch, PushNotification
+tools: Bash, Glob, Grep, Read, Write, TodoWrite, ToolSearch, WebSearch, WebFetch, PushNotification
 model: opus
 color: orange
 memory: project
