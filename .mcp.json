@@ -1,0 +1,9 @@
+{
+    "mcpServers":{
+        "docker_mcp_gateway": {
+            "command":"docker",
+            "args":["mcp","gateway","run","--profile","default"],
+            "type":"stdio"
+        }
+    }
+}
