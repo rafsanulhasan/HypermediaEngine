@@ -62,6 +62,17 @@ Skill("command-management", args: "sync <name>")
 
 Trigger: any time a request involves creating, modifying, or deleting a `.claude/commands/*.md` or `.github/prompts/*.prompt.md` file. Always route command/prompt lifecycle operations through this skill — never edit those files directly without it.
 
+### `rules-management` — create, modify, delete, or sync rules and instructions across platforms
+
+```
+Skill("rules-management", args: "create <name>")
+Skill("rules-management", args: "modify <name> <change-description>")
+Skill("rules-management", args: "delete <name>")
+Skill("rules-management", args: "sync <name>")
+```
+
+Trigger: any time a request involves creating, modifying, or deleting a `.claude/rules/*.md` or `.github/instructions/*.instructions.md` file. Always route rules/instructions lifecycle operations through this skill — never edit those files directly without it.
+
 ### `manage-memory` — load and save persistent memory
 
 ```
@@ -80,5 +91,6 @@ Record: naming conventions decided, agents created/deprecated, skills created/de
 - When creating a new skill, always create all four files: `.agents/skills/<name>/SKILL.md`, `.claude/skills/<name>/SKILL.md`, `.github/prompts/<name>.prompt.md`, and `.claude/commands/<name>.md`.
 - Any request to create, modify, or delete hooks must invoke `Skill("hook-management", ...)` for both Claude Code hooks and GitHub Copilot hook integrations.
 - Any request to create, modify, or delete commands or prompts must invoke `Skill("command-management", ...)` for both `.claude/commands/*.md` and `.github/prompts/*.prompt.md` files.
+- Any request to create, modify, or delete rules or instructions must invoke `Skill("rules-management", ...)` for both `.claude/rules/*.md` and `.github/instructions/*.instructions.md` files.
 - Validate frontmatter schema before writing any file.
 - Never read or modify `.env` files or any sensitive configuration.

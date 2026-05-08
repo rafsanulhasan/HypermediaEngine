@@ -33,6 +33,8 @@ This file defines repository-specific operating rules for GitHub Copilot in Hype
 
 - After each implemented feature or fix: run `dotnet test`.
 - After tests pass: run `dotnet stryker`.
+- Exception: if a change is non-functional and only modifies agent artifacts (planning, agents, skills, hooks, prompts/commands, rules/instructions), you may skip both gates.
+- If any runtime code, test code, runtime configuration, or build logic changes, run both gates.
 
 ## Agent Execution Protocol
 

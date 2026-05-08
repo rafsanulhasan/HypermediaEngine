@@ -27,6 +27,8 @@
 
 - Run test cases after building every feature using `dotnet test`
 - Run Mutation tests after running all tests using `dotnet stryker`
+- Exception: if a change is non-functional and only modifies agent artifacts (planning, agents, skills, hooks, prompts/commands, rules/instructions), you may skip both gates.
+- If any runtime code, test code, runtime configuration, or build logic changes, run both gates.
 
 ## Agent Protocols
 
