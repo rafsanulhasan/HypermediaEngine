@@ -42,10 +42,18 @@
 - Session end: `Skill("manage-memory", args: "save <agent-name> ...")` to save new learnings
 - For prune, audit, or refresh: `Agent("skill-manager", prompt: "prune/audit/refresh <agent-name>")`
 
-### Skill & Agent Updates
+### File Ownership By Agent
 
-- All agent definitions, skill files, and command files must be created or modified through `Agent("skill-manager", prompt: "...")`
-- No agent edits `.claude/agents/*.md`, `agents/skills/*/SKILL.md`, or `.claude/commands/*.md` directly
+**Agent definitions** are owned by `agent-manager`:
+- Route all agent creation/update requests to `Agent("agent-manager", prompt: "...")`
+- No agent edits `.claude/agents/*.md` or `.github/agents/*.agent.md` directly
+- `agent-manager` may internally delegate new skill creation to `skill-manager` when the new agent requires a new skill
+
+**Skill and command files** are owned by `skill-manager`:
+- Route all skill/command creation/update requests to `Agent("skill-manager", prompt: "...")`
+- No agent edits `.agents/skills/*/SKILL.md`, `.claude/skills/*/SKILL.md`, or `.claude/commands/*.md` directly
+
+**Routing rule:** When a user asks to create or update an agent → `agent-manager`. When a user asks to create or update a skill → `skill-manager`.
 
 ## Multi-Platform Agent Portability
 

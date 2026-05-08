@@ -50,17 +50,26 @@ This file defines repository-specific operating rules for GitHub Copilot in Hype
 - At session end: `Skill("manage-memory", args: "save <agent-name> ...")`
 - For non-routine memory operations (prune/audit/refresh): route through `Agent("skill-manager", prompt: "prune/audit/refresh <agent-name>")`
 
-### 3. Skill And Agent File Ownership
+### 3. File Ownership By Agent
 
-- All agent, skill, and command file creation/modification must go through `Agent("skill-manager", prompt: "...")`.
+**Agent definitions** are owned by `agent-manager`:
+- Route all agent creation/update requests to `Agent("agent-manager", prompt: "...")`.
 - Do not directly edit:
 	- `.claude/agents/*.md`
+	- `.github/agents/*.agent.md`
+- `agent-manager` may internally delegate new skill creation to `skill-manager` when an agent requires a new skill.
+
+**Skill and command files** are owned by `skill-manager`:
+- Route all skill/command creation/update requests to `Agent("skill-manager", prompt: "...")`.
+- Do not directly edit:
 	- `.claude/commands/*.md`
-	- `agents/skills/*/SKILL.md`
 	- `.agents/skills/*/SKILL.md`
+	- `.claude/skills/*/SKILL.md`
 - When creating a new skill, always create both:
 	- `.agents/skills/<name>/SKILL.md`
 	- `.claude/commands/<name>.md`
+
+**Routing rule:** When a user asks to create or update an agent, invoke `agent-manager` — not `skill-manager`. When a user asks to create or update a skill, invoke `skill-manager` — not `agent-manager`.
 
 ## Multi-Platform Portability
 
