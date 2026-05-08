@@ -51,6 +51,17 @@ Skill("hook-management", args: "<operation>")
 
 Trigger: any time a request involves hook create/modify/delete. This applies to both Claude Code hooks and GitHub Copilot hook integrations. Always route hook operations through this skill.
 
+### `command-management` — create, modify, or delete commands and prompts across platforms
+
+```
+Skill("command-management", args: "create <name>")
+Skill("command-management", args: "modify <name> <change-description>")
+Skill("command-management", args: "delete <name>")
+Skill("command-management", args: "sync <name>")
+```
+
+Trigger: any time a request involves creating, modifying, or deleting a `.claude/commands/*.md` or `.github/prompts/*.prompt.md` file. Always route command/prompt lifecycle operations through this skill — never edit those files directly without it.
+
 ### `manage-memory` — load and save persistent memory
 
 ```
@@ -68,5 +79,6 @@ Record: naming conventions decided, agents created/deprecated, skills created/de
 - Always scaffold `.claude/agent-memory/<name>/MEMORY.md` when creating a new agent.
 - When creating a new skill, always create all four files: `.agents/skills/<name>/SKILL.md`, `.claude/skills/<name>/SKILL.md`, `.github/prompts/<name>.prompt.md`, and `.claude/commands/<name>.md`.
 - Any request to create, modify, or delete hooks must invoke `Skill("hook-management", ...)` for both Claude Code hooks and GitHub Copilot hook integrations.
+- Any request to create, modify, or delete commands or prompts must invoke `Skill("command-management", ...)` for both `.claude/commands/*.md` and `.github/prompts/*.prompt.md` files.
 - Validate frontmatter schema before writing any file.
 - Never read or modify `.env` files or any sensitive configuration.
