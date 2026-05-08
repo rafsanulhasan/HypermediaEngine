@@ -1,7 +1,6 @@
 ---
-description: C# coding style conventions for HypermediaEngine
-globs: "**/*.cs"
-alwaysApply: false
+applyTo: "**/*.cs"
+description: "C# coding style conventions for HypermediaEngine"
 ---
 
 # Coding Style

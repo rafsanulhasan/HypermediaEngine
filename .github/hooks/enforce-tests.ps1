@@ -1,7 +1,7 @@
 #!/usr/bin/env pwsh
-# enforce-tests.ps
+# enforce-tests.ps1
 # Hook: Stop — blocks the agent from finishing if tests have not passed.
-# Called from the Stop hook in .claude/settings.json.
+# Called from .github/hooks/enforce-tests.json (PostToolUse / Stop event).
 
 param(
     [Parameter(ValueFromPipeline = $true)]

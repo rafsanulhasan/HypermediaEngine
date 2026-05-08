@@ -1,7 +1,6 @@
 ---
-description: Testing and quality gate requirements for HypermediaEngine
-globs: "**"
-alwaysApply: true
+applyTo: "**"
+description: "Testing and quality gate requirements for HypermediaEngine"
 ---
 
 # Testing Requirements
