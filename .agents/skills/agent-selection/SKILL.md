@@ -1,11 +1,9 @@
 ---
 name: agent-selection
 description: Expert agent selection skill. Use PROACTIVELY to select the most suitable agent for a given task, based on the task requirements and agent capabilities. Also use this skill to orchestrate multi-agent workflows when a task requires multiple skills or expertise.
-model: claude-haiku-4-5-20251001
-tools: Read, Grep, Glob, agent
 ---
 
-# Agents
+# agent-selection
 
 ## Workflow
 
@@ -23,14 +21,16 @@ Use `triage-agent` to orchestrate multi-agent workflows.
 
 - **system-engineer** — Designs low-level structure: SOLID, design patterns, monads, discriminated unions. Collaborates with `software-architect` to translate requirements into concrete design. Also validates implementation after `software-engineer` finishes.
 
-- **senior-system-engineer** — Same focus as `system-engineer` but with extended tooling (Bash, Write, mcp). Use when the design task requires file edits or shell execution.
-
 - **software-engineer** — Implements features, fixes bugs, refactors. Invoke after architecture and design are defined.
 
-- **code-reviewer** — Reviews implementation after `software-engineer` completes.
+- **code-reviewer** — Reviews implementation and test cases after `software-engineer` and `sqa-engineer` complete their work.
 
-- **software-tester** — Writes and validates tests after `code-reviewer` approves.
+- **sqa-engineer** — Writes and validates tests after `software-engineer` implements features, fixes bugs, and refactors code.
 
 - **triage-agent** — Orchestrates and manages multi-agent workflows. Use when a task spans multiple agents or requires coordinated parallel execution.
 
 - **product-manager** — Owns the product backlog, prioritization, and release planning. Consult before starting Feature or TechDebt work. Invoke for release planning and backlog health reviews.
+
+- **documentation-writer** — Writes and maintains documentation. Invoke after `software-engineer` completes, and for ongoing updates as features evolve.
+
+- **agent-manager** — Manages agent definitions and lifecycle. Use to create, update, or deprecate agents as the system evolves.

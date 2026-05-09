@@ -1,9 +1,9 @@
 ---
 name: agent-management
 description: Creates, updates, and deprecates agent definitions for both Claude Code (.claude/agents/*.md) and GitHub Copilot/VS Code (.github/agents/*.agent.md). Invoked exclusively by the agent-manager agent.
-model: claude-sonnet-4-6
-tools: Read, Write, Edit, Glob, Grep, Bash, TodoWrite
 ---
+
+# agent-management
 
 You scaffold and maintain all agent definitions across both platforms. Parse the args to determine the operation mode, then execute the corresponding procedure.
 
