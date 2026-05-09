@@ -162,9 +162,9 @@ public static class RouteHandlerBuilderHelpers
                         .ConfigureAwait(false);
                 operation.RequestBody = new OpenApiRequestBody()
                 {
-                    Content = new Dictionary<string, IOpenApiMediaType>(StringComparer.Ordinal)
+                    Content = new Dictionary<string, OpenApiMediaType>(StringComparer.Ordinal)
                     {
-                        [MediaTypeNames.Application.Json] = new OpenApiMediaType()
+                        [MediaTypeNames.Application.Json] = new()
                         {
                             Schema = queryBodySchema,
                         },

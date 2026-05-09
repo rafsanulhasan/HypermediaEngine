@@ -8,11 +8,6 @@ public static class OpenApiResponseHelpers
 {
     extension(IOpenApiResponse? response)
     {
-        private static OpenApiMediaType EnsureMediaType(IOpenApiMediaType mediaType)
-        {
-            return mediaType as OpenApiMediaType ?? new OpenApiMediaType();
-        }
-
         public IOpenApiResponse UpsertContentSchema(
             string contentType,
             OpenApiSchema schema,
@@ -26,11 +21,11 @@ public static class OpenApiResponseHelpers
             {
                 response = new OpenApiResponse()
                 {
-                    Content = new Dictionary<string, IOpenApiMediaType>(StringComparer.OrdinalIgnoreCase)
+                    Content = new Dictionary<string, OpenApiMediaType>(StringComparer.OrdinalIgnoreCase)
                     {
                         {
                             contentType,
-                            new OpenApiMediaType()
+                            new()
                             {
                                  Schema = schema,
                                  Example = withExample ? example : null,
@@ -47,7 +42,7 @@ public static class OpenApiResponseHelpers
 
             if (response.Content.ContainsKey(contentType))
             {
-                OpenApiMediaType content = EnsureMediaType(response.Content[contentType]);
+                OpenApiMediaType content = response.Content[contentType];
                 content.Schema = schema;
                 content.Example = withExample ? example : null;
                 response.Content[contentType] = content;

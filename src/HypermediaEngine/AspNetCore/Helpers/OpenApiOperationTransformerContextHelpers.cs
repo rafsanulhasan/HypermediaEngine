@@ -170,11 +170,11 @@ public static class OpenApiOperationTransformerContextHelpers
                 {
                     [statusCodeStr] = new OpenApiResponse()
                     {
-                        Content = new Dictionary<string, IOpenApiMediaType>(StringComparer.OrdinalIgnoreCase)
+                        Content = new Dictionary<string, OpenApiMediaType>(StringComparer.OrdinalIgnoreCase)
                         {
                             {
                                 contentType,
-                                new OpenApiMediaType()
+                                new()
                                 {
                                     Schema = responseSchema,
                                     Example = example,
