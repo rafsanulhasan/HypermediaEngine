@@ -1,4 +1,3 @@
-#!/usr/bin/env pwsh
 # enforce-tests.ps1
 # Hook: Stop — blocks the agent from finishing if tests have not passed.
 # Called from .github/hooks/enforce-tests.json (PostToolUse / Stop event).

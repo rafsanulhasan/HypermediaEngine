@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "pwsh -File .claude/hooks/enforce-tests.ps1"
+            "command": "pwsh -ExecutionPolicy Bypass -File .claude/hooks/enforce-tests.ps1"
           }
         ]
       }

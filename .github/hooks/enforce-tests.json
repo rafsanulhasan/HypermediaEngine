@@ -3,8 +3,8 @@
     "Stop": [
       {
         "type": "command",
-        "command": "pwsh -File .github/hooks/enforce-tests.ps1",
-        "windows": "powershell -File .github\\hooks\\enforce-tests.ps1",
+        "command": "pwsh -ExecutionPolicy Bypass -File .github/hooks/enforce-tests.ps1",
+        "windows": "powershell -ExecutionPolicy Bypass -File .github\\hooks\\enforce-tests.ps1",
         "timeout": 120
       }
     ]
