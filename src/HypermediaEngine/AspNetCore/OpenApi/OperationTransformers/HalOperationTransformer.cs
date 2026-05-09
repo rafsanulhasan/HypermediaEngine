@@ -95,9 +95,9 @@ internal class HalOperationTransformer(Type type, bool isList, bool withExample)
             {
                 [statusCodeStr] = new OpenApiResponse()
                 {
-                    Content = new Dictionary<string, OpenApiMediaType>(StringComparer.OrdinalIgnoreCase)
+                        Content = new Dictionary<string, IOpenApiMediaType>(StringComparer.OrdinalIgnoreCase)
                     {
-                        [MediaType] = new()
+                        [MediaType] = new OpenApiMediaType()
                         {
                             Schema = responseSchema,
                             Example = example,

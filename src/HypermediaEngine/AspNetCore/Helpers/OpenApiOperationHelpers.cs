@@ -46,7 +46,7 @@ internal static class OpenApiOperationHelpers
             return operation.Responses is { Count: > 0 }
                 && operation.Responses.TryGetValue("200", out IOpenApiResponse? response)
                 && response is { Content.Count: > 0 }
-                && response.Content.TryGetValue(HalMediaTypeNames.Application.HalJson, out OpenApiMediaType? mediaType)
+                && response.Content.TryGetValue(HalMediaTypeNames.Application.HalJson, out IOpenApiMediaType? mediaType)
                 && mediaType is { Schema: not null };
         }
 
@@ -58,7 +58,7 @@ internal static class OpenApiOperationHelpers
             return operation.Responses is { Count: > 0 }
                 && operation.Responses.TryGetValue("200", out IOpenApiResponse? response)
                 && response is { Content.Count: > 0 }
-                && response.Content.TryGetValue(contentType, out OpenApiMediaType? mediaType)
+                && response.Content.TryGetValue(contentType, out IOpenApiMediaType? mediaType)
                 && mediaType is not null;
         }
     }
