@@ -99,9 +99,17 @@ public sealed class ProducesHalResponseAttribute<T, TResponse>
         using IResponseHandler objectResponseHandler = sp.GetRequiredKeyedService<SimpleObjectResponseHandler>(ObjectResponseHandlers.ObjectResponseHandler);
         responseHandler = responseHandler switch
         {
-            CollectionResponseHandler<T> collectionResponseHandler => collectionResponseHandler
+            MartenQueryableResponseHandler<T> collectionResponseHandler => collectionResponseHandler
                                                                         .WithEndpointInvocationFilterContext(context)
-                                                                        .WithNextHandler(tObjectResponseHandler),
+                                                                        .WithHttpContext(context.HttpContext),
+
+            QueryableResponseHandler<T> collectionResponseHandler => collectionResponseHandler
+                                                                        .WithEndpointInvocationFilterContext(context)
+                                                                        .WithHttpContext(context.HttpContext),
+
+            EnumerableCollectionResponseHandler<T> collectionResponseHandler => collectionResponseHandler
+                                                                        .WithEndpointInvocationFilterContext(context)
+                                                                        .WithHttpContext(context.HttpContext),
             TResponseHandler<T> tResponseHandler => tResponseHandler
                                                         .WithEndpointInvocationFilterContext(context)
                                                         .WithNextHandler(objectResponseHandler),

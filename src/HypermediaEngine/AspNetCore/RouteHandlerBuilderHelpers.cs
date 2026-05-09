@@ -152,6 +152,7 @@ public static class RouteHandlerBuilderHelpers
             });
             return builder;
         }
+        
         public RouteHandlerBuilder WithFilterAndSortingParams()
         {
             builder.AddOpenApiOperationTransformer(async (operation, ctx, ct) =>
@@ -161,7 +162,7 @@ public static class RouteHandlerBuilderHelpers
                         .ConfigureAwait(false);
                 operation.RequestBody = new OpenApiRequestBody()
                 {
-                    Content = new Dictionary<string, OpenApiMediaType>(StringComparer.Ordinal)
+                    Content = new Dictionary<string, IOpenApiMediaType>(StringComparer.Ordinal)
                     {
                         [MediaTypeNames.Application.Json] = new OpenApiMediaType()
                         {

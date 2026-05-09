@@ -75,7 +75,19 @@ public sealed class ProducesHalAttribute<T>
         using IResponseHandler objectResponseHandler = sp.GetRequiredService<IResponseHandler>();
         object? response = responseHandler switch
         {
-            CollectionResponseHandler<T> collectionResponseHandler => await collectionResponseHandler
+            MartenQueryableResponseHandler<T> collectionResponseHandler => await collectionResponseHandler
+                                                                            .WithEndpointInvocationFilterContext(context)
+                                                                            .WithHttpContext(http)
+                                                                            .HandleResponseAsync(result)
+                                                                            .ConfigureAwait(false),
+
+            QueryableResponseHandler<T> collectionResponseHandler => await collectionResponseHandler
+                                                                            .WithEndpointInvocationFilterContext(context)
+                                                                            .WithHttpContext(http)
+                                                                            .HandleResponseAsync(result)
+                                                                            .ConfigureAwait(false),
+
+            EnumerableCollectionResponseHandler<T> collectionResponseHandler => await collectionResponseHandler
                                                                             .WithEndpointInvocationFilterContext(context)
                                                                             .WithHttpContext(http)
                                                                             .HandleResponseAsync(result)
