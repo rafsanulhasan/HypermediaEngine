@@ -5,7 +5,8 @@ using HypermediaEngine.Abstractions;
 namespace HypermediaEngine.Responses.Handlers;
 
 #pragma warning disable MA0048 // File name must match type name
-internal sealed class CollectionETagMetadataHandler<T> : AbstractCollectionMetadataHandler<T>
+internal sealed class CollectionETagMetadataHandler<T>(IHypermediaCollectionBuilder<T> builder)
+    : AbstractCollectionMetadataHandler<T>(builder)
     where T : notnull
 {
     public override IHypermediaCollectionBuilder<T> Handle(IEnumerable<T> result, ListResponseMetadata? metadata = null)

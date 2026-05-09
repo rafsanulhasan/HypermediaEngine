@@ -131,12 +131,12 @@ internal sealed class CollectionPageEndpointLinkHandler<T>(
                 SelfLink = link;
                 Builder = Builder!.WithSelfLink(link);
             });
-        if (string.IsNullOrEmpty(Metadata!.Cursor)
+        if (string.IsNullOrEmpty(Metadata!.ServedCursor)
          || SelfLink is null or { Relationship: null })
         {
             return Builder!;
         }
-        string nextCursor = Metadata.Cursor;
+        string nextCursor = Metadata.ServedCursor;
         string nextLink = selfUri.ToString().RemoveParameters("cursor", "limit");
         nextLink = QueryHelpers.AddQueryString(
             nextLink,
@@ -149,7 +149,7 @@ internal sealed class CollectionPageEndpointLinkHandler<T>(
         {
             Href = nextLink,
             Relationship = LinkRelations.Next,
-            Title = "Next Link"
+            Title = "Next Link",
         });
 
         return Builder!;
