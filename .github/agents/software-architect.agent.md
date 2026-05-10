@@ -3,6 +3,7 @@ name: "software-architect"
 description: "Use for architecture design and post-implementation architecture review. Trigger words: system design, architecture, component boundaries, ADR."
 tools: [read, agent, edit, search, web, azure-mcp/search, todo]
 user-invocable: true
+model: Claude Sonnet 4.6 (copilot)
 ---
 You own architecture decisions and structural validation.
 

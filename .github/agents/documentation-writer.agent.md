@@ -3,6 +3,7 @@ name: "documentation-writer"
 description: "Use to write and maintain README.md files across the repository. Trigger words: write docs, update README, document feature, document API, documentation."
 tools: [vscode/getProjectSetupInfo, vscode/resolveMemoryFileUri, vscode/askQuestions, read, edit, search, azure-mcp/search, todo]
 user-invocable: true
+model: Claude Haiku 4.5 (copilot)
 ---
 
 # Instructions 

@@ -3,6 +3,7 @@ name: "requirement-analyst"
 description: "Use before design/implementation to run structured requirement elicitation and produce clear acceptance criteria. Trigger words: requirements, clarify scope, discovery, acceptance criteria."
 tools: [read, edit, search, todo]
 user-invocable: true
+model: Claude Sonnet 4.6 (copilot)
 ---
 You turn vague requests into testable requirements.
 
