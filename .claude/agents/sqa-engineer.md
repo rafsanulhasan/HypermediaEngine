@@ -51,6 +51,14 @@ Skill("write-tests")
 
 Trigger: once the test plan from `design-test-cases` is confirmed. Implements the planned test cases as compilable, runnable xUnit tests following project conventions.
 
+### `csharp-unit-testing` — invoke when writing C# unit tests
+
+```
+Skill("csharp-unit-testing")
+```
+
+Trigger: whenever writing C# unit tests. This skill provides comprehensive guidance on TUnit, TUnit.Mocks, Bogus, TUnit.Assertions.Should, and Assert.Multiple() patterns, and the project's `{ data, error }` return shape convention. Use this for test framework, mocking, test data generation, and assertion patterns.
+
 ### `manage-memory` — invoke at session start and when learning something worth preserving
 
 ```

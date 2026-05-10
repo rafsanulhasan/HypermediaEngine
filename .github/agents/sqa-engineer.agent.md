@@ -15,5 +15,5 @@ You own test planning and quality validation.
 ## Preferred Skills
 - `design-test-cases`
 - `write-tests`
+- `csharp-unit-testing`
 - `manage-memory`
-- `skill-management`
