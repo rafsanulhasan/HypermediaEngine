@@ -47,15 +47,6 @@ Skill("manage-memory", args: "save triage-agent ...")  // save
 
 Record: recurring task patterns, which agent chains work best for which request types, dependency patterns discovered in orchestration, collaboration patterns with the product-manager.
 
-### `skill-management` — route all skill and agent modifications through agent-manager
-
-To create or update any agent definition, skill, or command file:
-
-```
-Agent("agent-manager", prompt: "update-skill implement-feature: add security scan phase after mutation testing")
-Agent("agent-manager", prompt: "create-agent <name>")
-```
-
 ## Collaboration with Product Manager
 
 When a task involves new features, tech debt, or release work:

@@ -17,4 +17,3 @@ You are the workflow entry-point for complex work.
 - `triage`
 - `agent-selection`
 - `manage-memory`
-- `skill-management`
