@@ -179,6 +179,205 @@ public sealed class TodoApiTests : IntegrationTestsBase
 
 **Why Testcontainers:** Mocks lie about what the database accepts; integration tests with the real engine catch broken migrations, missing indexes, dialect-specific SQL, contract violations between services, and serialization mismatches that mocks cannot see.
 
+### Lifecycle Hooks: `[Before]` and `[After]`
+
+TUnit's `[Before(scope)]` and `[After(scope)]` hooks replace NUnit's `[SetUp]`/`[TearDown]` family. They are method attributes — async-first, no naming convention required.
+
+| Attribute | Scope | Runs | NUnit equivalent |
+|---|---|---|---|
+| `[Before(Test)]` | Per test | Before each test method | `[SetUp]` |
+| `[After(Test)]` | Per test | After each test method | `[TearDown]` |
+| `[Before(Class)]` | Per class | Once before all tests in the class | `[OneTimeSetUp]` |
+| `[After(Class)]` | Per class | Once after all tests in the class | `[OneTimeTearDown]` |
+| `[Before(Assembly)]` | Per assembly | Once for the whole assembly (static only) | `[SetUpFixture]` |
+| `[After(Assembly)]` | Per assembly | Once for the whole assembly (static only) | `[SetUpFixture]` teardown |
+
+**Pattern 1: Create and dispose a `TestWebApplicationFactory` at class scope**
+
+```csharp
+public sealed class TodoApiTests
+{
+    private HypermediaTestFactory _factory = null!;
+
+    [Before(Class)]
+    public async Task CreateFactory()
+    {
+        _factory = new HypermediaTestFactory();
+        await _factory.InitializeAsync();
+    }
+
+    [After(Class)]
+    public async Task DisposeFactory()
+    {
+        await _factory.DisposeAsync();
+    }
+}
+```
+
+**Pattern 2: Create and dispose a test container at class scope**
+
+```csharp
+public sealed class TodoRepositoryTests
+{
+    private PostgreSqlContainer _postgres = null!;
+
+    [Before(Class)]
+    public async Task StartPostgres()
+    {
+        _postgres = new PostgreSqlBuilder()
+            .WithImage("postgres:16-alpine")
+            .WithDatabase("hypermedia_test")
+            .Build();
+        await _postgres.StartAsync();
+    }
+
+    [After(Class)]
+    public async Task StopPostgres()
+    {
+        await _postgres.StopAsync();
+        await _postgres.DisposeAsync();
+    }
+}
+```
+
+**Pattern 3: Inject resolved services in `[Before(Test)]`**
+
+After the factory and container are live at class scope, use `[Before(Test)]` to resolve per-test dependencies from the factory's DI container and create a fresh HTTP client per test:
+
+```csharp
+public sealed class TodoApiTests
+{
+    private HypermediaTestFactory _factory = null!;
+    private HttpClient _client = null!;
+    private ITodoRepository _repository = null!;
+    private string _schema = null!;
+
+    [Before(Class)]
+    public async Task CreateFactory()
+    {
+        _factory = new HypermediaTestFactory();
+        await _factory.InitializeAsync();
+    }
+
+    [Before(Test)]
+    public async Task SetupTest()
+    {
+        // Fresh client per test — prevents cookie/header state leaking between tests
+        _client = _factory.CreateClient();
+
+        // Resolve services from the factory's DI container
+        _repository = _factory.Services.GetRequiredService<ITodoRepository>();
+
+        // Per-test isolation: each test owns its own schema
+        _schema = $"test_{TestContext.Current!.TestDetails.TestId:N}"[..16];
+        await _factory.Postgres.CreateSchemaAsync(_schema);
+    }
+
+    [After(Test)]
+    public async Task CleanupTest()
+    {
+        _client.Dispose();
+        await _factory.Postgres.DropSchemaAsync(_schema);
+    }
+
+    [After(Class)]
+    public async Task DisposeFactory()
+    {
+        await _factory.DisposeAsync();
+    }
+}
+```
+
+**Pattern 4: Full explicit stack — container + factory + per-test injection**
+
+Use when you own the full lifecycle and are not inheriting from `WebApplicationTest<T>`:
+
+```csharp
+public sealed class CreateTodoEndpointTests
+{
+    private PostgreSqlContainer _postgres = null!;
+    private HypermediaTestFactory _factory = null!;
+    private HttpClient _client = null!;
+    private string _schema = null!;
+
+    [Before(Class)]
+    public async Task StartInfrastructure()
+    {
+        // Container first
+        _postgres = new PostgreSqlBuilder()
+            .WithImage("postgres:16-alpine")
+            .WithDatabase("hypermedia_test")
+            .Build();
+        await _postgres.StartAsync();
+
+        // Factory second — wires the container's connection string in
+        _factory = new HypermediaTestFactory(_postgres.GetConnectionString());
+        await _factory.InitializeAsync();
+    }
+
+    [Before(Test)]
+    public async Task SetupTest()
+    {
+        // Per-test: isolated schema + fresh client + resolved services
+        _schema = $"test_{Guid.NewGuid():N}"[..16];
+        await _postgres.CreateSchemaAsync(_schema);
+        _client = _factory.CreateClient();
+    }
+
+    [After(Test)]
+    public async Task TeardownTest()
+    {
+        _client.Dispose();
+        await _postgres.DropSchemaAsync(_schema);
+    }
+
+    [After(Class)]
+    public async Task StopInfrastructure()
+    {
+        // Dispose in reverse order: factory first, container second
+        await _factory.DisposeAsync();
+        await _postgres.StopAsync();
+        await _postgres.DisposeAsync();
+    }
+}
+```
+
+**Pattern 5: Assembly-wide shared resources (static hooks)**
+
+Assembly hooks must be `static` methods in a `static class`. Use them only for truly global resources that every test class in the assembly shares:
+
+```csharp
+public static class TestAssemblyHooks
+{
+    public static INetwork SharedNetwork { get; private set; } = null!;
+
+    [Before(Assembly)]
+    public static async Task CreateSharedNetwork()
+    {
+        SharedNetwork = await new NetworkBuilder()
+            .WithName($"hypermedia-test-{Guid.NewGuid():N}")
+            .CreateAsync();
+    }
+
+    [After(Assembly)]
+    public static async Task DestroySharedNetwork()
+    {
+        await SharedNetwork.DisposeAsync();
+    }
+}
+```
+
+**When to use `[Before/After]` vs. `[ClassDataSource]`**
+
+| Scenario | Prefer |
+|---|---|
+| Session-shared infrastructure (one container for all classes) | `[ClassDataSource<T>(Shared = SharedType.PerTestSession)]` |
+| Class-owned infrastructure (container per test class) | `[Before(Class)]` / `[After(Class)]` |
+| Per-test setup (client, schema, resolved services) | `[Before(Test)]` / `[After(Test)]` |
+| Assembly-wide global resources | `[Before(Assembly)]` / `[After(Assembly)]` (static) |
+
+**Disposal order rule:** always dispose in reverse construction order — if you created factory after container, dispose factory before container.
+
 ### Aspire-Hosted Stacks
 
 If the system under test is composed via .NET Aspire, prefer `TUnit.Aspire`'s `AspireFixture<TAppHost>` — it builds the AppHost, boots every container, waits for health checks, and exposes typed HTTP clients for each resource.
