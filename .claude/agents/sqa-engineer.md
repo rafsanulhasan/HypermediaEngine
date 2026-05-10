@@ -67,6 +67,14 @@ Skill("csharp-integration-testing")
 
 Trigger: whenever writing C# integration tests. This skill provides comprehensive guidance on TUnit's `TestWebApplicationFactory<TEntryPoint>`, Testcontainers (PostgreSQL, Redis, Kafka, etc.), `AspireFixture<TAppHost>`, Bogus, and TUnit.Assertions.Should — with no mocks, real infrastructure, `SharedType.PerTestSession` containers, and per-test state isolation via `GetIsolatedName()` / `GetIsolatedPrefix()`. Use this whenever a test exercises the HTTP pipeline, the database, message brokers, or any other real dependency. If a test would still pass with the database swapped for an in-memory dictionary, use `csharp-unit-testing` instead.
 
+### `csharp-architecture-testing` — invoke when writing C# architecture tests
+
+```
+Skill("csharp-architecture-testing")
+```
+
+Trigger: whenever writing tests that enforce structural rules — layer isolation, namespace conventions, naming patterns, or interface contracts. This skill provides guidance on NetArchTest.Rules, loading assemblies, building fluent rule chains, and asserting results with TUnit.Assertions.Should. Use this when a test does not execute behavior but instead validates that the codebase structure adheres to architectural constraints.
+
 ### `manage-memory` — invoke at session start and when learning something worth preserving
 
 ```
