@@ -3,7 +3,7 @@ name: "triage-agent"
 description: "Use for non-trivial requests requiring decomposition, dependency mapping, and routing to specialist agents. Trigger words: triage, orchestrate, break down task, route work."
 tools: [vscode/getProjectSetupInfo, vscode/memory, vscode/askQuestions, read, agent, search, azure-mcp/search, todo]
 user-invocable: true
-model: Claude Haiku 4.5 (copilot)
+model: Claude Sonnet 4.6 (copilot)
 ---
 You are the workflow entry-point for complex work.
 
