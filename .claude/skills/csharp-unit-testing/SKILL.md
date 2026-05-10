@@ -3,7 +3,7 @@ name: csharp-unit-testing
 description: Comprehensive guidance for writing C# unit tests using TUnit, TUnit.Mocks, Bogus, and TUnit.Assertions.Should with project conventions
 ---
 
-# charp-unit-testing
+# csharp-unit-testing
 
 This skill encodes best practices for writing C# unit tests in the HypermediaEngine project. It guides test implementation using a standardized stack: **TUnit** for the test framework, **TUnit.Mocks** for mocking, **Bogus** for test data generation, and **TUnit.Assertions.Should** for powerful assertions. It also reinforces project conventions like the `{ data, error }` return shape and Assert.Multiple() failure collection.
 
@@ -38,33 +38,20 @@ TUnit is the project's testing framework. Use it for:
 TUnit.Mocks handles mock creation and behavior configuration. Always use it when a unit test needs to isolate the system under test (SUT) from its dependencies.
 
 **Pattern 1: Create a mock**
-```csharp
-// Call .Mock() on the interface — the result IS the interface, no .Object needed
-IRequestValidator mockValidator = IRequestValidator.Mock();
-```
+
+[`templates/mock-create.md`](templates/mock-create.md)
 
 **Pattern 2: Configure return behavior**
-```csharp
-// Call the method with Any() for wildcard matching, then chain .Returns()
-mockValidator.ValidateAsync(Any()).Returns(new ValidationResult { IsValid = true });
 
-// Exact argument matching
-mockValidator.GetUser(42).Returns(alice);
-```
+[`templates/mock-configure.md`](templates/mock-configure.md)
 
 **Pattern 3: Verify invocation**
-```csharp
-// Call the method with the expected argument(s), then chain .WasCalled()
-mockValidator.ValidateAsync(Any()).WasCalled(Times.Once);
-mockValidator.GetUser(42).WasCalled();
-```
+
+[`templates/mock-verify.md`](templates/mock-verify.md)
 
 **Pattern 4: Argument matching**
-```csharp
-Any()               // matches any value (like It.IsAny<T>())
-42                  // exact value match
-id => id > 0        // inline lambda predicate
-```
+
+[`templates/mock-argument-matching.md`](templates/mock-argument-matching.md)
 
 **Why TUnit.Mocks:** Zero ceremony — the mock IS the interface. Setup and verification are expressed as plain method calls, not lambda expressions.
 
@@ -73,19 +60,12 @@ id => id > 0        // inline lambda predicate
 Bogus generates realistic test data. Always use it instead of hardcoded test data, especially for complex objects.
 
 **Pattern 1: Create a Faker instance**
-```csharp
-Faker<User> userFaker = new()
-    .RuleFor(u => u.Id, f => f.Random.Guid())
-    .RuleFor(u => u.Email, f => f.Internet.Email())
-    .RuleFor(u => u.Name, f => f.Name.FullName());
 
-User testUser = userFaker.Generate();
-```
+[`templates/bogus-test-data.md`](templates/bogus-test-data.md)
 
 **Pattern 2: Generate multiple instances**
-```csharp
-List<User> users = userFaker.Generate(5);
-```
+
+[`templates/bogus-generate-multiple.md`](templates/bogus-generate-multiple.md)
 
 **Why Bogus:** Produces realistic, varied test data; reduces brittleness from hardcoded values; makes tests easier to read and maintain.
 
@@ -94,18 +74,12 @@ List<User> users = userFaker.Generate(5);
 TUnit.Assertions.Should provides readable, fluent assertions. Always use it instead of basic `Assert` statements.
 
 **Pattern 1: Simple assertions**
-```csharp
-await result.Should().NotBeNull();
-await result.Id.Should().BeEqualTo(expectedId);
-await result.Name.Should().StartWith("Test");
-```
+
+[`templates/assert-simple.md`](templates/assert-simple.md)
 
 **Pattern 2: Collection assertions**
-```csharp
-await result.Items.Should().HaveCount(3);
-await result.Items.Should().Any(x => x.Status == "Active");
-await result.Items.Should().All(x => x.CreatedAt <= DateTime.UtcNow);
-```
+
+[`templates/assert-collection.md`](templates/assert-collection.md)
 
 Note: `.Any(predicate)` and `.All(predicate)` are hand-written in TUnit.Assertions.Should and take a plain `Func<TItem, bool>` — not nested `.Should()` chains.
 
@@ -114,45 +88,25 @@ Note: `.Any(predicate)` and `.All(predicate)` are hand-written in TUnit.Assertio
 When asserting that a method call throws an exception, assign the call to a lambda and assert on it. This merges Act and Assert into one focused block.
 
 **Async exception:**
-```csharp
-// Arrange
-GetUserHandler handler = new(mockRepo);
-GetUserRequest request = new() { Id = Guid.Empty };
 
-// Act + Assert
-Func<Task> act = async () => await handler.HandleAsync(request);
-await act.Should().Throw<ArgumentException>();
-```
+[`templates/assert-async-exception.md`](templates/assert-async-exception.md)
 
 **Sync exception:**
-```csharp
-// Arrange
-RequestValidator validator = new();
-HttpRequest invalidInput = new Faker<HttpRequest>().Generate();
 
-// Act + Assert
-Action act = () => validator.Validate(invalidInput);
-await act.Should().Throw<ValidationException>();
-```
+[`templates/assert-sync-exception.md`](templates/assert-sync-exception.md)
 
 **Critical rule:** Always use TUnit.Assertions.Should's `.Should().Throw<>()` — this works for both `Action` (sync) and `Func<Task>` (async) delegates. Never use `.ThrowAsync<>()` (it does not exist in TUnit.Assertions.Should) and never use try/catch.
 
 **Note:** To assert exception messages, use `Assert.That()` — TUnit.Assertions.Should does not expose `.WithMessage()` on exception assertions.
 
 **Pattern 4: And/Or chaining**
-```csharp
-await value
-    .Should().BeEqualTo(5)
-    .And.NotBeEqualTo(7)
-    .And.BeBetween(1, 10);
 
-await statusCode
-    .Should().BeEqualTo(200)
-    .Or.BeEqualTo(201);
-```
+[`templates/assert-chaining.md`](templates/assert-chaining.md)
+
 Note: Do not mix `.And` and `.Or` in the same chain — TUnit will throw `MixedAndOrAssertionsException`.
 
 **Pattern 5: Justification**
+
 ```csharp
 await score.Should().BeGreaterThan(70).Because("passing grade is required");
 ```
@@ -163,17 +117,7 @@ await score.Should().BeGreaterThan(70).Because("passing grade is required");
 
 Always wrap multiple assertions in `Assert.Multiple()` to collect all failures before reporting. This is critical for debugging — you see all problems at once instead of fixing them one-by-one.
 
-**Pattern: Use Assert.Multiple()**
-```csharp
-using (Assert.Multiple())
-{
-    await result.Data.Should().NotBeNull();
-    await result.Error.Should().BeNull();
-    await result.Data!.Id.Should().BeEqualTo(expectedId);
-    await result.Data!.Name.Should().BeEqualTo(expectedName);
-    await result.Data!.CreatedAt.Should().BeLessThanOrEqualTo(DateTime.UtcNow);
-}
-```
+[`templates/assert-multiple.md`](templates/assert-multiple.md)
 
 If any assertion fails, the block collects all failures and reports them together. This saves debugging time.
 
@@ -186,54 +130,15 @@ All HypermediaEngine API responses use a consistent shape:
 public record ApiResponse<T>(T? Data, string? Error);
 ```
 
-**Pattern: Assert both fields**
-```csharp
-// Success case
-ApiResponse<UserDto> response = await handler.HandleAsync(validRequest);
-using (Assert.Multiple())
-{
-    await response.Data.Should().NotBeNull();
-    await response.Error.Should().BeNull();
-    await response.Data!.Id.Should().BeEqualTo(expectedId);
-}
+Always assert BOTH `Data` and `Error` fields. Never verify only one side. This ensures the response shape is correct.
 
-// Error case
-ApiResponse<UserDto> errorResponse = await handler.HandleAsync(invalidRequest);
-using (Assert.Multiple())
-{
-    await errorResponse.Data.Should().BeNull();
-    await errorResponse.Error.Should().NotBeNullOrEmpty();
-    await errorResponse.Error.Should().Contain("validation failed");
-}
-```
-
-**Important:** Always assert BOTH `Data` and `Error` fields. Never verify only one side. This ensures the response shape is correct.
+[`templates/data-error-shape.md`](templates/data-error-shape.md)
 
 ### Test Naming Convention
 
-Use descriptive test names that explain the scenario and expected outcome:
+Use descriptive test names that explain the scenario and expected outcome using the `Method_Scenario_Outcome` shape:
 
-```csharp
-[Test]
-public async Task ValidateAsync_WithValidRequest_ReturnsSuccessResponse()
-{
-    // Arrange
-    RequestValidator validator = new();
-    HttpRequest validRequest = new Faker<HttpRequest>()
-        .RuleFor(r => r.Method, "GET")
-        .Generate();
-
-    // Act
-    ApiResponse<ValidationResult> result = await validator.ValidateAsync(validRequest);
-
-    // Assert
-    using (Assert.Multiple())
-    {
-        await result.Data.Should().NotBeNull();
-        await result.Error.Should().BeNull();
-    }
-}
-```
+[`templates/test-naming.md`](templates/test-naming.md)
 
 ### Test Structure: Arrange, Act, Assert (AAA)
 
@@ -245,35 +150,7 @@ Every test follows the **Arrange, Act, Assert** pattern to keep test logic clear
 
 **Assert** — Verify that the result matches expectations using TUnit.Assertions.Should. Use `Assert.Multiple()` to collect all failures at once.
 
-**Example:**
-
-```csharp
-[Test]
-public async Task HandleAsync_WithValidRequest_ReturnsData()
-{
-    // Arrange
-    IUserRepository mockRepo = IUserRepository.Mock();
-    User expectedUser = new Faker<User>()
-        .RuleFor(u => u.Id, f => f.Random.Guid())
-        .RuleFor(u => u.Name, f => f.Name.FullName())
-        .Generate();
-    mockRepo.GetByIdAsync(expectedUser.Id).Returns(expectedUser);
-
-    GetUserHandler handler = new(mockRepo);
-
-    // Act
-    ApiResponse<UserDto> response = await handler.HandleAsync(new GetUserRequest { Id = expectedUser.Id });
-
-    // Assert
-    using (Assert.Multiple())
-    {
-        await response.Data.Should().NotBeNull();
-        await response.Error.Should().BeNull();
-        await response.Data!.Id.Should().BeEqualTo(expectedUser.Id);
-        await response.Data!.Name.Should().BeEqualTo(expectedUser.Name);
-    }
-}
-```
+[`templates/test-structure.md`](templates/test-structure.md)
 
 **Critical rule: one Act per test.** If a test needs to call the SUT more than once, split it into separate tests. Each test should verify a single behavior path.
 
@@ -283,71 +160,7 @@ public async Task HandleAsync_WithValidRequest_ReturnsData()
 
 Here is a complete example testing a middleware component using all conventions together:
 
-```csharp
-namespace HypermediaEngine.Tests;
-
-[TestClass]
-public class RequestValidationMiddlewareTests
-{
-    [Test]
-    public async Task InvokeAsync_WithValidRequest_CallsNext()
-    {
-        // Arrange
-        IRequestValidator mockValidator = IRequestValidator.Mock();
-        mockValidator.ValidateAsync(Any()).Returns(new ValidationResult { IsValid = true });
-
-        RequestDelegate mockNext = RequestDelegate.Mock();
-        RequestValidationMiddleware middleware = new(mockNext, mockValidator);
-
-        Faker<HttpRequest> requestFaker = new()
-            .RuleFor(r => r.Method, "POST")
-            .RuleFor(r => r.Path, "/api/users");
-
-        HttpRequest request = requestFaker.Generate();
-        DefaultHttpContext httpContext = new();
-        httpContext.Request.CopyFrom(request);
-
-        // Act
-        await middleware.InvokeAsync(httpContext);
-
-        // Assert
-        using (Assert.Multiple())
-        {
-            mockValidator.ValidateAsync(Any()).WasCalled(Times.Once);
-            mockNext.Invoke(Any<HttpContext>()).WasCalled(Times.Once);
-        }
-    }
-
-    [Test]
-    public async Task InvokeAsync_WithInvalidRequest_ReturnsErrorResponse()
-    {
-        // Arrange
-        IRequestValidator mockValidator = IRequestValidator.Mock();
-        mockValidator.ValidateAsync(Any()).Returns(new ValidationResult { IsValid = false, Error = "Missing required header" });
-
-        RequestDelegate mockNext = RequestDelegate.Mock();
-        RequestValidationMiddleware middleware = new(mockNext, mockValidator);
-
-        HttpRequest request = new Faker<HttpRequest>()
-            .RuleFor(r => r.Method, "POST")
-            .Generate();
-
-        DefaultHttpContext httpContext = new();
-        httpContext.Request.CopyFrom(request);
-
-        // Act
-        await middleware.InvokeAsync(httpContext);
-
-        // Assert
-        using (Assert.Multiple())
-        {
-            mockValidator.ValidateAsync(Any()).WasCalled(Times.Once);
-            mockNext.Invoke(Any<HttpContext>()).WasCalled(Times.Never);
-            await httpContext.Response.StatusCode.Should().BeEqualTo(400);
-        }
-    }
-}
-```
+[`templates/middleware-unit-test.md`](templates/middleware-unit-test.md)
 
 ---
 
