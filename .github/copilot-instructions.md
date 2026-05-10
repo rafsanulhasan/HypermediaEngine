@@ -40,7 +40,7 @@ This file defines repository-specific operating rules for GitHub Copilot in Hype
 
 ### 1. Routing
 
-- For non-trivial requests, start with `Skill("triage")` before any specialist skill or agent.
+- For non-trivial requests, invoke `@triage-agent` before any specialist skill or agent.
 - Skip triage only for:
 	- simple factual questions
 	- follow-up work within an already triaged workflow

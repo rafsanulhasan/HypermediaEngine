@@ -34,8 +34,8 @@
 
 ### Routing
 
-- **All user prompts must be routed through the triage skill first** — invoke `Skill("triage")` before any specialist agent or skill, unless the user is asking a simple factual question or a follow-up within an already-triaged workflow.
-- The triage skill classifies the request, decomposes multi-step tasks, maps dependencies, and produces a confirmed execution plan before routing to specialist agents.
+- **All user prompts must be routed through the triage-agent first** — invoke `Agent("triage-agent", prompt: "...")` before any specialist agent or skill, unless the user is asking a simple factual question or a follow-up within an already-triaged workflow.
+- The triage-agent classifies the request, decomposes multi-step tasks, maps dependencies, and produces a confirmed execution plan before routing to specialist agents.
 - Do not skip triage to save time — incorrect routing wastes more time than triage costs.
 
 ### Memory
