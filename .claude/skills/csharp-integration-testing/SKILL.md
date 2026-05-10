@@ -48,41 +48,16 @@ Before writing any integration test, confirm it belongs in the integration suite
 Use `TUnit.AspNet`'s `TestWebApplicationFactory<TEntryPoint>` rather than the vanilla ASP.NET `WebApplicationFactory`. It gives you trace correlation, per-test logging, and `TestContext.Current` access for free.
 
 **Pattern 1: Define the factory once per project**
-```csharp
-public sealed class HypermediaTestFactory : TestWebApplicationFactory<Program>
-{
-    [ClassDataSource<PostgresFixture>(Shared = SharedType.PerTestSession)]
-    public required PostgresFixture Postgres { get; init; }
 
-    protected override void ConfigureWebHost(IWebHostBuilder builder)
-    {
-        builder.ConfigureAppConfiguration((_, config) =>
-        {
-            Dictionary<string, string?> overrides = new()
-            {
-                ["ConnectionStrings:Default"] = Postgres.ConnectionString,
-            };
-            config.AddInMemoryCollection(overrides);
-        });
-    }
-}
-```
+[`templates/factory-definition.md`](templates/factory-definition.md)
 
 **Pattern 2: Define a base class so every test inherits the factory**
-```csharp
-public abstract class IntegrationTestsBase : WebApplicationTest<HypermediaTestFactory, Program>
-{
-}
-```
+
+[`templates/base-class.md`](templates/base-class.md)
 
 **Pattern 3: Per-test service overrides (use sparingly)**
-```csharp
-protected override void ConfigureTestServices(IServiceCollection services)
-{
-    // Replace clock so deterministic assertions are possible
-    services.ReplaceService<IClock>(new FixedClock(DateTimeOffset.UnixEpoch));
-}
-```
+
+[`templates/configure-test-services.md`](templates/configure-test-services.md)
 
 **Why TestWebApplicationFactory:** It wires OpenTelemetry headers, captures HTTP exchanges, and routes server-side `ILogger` output to the originating test — without these, parallel test runs interleave logs and you cannot tell which test produced which line.
 
@@ -91,61 +66,18 @@ protected override void ConfigureTestServices(IServiceCollection services)
 Testcontainers spins up real Docker containers for the lifetime of the test session. **Never use mocks for the database, message broker, cache, or any other infrastructure** — that is the entire point of integration testing.
 
 **Pattern 1: Wrap a container as an `IAsyncInitializer` / `IAsyncDisposable` fixture**
-```csharp
-public sealed class PostgresFixture : IAsyncInitializer, IAsyncDisposable
-{
-    public PostgreSqlContainer Container { get; } = new PostgreSqlBuilder()
-        .WithImage("postgres:16-alpine")
-        .WithDatabase("hypermedia_test")
-        .Build();
 
-    public string ConnectionString => Container.GetConnectionString();
-
-    public async Task InitializeAsync() => await Container.StartAsync();
-
-    public async ValueTask DisposeAsync() => await Container.DisposeAsync();
-}
-```
+[`templates/postgres-fixture.md`](templates/postgres-fixture.md)
 
 **Pattern 2: Inject the fixture into the factory with `[ClassDataSource]`**
-```csharp
-[ClassDataSource<PostgresFixture>(Shared = SharedType.PerTestSession)]
-public required PostgresFixture Postgres { get; init; }
-```
+
+[`templates/classdatasource-injection.md`](templates/classdatasource-injection.md)
 
 `SharedType.PerTestSession` means the container starts once for the entire test run, not once per test class. Every test borrows the same instance.
 
 **Pattern 3: Multi-container topology with a shared Docker network**
-```csharp
-public sealed class DockerNetwork : IAsyncInitializer, IAsyncDisposable
-{
-    public INetwork Instance { get; } = new NetworkBuilder()
-        .WithName($"hypermedia-test-{Guid.NewGuid():N}")
-        .Build();
 
-    public async Task InitializeAsync() => await Instance.CreateAsync();
-
-    public async ValueTask DisposeAsync() => await Instance.DisposeAsync();
-}
-
-public sealed class KafkaFixture : IAsyncInitializer, IAsyncDisposable
-{
-    [ClassDataSource<DockerNetwork>(Shared = SharedType.PerTestSession)]
-    public required DockerNetwork Network { get; init; }
-
-    public KafkaContainer Container { get; private set; } = null!;
-
-    public async Task InitializeAsync()
-    {
-        Container = new KafkaBuilder()
-            .WithNetwork(Network.Instance)
-            .Build();
-        await Container.StartAsync();
-    }
-
-    public async ValueTask DisposeAsync() => await Container.DisposeAsync();
-}
-```
+[`templates/multi-container-topology.md`](templates/multi-container-topology.md)
 
 TUnit resolves the dependency chain (network → kafka → factory) automatically — initialization runs in dependency order, disposal in reverse.
 
@@ -153,27 +85,7 @@ TUnit resolves the dependency chain (network → kafka → factory) automaticall
 
 Because `SharedType.PerTestSession` reuses the same database across tests, parallel tests will collide unless each test owns its own slice of state. Use TUnit's `GetIsolatedName()` / `GetIsolatedPrefix()` helpers from `WebApplicationTest`:
 
-```csharp
-public sealed class TodoApiTests : IntegrationTestsBase
-{
-    private string _schemaName = null!;
-
-    protected override async Task SetupAsync()
-    {
-        _schemaName = GetIsolatedName("todos");      // e.g., "Test_42_todos"
-        await Postgres.CreateSchemaAsync(_schemaName);
-    }
-
-    protected override void ConfigureTestConfiguration(IConfigurationBuilder config)
-    {
-        Dictionary<string, string?> overrides = new()
-        {
-            ["Database:Schema"] = _schemaName,
-        };
-        config.AddInMemoryCollection(overrides);
-    }
-}
-```
+[`templates/per-test-schema-isolation.md`](templates/per-test-schema-isolation.md)
 
 **Golden rule:** if a resource is shared, every test must address its own slice of it (schema, table prefix, queue name, cache prefix, blob path). Otherwise parallel tests will flake.
 
@@ -194,178 +106,29 @@ TUnit's `[Before(scope)]` and `[After(scope)]` hooks replace NUnit's `[SetUp]`/`
 
 **Pattern 1: Create and dispose a `TestWebApplicationFactory` at class scope**
 
-```csharp
-public sealed class TodoApiTests
-{
-    private HypermediaTestFactory _factory = null!;
-
-    [Before(Class)]
-    public async Task CreateFactory()
-    {
-        _factory = new HypermediaTestFactory();
-        await _factory.InitializeAsync();
-    }
-
-    [After(Class)]
-    public async Task DisposeFactory()
-    {
-        await _factory.DisposeAsync();
-    }
-}
-```
+[`templates/before-after-factory.md`](templates/before-after-factory.md)
 
 **Pattern 2: Create and dispose a test container at class scope**
 
-```csharp
-public sealed class TodoRepositoryTests
-{
-    private PostgreSqlContainer _postgres = null!;
-
-    [Before(Class)]
-    public async Task StartPostgres()
-    {
-        _postgres = new PostgreSqlBuilder()
-            .WithImage("postgres:16-alpine")
-            .WithDatabase("hypermedia_test")
-            .Build();
-        await _postgres.StartAsync();
-    }
-
-    [After(Class)]
-    public async Task StopPostgres()
-    {
-        await _postgres.StopAsync();
-        await _postgres.DisposeAsync();
-    }
-}
-```
+[`templates/before-after-container.md`](templates/before-after-container.md)
 
 **Pattern 3: Inject resolved services in `[Before(Test)]`**
 
 After the factory and container are live at class scope, use `[Before(Test)]` to resolve per-test dependencies from the factory's DI container and create a fresh HTTP client per test:
 
-```csharp
-public sealed class TodoApiTests
-{
-    private HypermediaTestFactory _factory = null!;
-    private HttpClient _client = null!;
-    private ITodoRepository _repository = null!;
-    private string _schema = null!;
-
-    [Before(Class)]
-    public async Task CreateFactory()
-    {
-        _factory = new HypermediaTestFactory();
-        await _factory.InitializeAsync();
-    }
-
-    [Before(Test)]
-    public async Task SetupTest()
-    {
-        // Fresh client per test — prevents cookie/header state leaking between tests
-        _client = _factory.CreateClient();
-
-        // Resolve services from the factory's DI container
-        _repository = _factory.Services.GetRequiredService<ITodoRepository>();
-
-        // Per-test isolation: each test owns its own schema
-        _schema = $"test_{TestContext.Current!.TestDetails.TestId:N}"[..16];
-        await _factory.Postgres.CreateSchemaAsync(_schema);
-    }
-
-    [After(Test)]
-    public async Task CleanupTest()
-    {
-        _client.Dispose();
-        await _factory.Postgres.DropSchemaAsync(_schema);
-    }
-
-    [After(Class)]
-    public async Task DisposeFactory()
-    {
-        await _factory.DisposeAsync();
-    }
-}
-```
+[`templates/before-after-service-injection.md`](templates/before-after-service-injection.md)
 
 **Pattern 4: Full explicit stack — container + factory + per-test injection**
 
 Use when you own the full lifecycle and are not inheriting from `WebApplicationTest<T>`:
 
-```csharp
-public sealed class CreateTodoEndpointTests
-{
-    private PostgreSqlContainer _postgres = null!;
-    private HypermediaTestFactory _factory = null!;
-    private HttpClient _client = null!;
-    private string _schema = null!;
-
-    [Before(Class)]
-    public async Task StartInfrastructure()
-    {
-        // Container first
-        _postgres = new PostgreSqlBuilder()
-            .WithImage("postgres:16-alpine")
-            .WithDatabase("hypermedia_test")
-            .Build();
-        await _postgres.StartAsync();
-
-        // Factory second — wires the container's connection string in
-        _factory = new HypermediaTestFactory(_postgres.GetConnectionString());
-        await _factory.InitializeAsync();
-    }
-
-    [Before(Test)]
-    public async Task SetupTest()
-    {
-        // Per-test: isolated schema + fresh client + resolved services
-        _schema = $"test_{Guid.NewGuid():N}"[..16];
-        await _postgres.CreateSchemaAsync(_schema);
-        _client = _factory.CreateClient();
-    }
-
-    [After(Test)]
-    public async Task TeardownTest()
-    {
-        _client.Dispose();
-        await _postgres.DropSchemaAsync(_schema);
-    }
-
-    [After(Class)]
-    public async Task StopInfrastructure()
-    {
-        // Dispose in reverse order: factory first, container second
-        await _factory.DisposeAsync();
-        await _postgres.StopAsync();
-        await _postgres.DisposeAsync();
-    }
-}
-```
+[`templates/before-after-full-stack.md`](templates/before-after-full-stack.md)
 
 **Pattern 5: Assembly-wide shared resources (static hooks)**
 
 Assembly hooks must be `static` methods in a `static class`. Use them only for truly global resources that every test class in the assembly shares:
 
-```csharp
-public static class TestAssemblyHooks
-{
-    public static INetwork SharedNetwork { get; private set; } = null!;
-
-    [Before(Assembly)]
-    public static async Task CreateSharedNetwork()
-    {
-        SharedNetwork = await new NetworkBuilder()
-            .WithName($"hypermedia-test-{Guid.NewGuid():N}")
-            .CreateAsync();
-    }
-
-    [After(Assembly)]
-    public static async Task DestroySharedNetwork()
-    {
-        await SharedNetwork.DisposeAsync();
-    }
-}
-```
+[`templates/before-after-assembly.md`](templates/before-after-assembly.md)
 
 **When to use `[Before/After]` vs. `[ClassDataSource]`**
 
@@ -383,35 +146,12 @@ public static class TestAssemblyHooks
 If the system under test is composed via .NET Aspire, prefer `TUnit.Aspire`'s `AspireFixture<TAppHost>` — it builds the AppHost, boots every container, waits for health checks, and exposes typed HTTP clients for each resource.
 
 **Pattern: Direct fixture usage**
-```csharp
-[ClassDataSource<AspireFixture<Projects.HypermediaEngine_AppHost>>(Shared = SharedType.PerTestSession)]
-public sealed class WeatherApiTests(AspireFixture<Projects.HypermediaEngine_AppHost> fixture)
-{
-    [Test]
-    public async Task GetForecast_ReturnsOk()
-    {
-        HttpClient client = fixture.CreateHttpClient("apiservice");
-        HttpResponseMessage response = await client.GetAsync("/weatherforecast");
-        await response.StatusCode.Should().BeEqualTo(HttpStatusCode.OK);
-    }
-}
-```
+
+[`templates/aspire-fixture-direct.md`](templates/aspire-fixture-direct.md)
 
 **Pattern: Customise the fixture**
-```csharp
-public sealed class HypermediaAspireFixture : AspireFixture<Projects.HypermediaEngine_AppHost>
-{
-    protected override TimeSpan ResourceTimeout => TimeSpan.FromMinutes(3);
 
-    protected override IEnumerable<string> ResourcesToRemove() =>
-        ["pgadmin", "redisinsight", "seq"];
-
-    protected override void ConfigureBuilder(IDistributedApplicationTestingBuilder builder)
-    {
-        builder.Services.ConfigureHttpClientDefaults(c => c.AddStandardResilienceHandler());
-    }
-}
-```
+[`templates/aspire-fixture-custom.md`](templates/aspire-fixture-custom.md)
 
 **Why Aspire fixtures:** the AppHost already encodes the production topology — re-using it in tests removes drift between "what we test" and "what we ship".
 
@@ -419,13 +159,7 @@ public sealed class HypermediaAspireFixture : AspireFixture<Projects.HypermediaE
 
 Bogus still applies. Hardcoded seed data hides bugs and makes integration tests brittle.
 
-```csharp
-Faker<CreateTodoRequest> requestFaker = new Faker<CreateTodoRequest>()
-    .RuleFor(r => r.Title, f => f.Lorem.Sentence(3))
-    .RuleFor(r => r.DueDate, f => f.Date.FutureOffset());
-
-CreateTodoRequest request = requestFaker.Generate();
-```
+[`templates/bogus-test-data.md`](templates/bogus-test-data.md)
 
 When seeding the database directly, generate full aggregates with Bogus and persist them through the production repository — never via raw SQL. Round-tripping through the real persistence layer is part of what you are validating.
 
@@ -434,39 +168,22 @@ When seeding the database directly, generate full aggregates with Bogus and pers
 Same library, same patterns as unit tests. Quick reference for integration-flavoured cases:
 
 **Pattern 1: HTTP response assertions**
-```csharp
-await response.StatusCode.Should().BeEqualTo(HttpStatusCode.Created);
-await response.Headers.Location.Should().NotBeNull();
-```
+
+[`templates/assert-http-response.md`](templates/assert-http-response.md)
 
 **Pattern 2: Deserialised body**
-```csharp
-ApiResponse<TodoDto>? body = await response.Content.ReadFromJsonAsync<ApiResponse<TodoDto>>();
-using (Assert.Multiple())
-{
-    await body.Should().NotBeNull();
-    await body!.Data.Should().NotBeNull();
-    await body.Error.Should().BeNull();
-    await body.Data!.Title.Should().BeEqualTo(request.Title);
-}
-```
+
+[`templates/assert-deserialized-body.md`](templates/assert-deserialized-body.md)
 
 **Pattern 3: Side-effect verification**
 
 Integration tests check observable side effects — never internal state.
-```csharp
-await using NpgsqlConnection conn = new(Postgres.ConnectionString);
-await conn.OpenAsync();
-long count = await conn.ExecuteScalarAsync<long>(
-    "select count(*) from todos where id = @id", new { id = body.Data!.Id });
-await count.Should().BeEqualTo(1);
-```
+
+[`templates/assert-side-effects.md`](templates/assert-side-effects.md)
 
 **Pattern 4: Async exceptions** — same as unit tests
-```csharp
-Func<Task> act = async () => await client.GetAsync("/will-fail");
-await act.Should().Throw<HttpRequestException>();
-```
+
+[`templates/assert-async-exception.md`](templates/assert-async-exception.md)
 
 Use `.Should().Throw<>()` for both `Action` and `Func<Task>` — never `.ThrowAsync<>()`, never try/catch.
 
@@ -474,42 +191,19 @@ Use `.Should().Throw<>()` for both `Action` and `Func<Task>` — never `.ThrowAs
 
 Always wrap related assertions in `Assert.Multiple()`. In integration tests this matters even more — a single test exercises many layers, and you want to see *all* the things that broke at once instead of fixing them one by one across long container-startup cycles.
 
-```csharp
-using (Assert.Multiple())
-{
-    await response.StatusCode.Should().BeEqualTo(HttpStatusCode.OK);
-    await body.Data.Should().NotBeNull();
-    await body.Error.Should().BeNull();
-    await body.Data!.Items.Should().HaveCount(3);
-}
-```
+[`templates/assert-multiple.md`](templates/assert-multiple.md)
 
 ### The `{ data, error }` Return Shape
 
 Every API response — including those reached via the HTTP pipeline — must be asserted on both `Data` and `Error`. No exceptions for integration tests.
 
-```csharp
-ApiResponse<TodoDto>? body = await response.Content.ReadFromJsonAsync<ApiResponse<TodoDto>>();
-using (Assert.Multiple())
-{
-    await body.Should().NotBeNull();
-    await body!.Data.Should().BeNull();
-    await body.Error.Should().NotBeNullOrEmpty();
-    await body.Error.Should().Contain("validation failed");
-}
-```
+[`templates/data-error-shape.md`](templates/data-error-shape.md)
 
 ### Test Naming Convention
 
 Use the same `Method_Scenario_Outcome` shape as unit tests, but the "method" is usually the HTTP verb + route:
 
-```csharp
-[Test]
-public async Task PostTodos_WithValidPayload_PersistsAndReturnsCreated() { /* ... */ }
-
-[Test]
-public async Task GetTodos_WhenSchemaIsEmpty_ReturnsEmptyCollection() { /* ... */ }
-```
+[`templates/test-naming.md`](templates/test-naming.md)
 
 If the suite ties to a numbered AC, prefix the display name with the AC ID (`[AC-3] PostTodos_...`).
 
@@ -527,73 +221,7 @@ Same discipline as unit tests:
 
 ## Phase 3 — Complete Example: Endpoint Integration Test
 
-```csharp
-namespace HypermediaEngine.IntegrationTests;
-
-[TestClass]
-public sealed class CreateTodoEndpointTests : IntegrationTestsBase
-{
-    [Test]
-    public async Task PostTodos_WithValidPayload_PersistsAndReturnsCreated()
-    {
-        // Arrange
-        string schema = GetIsolatedName("todos");
-        await Factory.Postgres.CreateSchemaAsync(schema);
-
-        Faker<CreateTodoRequest> requestFaker = new Faker<CreateTodoRequest>()
-            .RuleFor(r => r.Title, f => f.Lorem.Sentence(3))
-            .RuleFor(r => r.DueDate, f => f.Date.FutureOffset());
-        CreateTodoRequest request = requestFaker.Generate();
-
-        HttpClient client = Factory.CreateClient();
-
-        // Act
-        HttpResponseMessage response = await client.PostAsJsonAsync("/api/todos", request);
-
-        // Assert
-        ApiResponse<TodoDto>? body = await response.Content.ReadFromJsonAsync<ApiResponse<TodoDto>>();
-        using (Assert.Multiple())
-        {
-            await response.StatusCode.Should().BeEqualTo(HttpStatusCode.Created);
-            await response.Headers.Location.Should().NotBeNull();
-            await body.Should().NotBeNull();
-            await body!.Data.Should().NotBeNull();
-            await body.Error.Should().BeNull();
-            await body.Data!.Title.Should().BeEqualTo(request.Title);
-        }
-
-        // Side-effect verification — the row really exists in Postgres
-        await using NpgsqlConnection conn = new(Factory.Postgres.ConnectionString);
-        await conn.OpenAsync();
-        long persistedCount = await conn.ExecuteScalarAsync<long>(
-            $"select count(*) from {schema}.todos where id = @id",
-            new { id = body!.Data!.Id });
-        await persistedCount.Should().BeEqualTo(1);
-    }
-
-    [Test]
-    public async Task PostTodos_WithEmptyTitle_ReturnsValidationError()
-    {
-        // Arrange
-        CreateTodoRequest request = new() { Title = string.Empty, DueDate = DateTimeOffset.UtcNow.AddDays(1) };
-        HttpClient client = Factory.CreateClient();
-
-        // Act
-        HttpResponseMessage response = await client.PostAsJsonAsync("/api/todos", request);
-
-        // Assert
-        ApiResponse<TodoDto>? body = await response.Content.ReadFromJsonAsync<ApiResponse<TodoDto>>();
-        using (Assert.Multiple())
-        {
-            await response.StatusCode.Should().BeEqualTo(HttpStatusCode.BadRequest);
-            await body.Should().NotBeNull();
-            await body!.Data.Should().BeNull();
-            await body.Error.Should().NotBeNullOrEmpty();
-            await body.Error.Should().Contain("Title");
-        }
-    }
-}
-```
+[`templates/endpoint-integration-test.md`](templates/endpoint-integration-test.md)
 
 ---
 
