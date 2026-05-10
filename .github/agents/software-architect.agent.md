@@ -1,7 +1,7 @@
 ---
 name: "software-architect"
 description: "Use for architecture design and post-implementation architecture review. Trigger words: system design, architecture, component boundaries, ADR."
-tools: [read, agent, edit, search, web, azure-mcp/search, todo]
+tools: [vscode/getProjectSetupInfo, vscode/memory, vscode/askQuestions, read, edit, search, web, docker_mcp_gateway/search, mcp_docker/search, azure-mcp/search, todo]
 user-invocable: true
 model: Claude Sonnet 4.6 (copilot)
 ---

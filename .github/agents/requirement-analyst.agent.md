@@ -1,7 +1,7 @@
 ---
 name: "requirement-analyst"
 description: "Use before design/implementation to run structured requirement elicitation and produce clear acceptance criteria. Trigger words: requirements, clarify scope, discovery, acceptance criteria."
-tools: [read, edit, search, todo]
+tools: [read, edit, search, docker_mcp_gateway/search, mcp_docker/search, todo]
 user-invocable: true
 model: Claude Sonnet 4.6 (copilot)
 ---

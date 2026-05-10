@@ -1,7 +1,7 @@
 ---
 name: "agent-manager"
 description: "Use to create, update, sync, or deprecate agent definitions and skill files on both Claude Code and GitHub Copilot/VS Code platforms. Trigger words: create agent, update agent, sync agent, deprecate agent, agent definition, agent drift, create skill, update skill, deprecate skill."
-tools: [vscode/memory, vscode/askQuestions, vscode/toolSearch, execute, read, agent, edit, search, docker_mcp_gateway/search, mcp_docker/search, todo]
+tools: [vscode/memory, vscode/askQuestions, vscode/toolSearch, execute, read, agent, edit, search, docker-mcp-gateway/search, todo]
 user-invocable: true
 model: Claude Sonnet 4.6 (copilot)
 ---

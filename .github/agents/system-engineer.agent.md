@@ -1,7 +1,7 @@
 ---
 name: "system-engineer"
 description: "Use for low-level design decisions, SOLID/DRY/KISS enforcement, and pattern selection between architecture and implementation. Trigger words: low-level design, design principles, refactor design."
-tools: [vscode/memory, vscode/askQuestions, read, edit, search, todo]
+tools: [vscode/memory, vscode/askQuestions, read, edit, search, docker-mcp-gateway/search, todo]
 user-invocable: true
 model: GPT-5.2-Codex (copilot)
 ---
