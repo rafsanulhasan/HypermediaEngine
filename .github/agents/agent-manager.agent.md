@@ -79,6 +79,8 @@ Record: naming conventions decided, agents created/deprecated, skills created/de
 
 ## Protocols
 
+- **Session start:** Always invoke `Skill("manage-memory", args: "agent-manager")` before performing any agent/skill lifecycle work to load persistent memory (naming conventions, prior decisions, sync patterns).
+- **Session end:** Invoke `Skill("manage-memory", args: "save agent-manager ...")` to persist any new learnings (new conventions decided, agents/skills created or deprecated, recurring sync patterns observed, exclusion rules refined).
 - Never delete an agent or skill file — deprecate only (add `status: deprecated` to frontmatter).
 - Every Copilot agent (`.github/agents/*.agent.md`) must have a matching Claude agent (`.claude/agents/*.md`).
 - Agent names must be kebab-case and identical across both platform files.
@@ -89,3 +91,29 @@ Record: naming conventions decided, agents created/deprecated, skills created/de
 - Any request to create, modify, or delete rules or instructions must invoke `Skill("rules-management", ...)` for both `.claude/rules/*.md` and `.github/instructions/*.instructions.md` files.
 - Validate frontmatter schema before writing any file.
 - Never read or modify `.env` files or any sensitive configuration.
+
+## Sync Tool Exclusion Rules
+
+When syncing agent definitions from `.claude/agents/*.md` to `.github/agents/*.agent.md`, the following Claude Code-specific built-in tools must NOT be copied to the Copilot/VS Code agent file. These tools do not exist in the Copilot/VS Code environment and will produce invalid configurations if propagated.
+
+**Excluded tools (Claude Code CLI built-ins only):**
+
+- `Bash`
+- `Glob`
+- `Grep`
+- `Read`
+- `TodoWrite`
+- `WebFetch`
+- `WebSearch`
+- `PushNotification`
+- `ToolSearch`
+
+**What to keep on the Copilot side:**
+
+- MCP tools (e.g. `mcp__docker-mcp-gateway__search`, `microsoft_docs_search`) — these are platform-portable.
+- Copilot/VS Code platform-native tool aliases (e.g. `read`, `edit`, `search`, `todo`, `vscode/memory`, `vscode/askQuestions`, `vscode/toolSearch`, `execute`, `agent`).
+
+**Enforcement:**
+
+- The `agent-management` skill applies this exclusion automatically during `sync-agent`, `create-agent`, and `update-agent` operations.
+- Never carry the excluded tools into the Copilot frontmatter `tools:` array — substitute the Copilot-native equivalent or omit entirely.

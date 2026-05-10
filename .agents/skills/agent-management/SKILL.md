@@ -41,7 +41,7 @@ You scaffold and maintain all agent definitions across both platforms. Parse the
    - One-line purpose describing the agent's domain
    - 2–4 bullet responsibilities
 4. Write `.claude/agents/<name>.md` using the **Claude Agent Template** below.
-5. Write `.github/agents/<name>.agent.md` using the **Copilot Agent Template** below.
+5. Write `.github/agents/<name>.agent.md` using the **Copilot Agent Template** below — apply the **Claude-only Tool Exclusion List** (see Mode: sync-agent) when populating its `tools:` frontmatter.
 6. Create `.claude/agent-memory/<name>/` directory: 
 	a. Windows: `mkdir -p ".claude/agent-memory/<name>"`
 	b. Linux/Mac: `mkdir -p .claude/agent-memory/<name>/` 
@@ -130,9 +130,11 @@ You are the <Title> for the HypermediaEngine project.
 2. Parse `<change-description>` to determine what to change (frontmatter field, responsibilities, skills section, protocols, etc.).
 3. Apply changes to `.claude/agents/<name>.md` using Edit.
 4. Apply equivalent changes to `.github/agents/<name>.agent.md` using Edit.
-5. Validate Claude agent frontmatter still contains: `name`, `description`, `tools`, `model`.
-6. Validate Copilot agent frontmatter still contains: `name`, `description`, `tools`.
-7. Confirm: "Agent '<name>' updated on both platforms."
+5. If the change touches the `tools:` frontmatter, apply the **Claude-only Tool Exclusion List** (see Mode: sync-agent) before writing the Copilot file — never propagate excluded tools.
+6. Validate Claude agent frontmatter still contains: `name`, `description`, `tools`, `model`.
+7. Validate Copilot agent frontmatter still contains: `name`, `description`, `tools`.
+8. Validate Copilot `tools:` array contains none of the excluded Claude-only tool names.
+9. Confirm: "Agent '<name>' updated on both platforms."
 
 ---
 
@@ -144,8 +146,45 @@ Use when a Claude agent definition exists but the Copilot counterpart is missing
 
 1. Read `.claude/agents/<name>.md`.
 2. Derive the equivalent `.github/agents/<name>.agent.md` content from it using the **Copilot Agent Template**.
-3. Write or overwrite `.github/agents/<name>.agent.md`.
-4. Confirm: "Agent '<name>' synced to `.github/agents/<name>.agent.md`."
+3. **Apply the Claude-only Tool Exclusion List** (see below) when translating the `tools:` frontmatter — strip excluded tools and substitute Copilot-native equivalents where appropriate.
+4. Write or overwrite `.github/agents/<name>.agent.md`.
+5. Confirm: "Agent '<name>' synced to `.github/agents/<name>.agent.md`."
+
+### Claude-only Tool Exclusion List (sync, create, update)
+
+When projecting the `tools:` array from a Claude agent definition into a Copilot agent file, the following Claude Code-specific built-in tool names MUST be removed. They do not exist in the GitHub Copilot / VS Code custom agent environment, and including them produces an invalid Copilot agent configuration.
+
+**Excluded tools — never copy to `.github/agents/*.agent.md`:**
+
+- `Bash`
+- `Glob`
+- `Grep`
+- `Read`
+- `TodoWrite`
+- `WebFetch`
+- `WebSearch`
+- `PushNotification`
+- `ToolSearch`
+
+**Tools that are kept or translated:**
+
+- MCP tools (any tool whose name contains `mcp__` or that maps to an MCP server, e.g. `mcp__docker-mcp-gateway__search`, `microsoft_docs_search`) — keep verbatim, they are platform-portable.
+- Skill / Agent invocations — keep verbatim.
+- Translate Claude built-ins to Copilot-native equivalents where there is a 1:1 match (apply during sync only when the Copilot file currently lacks the equivalent):
+   - `Read` → `read`
+   - `Edit` / `Write` → `edit`
+   - `Glob` / `Grep` → `search`
+   - `Bash` → `execute`
+   - `TodoWrite` → `todo`
+   - `Agent` → `agent`
+
+**Procedure for translating `tools:`:**
+
+1. Read the Claude `tools:` array.
+2. For each tool, look it up in the Excluded list — if matched, drop it.
+3. For each remaining tool, look it up in the translation map — if matched, substitute the Copilot-native alias.
+4. Preserve all MCP and Skill/Agent entries verbatim.
+5. Emit the translated array as the Copilot file's `tools:` frontmatter.
 
 ---
 
@@ -166,6 +205,7 @@ Use when a Claude agent definition exists but the Copilot counterpart is missing
 - Agent files must never be deleted — only deprecated via `status: deprecated` in frontmatter.
 - Claude agent files (`.claude/agents/*.md`) must have: `name`, `description`, `tools`, `model`.
 - Copilot agent files (`.github/agents/*.agent.md`) must have: `name`, `description`, `tools`.
+- Copilot agent `tools:` arrays MUST NOT contain any of the Claude-only excluded tools: `Bash`, `Glob`, `Grep`, `Read`, `TodoWrite`, `WebFetch`, `WebSearch`, `PushNotification`, `ToolSearch`. Reject the write if any are present.
 - Every Claude agent must have a matching Copilot agent of the same name — warn when they are out of sync.
 - Agent names must be kebab-case and match across both platform files.
 - Never read or modify `.env` files or sensitive configuration.
