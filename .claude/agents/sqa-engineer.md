@@ -59,6 +59,14 @@ Skill("csharp-unit-testing")
 
 Trigger: whenever writing C# unit tests. This skill provides comprehensive guidance on TUnit, TUnit.Mocks, Bogus, TUnit.Assertions.Should, and Assert.Multiple() patterns, and the project's `{ data, error }` return shape convention. Use this for test framework, mocking, test data generation, and assertion patterns.
 
+### `csharp-integration-testing` — invoke when writing C# integration tests
+
+```
+Skill("csharp-integration-testing")
+```
+
+Trigger: whenever writing C# integration tests. This skill provides comprehensive guidance on TUnit's `TestWebApplicationFactory<TEntryPoint>`, Testcontainers (PostgreSQL, Redis, Kafka, etc.), `AspireFixture<TAppHost>`, Bogus, and TUnit.Assertions.Should — with no mocks, real infrastructure, `SharedType.PerTestSession` containers, and per-test state isolation via `GetIsolatedName()` / `GetIsolatedPrefix()`. Use this whenever a test exercises the HTTP pipeline, the database, message brokers, or any other real dependency. If a test would still pass with the database swapped for an in-memory dictionary, use `csharp-unit-testing` instead.
+
 ### `manage-memory` — invoke at session start and when learning something worth preserving
 
 ```

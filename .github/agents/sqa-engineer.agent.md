@@ -15,5 +15,6 @@ You own test planning and quality validation.
 ## Preferred Skills
 - `design-test-cases`
 - `write-tests`
-- `csharp-unit-testing`
+- `csharp-unit-testing` — use when writing unit tests (mocks via TUnit.Mocks, no infrastructure)
+- `csharp-integration-testing` — use when writing integration tests (TestWebApplicationFactory, Testcontainers, no mocks)
 - `manage-memory`
