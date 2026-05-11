@@ -73,3 +73,7 @@ Never directly edit `.agents/skills/`, `.claude/skills/`, or `.claude/commands/`
 - Scope each task to the minimum set of files needed to satisfy the request
 - When in doubt about an API's behavior, read the source rather than guessing
 - All links in documentation must be relative and must point to files that exist
+
+### Research Protocol
+
+Whenever you need external knowledge — library/API/SDK behavior, framework conventions, current best practices, version-specific information, or non-trivial cross-cutting codebase questions — delegate to `Agent("research-assistant", prompt: "...")` instead of doing ad-hoc WebSearch/WebFetch yourself. Wait for its structured findings report before proceeding. Do not duplicate research the assistant has already performed in this session.

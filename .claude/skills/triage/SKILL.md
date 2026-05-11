@@ -32,8 +32,9 @@ For complex requests (multiple types or >1 agent needed):
 
 1. Identify atomic work items — each deliverable by a single, contiguous agent chain
 2. Map dependencies: which items must complete before others can begin
-3. Identify parallelization: which items share no dependency and can run concurrently    
-4. Keep decomposition minimal — do not split a naturally-sequential flow into artificial fragments
+3. Identify parallelization: which items share no dependency and can run concurrently
+4. **Flag research dependencies** — for each work item, check whether it requires external knowledge (library/API/SDK docs, unfamiliar framework, current best practices, version-migration info) or non-trivial cross-cutting code exploration. If yes, prepend a `research-assistant` step to that item's agent chain. The downstream specialists wait for the research findings before starting. See Step 3 routing rules for the explicit chains.
+5. Keep decomposition minimal — do not split a naturally-sequential flow into artificial fragments
 
 For simple requests (one type, one agent, no dependencies): return a single-item plan.
 
@@ -42,24 +43,30 @@ For simple requests (one type, one agent, no dependencies): return a single-item
 For each work item, select the tightest-fitting standard chain:
 
 ```
-New feature (scope unknown)         → requirement-analyst → software-architect → system-engineer → software-engineer → sqa-engineer
-New feature (design needed)         → software-architect → system-engineer → software-engineer → sqa-engineer
-New feature (ready to build)        → software-engineer → sqa-engineer
-Feature needs prioritization        → product-manager → (then appropriate build chain above)
-Bug fix                             → software-engineer  (invoke fix-bug skill)
-Bug fix with arch concern           → software-engineer → software-architect  (invoke architecture-review skill)
-Security fix                        → /security-review skill directly
-Tech debt / refactor                → software-engineer → code-reviewer
-Tech debt needs prioritization      → product-manager → software-engineer → code-reviewer
-Test coverage gap                   → sqa-engineer
-Low-level design question           → system-engineer
-Architecture question               → software-architect
-Backlog / prioritization question   → product-manager
-Release / milestone planning        → product-manager → deploy skill (downstream chain depends on items)
-Agent / skill / command lifecycle   → agent-manager
-Rules / instructions / hooks change → agent-manager
-Agent memory prune / audit / refresh → agent-manager
+New feature (scope unknown)              → requirement-analyst → software-architect → system-engineer → software-engineer → sqa-engineer
+New feature (design needed)              → software-architect → system-engineer → software-engineer → sqa-engineer
+New feature (ready to build)             → software-engineer → sqa-engineer
+Feature needs prioritization             → product-manager → (then appropriate build chain above)
+Bug fix                                  → software-engineer  (invoke fix-bug skill)
+Bug fix with arch concern                → software-engineer → software-architect  (invoke architecture-review skill)
+Security fix                             → /security-review skill directly
+Tech debt / refactor                     → software-engineer → code-reviewer
+Tech debt needs prioritization           → product-manager → software-engineer → code-reviewer
+Test coverage gap                        → sqa-engineer
+Low-level design question                → system-engineer
+Architecture question                    → software-architect
+Backlog / prioritization question        → product-manager
+Release / milestone planning             → product-manager → deploy skill (downstream chain depends on items)
+Agent / skill / command lifecycle        → agent-manager
+Rules / instructions / hooks change      → agent-manager
+Agent memory prune / audit / refresh     → agent-manager
+External knowledge / library docs needed → research-assistant → (then the appropriate chain above)
+Unfamiliar framework / SDK behavior      → research-assistant → (then specialist chain)
+Validate assumption before design        → research-assistant → software-architect
+Deep cross-cutting codebase exploration  → research-assistant (standalone) or research-assistant → specialist
 ```
+
+**Research-prepend rule:** Whenever a work item's chain involves design or implementation against external technology the team has not recently verified, prepend `research-assistant` as the first agent in that item's chain. The specialist receiving the work waits for the cited findings report before starting.
 
 ### Step 4 — Set Priorities
 

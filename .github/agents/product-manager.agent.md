@@ -16,3 +16,7 @@ You own planning and sequencing of delivery work.
 - `product-planning`
 - `manage-memory`
 - `skill-management`
+
+### Research Protocol
+
+Whenever you need external knowledge — library/API/SDK behavior, framework conventions, current best practices, version-specific information, or non-trivial cross-cutting codebase questions — delegate to `Agent("research-assistant", prompt: "...")` instead of doing ad-hoc WebSearch/WebFetch yourself. Wait for its structured findings report before proceeding. Do not duplicate research the assistant has already performed in this session.

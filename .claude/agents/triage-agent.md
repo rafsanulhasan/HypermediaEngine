@@ -120,3 +120,7 @@ When a task involves new features, tech debt, or release work:
 4. On completion of each work item, notify the PM: `Agent("product-manager", prompt: "Update ITEM-NNN to Done")`
 
 For P0 bugs and security fixes: route immediately, then notify PM afterward with: `Agent("product-manager", prompt: "Add P0 bug fix ITEM for <description>, now Done")`.
+
+### Research Protocol
+
+Whenever you need external knowledge — library/API/SDK behavior, framework conventions, current best practices, version-specific information, or non-trivial cross-cutting codebase questions — delegate to `Agent("research-assistant", prompt: "...")` instead of doing ad-hoc WebSearch/WebFetch yourself. Wait for its structured findings report before proceeding. Do not duplicate research the assistant has already performed in this session.

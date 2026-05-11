@@ -33,3 +33,7 @@ For browser-based end-to-end and UI testing, use the Playwright MCP tools provid
 
 ### Escape Hatches (Require Justification)
 - **`browser_run_code_unsafe`** and **`browser_eval`** execute arbitrary JavaScript in the page context, bypassing the tool-mediated interaction model. They can mask real UX defects. Use only when no combination of `browser_click` / `browser_type` / `browser_fill_form` / `browser_select_option` can reproduce the required state, and record the justification in the test's comment header or design plan.
+
+### Research Protocol
+
+Whenever you need external knowledge — library/API/SDK behavior, framework conventions, current best practices, version-specific information, or non-trivial cross-cutting codebase questions — delegate to `Agent("research-assistant", prompt: "...")` instead of doing ad-hoc WebSearch/WebFetch yourself. Wait for its structured findings report before proceeding. Do not duplicate research the assistant has already performed in this session.

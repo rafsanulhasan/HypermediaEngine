@@ -124,3 +124,7 @@ When syncing agent definitions from `.claude/agents/*.md` to `.github/agents/*.a
 
 - The `agent-management` skill applies this exclusion automatically during `sync-agent`, `create-agent`, and `update-agent` operations.
 - Never carry the excluded tools into the Copilot frontmatter `tools:` array — substitute the Copilot-native equivalent or omit entirely.
+
+### Research Protocol
+
+Whenever you need external knowledge — library/API/SDK behavior, framework conventions, current best practices, version-specific information, or non-trivial cross-cutting codebase questions — delegate to `Agent("research-assistant", prompt: "...")` instead of doing ad-hoc WebSearch/WebFetch yourself. Wait for its structured findings report before proceeding. Do not duplicate research the assistant has already performed in this session.

@@ -10,12 +10,14 @@ This is the expert agent selection skill. Use PROACTIVELY to select the most sui
 ## Workflow
 
 ```
-requirement-analyst → software-architect + system-engineer → software-engineer → (sqa-engineer + documentation-writer) → code-reviewer
+(research-assistant — optional, when knowledge-dependent) → requirement-analyst → software-architect + system-engineer → software-engineer → (sqa-engineer + documentation-writer) → code-reviewer
 ```
 
-Use `triage-agent` to orchestrate multi-agent workflows. After `software-engineer` completes any implementation work (feature, bug fix, or refactor), `sqa-engineer` and `documentation-writer` start in parallel.
+Use `triage-agent` to orchestrate multi-agent workflows. When the work depends on external knowledge (library/API/SDK docs, unfamiliar framework, current best practices, validating assumptions before design, deep cross-cutting code exploration), prepend `research-assistant` as the first step before any specialist work. After `software-engineer` completes any implementation work (feature, bug fix, or refactor), `sqa-engineer` and `documentation-writer` start in parallel.
 
 ## Agent Reference
+
+- **research-assistant** — Read-only research specialist. Invoke when external knowledge is needed: library/API/SDK docs, unfamiliar framework behavior, version-migration info, current best practices, validating assumptions before design or implementation, or non-trivial cross-cutting code exploration where a single Grep is insufficient. Returns a cited, structured findings report. Prefer this over any agent doing ad-hoc WebSearch/WebFetch themselves. Valid as a **first step** in sequential SDLC chains when the work is knowledge-dependent (e.g., before `requirement-analyst` or `software-architect` when external tech is involved).
 
 - **requirement-analyst** — Analyzes requirements. Invoke before any feature work begins.
 
@@ -65,7 +67,7 @@ Use the following decision tree to pick the right orchestration mode. Always sta
 
 ## Rules for Multi-Agent Workflow Orchestration
 
-- **Research work** → spawn **3–5 `researcher` subagents in parallel**, each with a distinct approach or focus. `triage-agent` then synthesizes findings into a single report.
+- **Research work** → delegate to `research-assistant`. For broad, multi-angle research (comparison studies, surveys of competing options), spawn **3–5 `research-assistant` subagents in parallel**, each with a distinct angle; `triage-agent` then synthesizes findings into a single report. Triggers: "external knowledge needed", "library/API/SDK docs", "unfamiliar framework", "validate assumption before design", "deep cross-cutting code exploration where Explore is insufficient".
 - **Design and implementation work** → follow the SDLC workflow with `triage-agent` orchestrating end to end.
   - When a complex task is decomposed into subtasks, run an SDLC workflow **per subtask**:
     - **No collaboration needed within a subtask** → spawn parallel subagent teams per SDLC role to work simultaneously; `triage-agent` synthesizes outputs.
