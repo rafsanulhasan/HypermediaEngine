@@ -13,20 +13,9 @@ This skill guides the `sqa-engineer` agent to perform AI-driven UI tests using t
 
 Before invoking this skill:
 1. Confirm the change is UI/frontend-related. If not, skip this skill entirely.
-2. Ensure the Playwright MCP server is configured in `.mcp.json`:
-```json
-{
-  "mcpServers": {
-    "playwright": {
-      "command": "npx",
-      "args": ["@playwright/mcp@latest"],
-      "type": "stdio"
-    }
-  }
-}
-```
-3. Ensure the application is running (or start it via `dotnet run` or Aspire AppHost).
-4. Discover the service URL (check Aspire dashboard at `http://localhost:15888` or use configured `launchUrl`).
+2. The Playwright MCP server is already available via the **docker MCP gateway** (configured in `.mcp.json`). No additional setup is required — all browser tools are available with the `mcp__docker-mcp-gateway__` prefix.
+3. Ensure the application is running (start via `dotnet run` or via the Aspire AppHost in `samples/AppHost`).
+4. Discover the service URL (check Aspire dashboard at `http://localhost:15888` or use the configured `launchUrl`).
 
 ---
 
@@ -56,44 +45,50 @@ Execute each test case using the Playwright MCP tools. Follow the **SAA pattern*
 
 ### Core Tool Reference
 
+All browser tools are invoked via the docker MCP gateway. Use the exact tool names below:
+
 | Tool | Purpose |
 |------|---------|
-| `browser_navigate` | Navigate to a URL |
-| `browser_snapshot` | Capture accessibility tree (default mode — use this for assertions) |
-| `browser_screenshot` | Capture screenshot as evidence |
-| `browser_click` | Click an element by ARIA ref |
-| `browser_type` | Type into a focused element |
-| `browser_fill` | Fill an input field |
-| `browser_press_key` | Press keyboard key (Enter, Tab, Escape, etc.) |
-| `browser_select_option` | Select a dropdown option |
-| `browser_check` / `browser_uncheck` | Check/uncheck checkboxes |
-| `browser_wait_for_load_state` | Wait for network idle or DOM loaded |
-| `browser_wait` | Wait for N milliseconds (use sparingly) |
-| `browser_get_console_log` | Retrieve browser console logs |
-| `browser_get_network_requests` | List intercepted network requests |
-| `browser_evaluate` | Execute JavaScript (escape hatch — requires justification) |
+| `mcp__docker-mcp-gateway__browser_navigate` | Navigate to a URL |
+| `mcp__docker-mcp-gateway__browser_snapshot` | Capture accessibility tree — use this for all assertions |
+| `mcp__docker-mcp-gateway__browser_take_screenshot` | Capture screenshot as evidence |
+| `mcp__docker-mcp-gateway__browser_click` | Click an element by ARIA ref |
+| `mcp__docker-mcp-gateway__browser_type` | Type into a focused element |
+| `mcp__docker-mcp-gateway__browser_fill_form` | Fill a form field |
+| `mcp__docker-mcp-gateway__browser_press_key` | Press keyboard key (Enter, Tab, Escape, etc.) |
+| `mcp__docker-mcp-gateway__browser_select_option` | Select a dropdown option |
+| `mcp__docker-mcp-gateway__browser_wait_for` | Wait for element/condition |
+| `mcp__docker-mcp-gateway__browser_console_messages` | Retrieve browser console log |
+| `mcp__docker-mcp-gateway__browser_network_requests` | List intercepted network requests |
+| `mcp__docker-mcp-gateway__browser_hover` | Hover over an element |
+| `mcp__docker-mcp-gateway__browser_drag` / `mcp__docker-mcp-gateway__browser_drop` | Drag and drop |
+| `mcp__docker-mcp-gateway__browser_handle_dialog` | Handle JS alert/confirm/prompt dialogs |
+| `mcp__docker-mcp-gateway__browser_eval` | Execute JavaScript (escape hatch — requires justification) |
+| `mcp__docker-mcp-gateway__browser_tabs` | List open browser tabs |
+| `mcp__docker-mcp-gateway__browser_resize` | Resize the browser window |
+| `mcp__docker-mcp-gateway__browser_navigate_back` | Navigate back |
+| `mcp__docker-mcp-gateway__browser_network_request` | Inspect a specific network request |
 
 ### SAA Pattern (Mandatory for every interaction)
 
 ```
-Step 1: browser_snapshot          → read current state, identify ARIA refs
-Step 2: browser_click/type/fill   → perform the interaction
-Step 3: browser_snapshot          → verify state changed as expected
+Step 1: mcp__docker-mcp-gateway__browser_snapshot          → read current state, identify ARIA refs
+Step 2: mcp__docker-mcp-gateway__browser_click / browser_type / browser_fill_form   → perform the interaction
+Step 3: mcp__docker-mcp-gateway__browser_snapshot          → verify state changed as expected
 ```
 
 Never skip the post-action snapshot — it is the assertion.
 
 ### Evidence Capture
 
-After each test case (pass or fail), capture:
+After each test case (pass or fail), capture a screenshot:
 ```
-Tool: browser_screenshot
-Args: { "filename": "tests/screenshots/<scenario-name>-<pass|fail>.png" }
+Tool: mcp__docker-mcp-gateway__browser_take_screenshot
 ```
 
 Also capture console errors:
 ```
-Tool: browser_get_console_log
+Tool: mcp__docker-mcp-gateway__browser_console_messages
 ```
 Treat any `[error]` level entries as implicit test failures.
 
@@ -128,8 +123,8 @@ Produce a structured test report:
 ## Rules and Constraints
 
 - **Snapshot mode is preferred** over vision mode — cheaper, faster, no vision model required.
-- **Never use `browser_evaluate` as a shortcut** to set state directly. Use actual UI flows. Document any unavoidable use in the test report.
-- **Flaky timing**: always use `browser_wait_for_load_state` or `browser_wait` after navigation/form submission — never assume instant rendering.
+- **Never use `mcp__docker-mcp-gateway__browser_eval` as a shortcut** to set state directly. Use actual UI flows. Document any unavoidable use in the test report.
+- **Flaky timing**: always use `browser_wait_for` after navigation/form submission — never assume instant rendering.
 - **ARIA anchoring**: if UI elements lack proper ARIA labels/roles, surface it as a bug to the software-engineer and request semantic markup fixes before retesting.
 - **Screenshots are mandatory evidence** — never submit a test report without screenshot files.
 - **This skill produces a report, not test code.** The `write-tests` skill produces `.cs` test files. This skill produces browser interaction results and a markdown report.
@@ -138,5 +133,5 @@ Produce a structured test report:
 
 ## Escape Hatches (Require Justification in Report)
 
-- `browser_evaluate` / `browser_run_code_unsafe`: only when no combination of interaction tools can achieve the required state.
-- Vision mode (`--vision` flag on the MCP server): only when testing visual rendering (CSS, layout, images).
+- `mcp__docker-mcp-gateway__browser_eval` / `mcp__docker-mcp-gateway__browser_run_code_unsafe`: only when no combination of interaction tools can achieve the required state.
+- If visual/CSS rendering testing is needed, capture multiple screenshots with `mcp__docker-mcp-gateway__browser_take_screenshot` at different viewports using `mcp__docker-mcp-gateway__browser_resize`.
