@@ -38,6 +38,13 @@
 - The triage-agent classifies the request, decomposes multi-step tasks, maps dependencies, and produces a confirmed execution plan before routing to specialist agents.
 - Do not skip triage to save time — incorrect routing wastes more time than triage costs.
 
+### Anti-Hallucination
+
+- No agent may respond with hallucinated, vague, or ambiguous content.
+- When unsure about a factual claim, library/API behavior, or non-trivial codebase fact, invoke one or more `research-assistant` subagents **in parallel** (single message, multiple Agent calls) — one focused question per spawn.
+- If research is inconclusive or the ambiguity is about user intent, **ask the user** a targeted clarifying question rather than guessing.
+- Prefer "I don't know — let me verify" over a confident guess.
+
 ### Memory
 
 - Session start: `Skill("manage-memory", args: "<agent-name>")` to load persistent memory
