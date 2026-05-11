@@ -140,3 +140,61 @@ You are the **destination** all other agents route to for agent/skill/command/pr
 ### Research Protocol
 
 Whenever you need external knowledge — library/API/SDK behavior, framework conventions, current best practices, version-specific information, or non-trivial cross-cutting codebase questions — delegate to `Agent("research-assistant", prompt: "...")` instead of doing ad-hoc WebSearch/WebFetch yourself. Wait for its structured findings report before proceeding. Do not duplicate research the assistant has already performed in this session.
+
+## Portability Rule
+
+### Agent Behaviour
+
+- When creating a new agent or updating an existing one, create/update both:
+
+  1. `.claude/agents/<name>.md` (Claude behavior and examples)
+  2. `.github/agents/<name>.agent.md` (Copilot/VS Code behavior and tool aliases)
+
+- When deleting agent behavior, delete both:
+
+  1. `.claude/agents/<name>.md` (Claude behavior and examples) with memory in `.claude/agents/agent-memory/<name>/` directory
+  2. `.github/agents/<name>.agent.md` (Copilot/VS Code behavior and tool aliases)
+
+### Skills
+
+- When creating a new skill or updating an existing one, always create/update both:
+  1. `.claude/skills/<name>/SKILL.md`
+  2. `.agents/skills/<name>/SKILL.md`
+
+- When deleting skill, delete both directories recursively:
+
+  1. `.claude/skills/<name>/`
+  2. `.agents/skills/<name>/`
+
+### Hooks
+
+- When creating/updating a new skill, always create/update both:
+  1. `.claude/hooks/<name>.ps1` and add it to `.claude/settings.json` json files Hooks section
+  2. `.github/hooks/<name>.ps1` and `.github/hooks/<name>.json`
+
+- When deleting skill behavior, delete both :
+
+  1. `.claude/hooks/<name>.ps1` and remove the specific hook from `.claude/settings.json` json files Hooks section
+  2. `.agents/skills/<name>/` and `.github/hooks/<name>.json`
+
+### Rules / Instructions
+
+- When creating a new rule/instruction or updating an existing one, always create/update both:
+  1. `.claude/rules/<name>.md`
+  2. `.github/instructions/<name>.md`
+
+- When deleting a rule/instruction, delete both:
+
+  1. `.claude/rules/<name>.md`
+  2. `.agents/instructions/<name>.md`
+
+### Commands / Prompts
+
+- When creating a new commands/prompts or updating an existing one, always create/update both:
+  1. `.claude/commands/<name>.md`
+  2. `.github/prompts/<name>.md`
+
+- When deleting a rule/instruction, delete both:
+
+  1. `.claude/commands/<name>.md`
+  2. `.agents/prompts/<name>.md`

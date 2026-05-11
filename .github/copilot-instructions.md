@@ -4,6 +4,8 @@
 
 This file defines repository-specific operating rules for GitHub Copilot in HypermediaEngine.
 
+> Agent-related instructions (routing, anti-hallucination, memory, file ownership, multi-platform portability) live in [AGENTS.md](../AGENTS.md).
+
 ## Core Build And Test Commands
 
 - `dotnet build` to build the solution or project
@@ -35,76 +37,3 @@ This file defines repository-specific operating rules for GitHub Copilot in Hype
 - After tests pass: run `dotnet stryker`.
 - Exception: if a change is non-functional and only modifies agent artifacts (planning, agents, skills, hooks, prompts/commands, rules/instructions), you may skip both gates.
 - If any runtime code, test code, runtime configuration, or build logic changes, run both gates.
-
-## Agent Execution Protocol
-
-### 1. Routing
-
-- For non-trivial requests, invoke `@triage-agent` before any specialist skill or agent.
-- Skip triage only for:
-	- simple factual questions
-	- follow-up work within an already triaged workflow
-- Triage must output a decomposition, dependency map, and a confirmed execution plan.
-
-### 2. Anti-Hallucination
-
-- No agent may respond with hallucinated, vague, or ambiguous content.
-- When unsure about a factual claim, library/API behavior, or non-trivial codebase fact, invoke multiple `@research-assistant` subagents **in parallel** — one focused question per spawn.
-- If research is inconclusive or the ambiguity is about user intent, **ask the user** a clarifying question rather than guessing.
-- Prefer acknowledging uncertainty over a confident guess.
-
-### 3. Memory
-
-- At session start: `Skill("manage-memory", args: "<agent-name>")`
-- At session end: `Skill("manage-memory", args: "save <agent-name> ...")`
-- For non-routine memory operations (prune/audit/refresh): route through `Agent("agent-manager", prompt: "prune/audit/refresh <agent-name>")`
-
-### 4. File Ownership By Agent
-
-**Agent definitions and skill files** are owned by `agent-manager`:
-- Route all agent creation/update requests to `Agent("agent-manager", prompt: "...")`.
-- Route all skill/command creation/update requests to `Agent("agent-manager", prompt: "...")`.
-- Do not directly edit:
-	- `.claude/agents/*.md`
-	- `.github/agents/*.agent.md`
-	- `.claude/commands/*.md`
-	- `.agents/skills/*/SKILL.md`
-	- `.claude/skills/*/SKILL.md`
-- When creating a new skill, always create both:
-	- `.agents/skills/<name>/SKILL.md`
-	- `.claude/commands/<name>.md`
-
-**Routing rule:** When a user asks to create or update an agent or a skill, invoke `agent-manager`.
-
-## Multi-Platform Portability
-
-This repository maintains parallel behavior across Claude Code and Copilot/VS Code agent systems.
-
-### Platform Structure
-
-- `.claude/agents/*.md` and `.claude/commands/*.md`: Claude-first definitions/workflows
-- `.claude/skills/*/SKILL.md`: Claude skill discovery
-- `.github/agents/*.agent.md`: Copilot/VS Code agent definitions
-- `.agents/skills/*/SKILL.md`: shared Copilot/VS Code skill discovery
-
-### Shared Agent Names
-
-- `triage-agent`
-- `requirement-analyst`
-- `software-architect`
-- `system-engineer`
-- `software-engineer`
-- `sqa-engineer`
-- `code-reviewer`
-- `product-manager`
-- `agent-manager`
-- `documentation-writer`
-
-### Synchronization Rules
-
-- Agent behavior updates must be mirrored in both:
-	- `.claude/agents/<name>.md`
-	- `.github/agents/<name>.agent.md`
-- Skill behavior updates must be mirrored in both:
-	- `.claude/skills/<skill>/SKILL.md`
-	- `.agents/skills/<skill>/SKILL.md`

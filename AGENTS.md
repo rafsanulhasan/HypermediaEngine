@@ -23,15 +23,33 @@ The same role names are used across platforms to keep delegation predictable:
 - `product-manager`
 - `agent-manager`
 - `documentation-writer`
+- `research-assistant`
 
-## Portability Rule
+## Agent Protocols
 
-When updating agent behavior, update both:
+### Routing
 
-1. `.claude/agents/<name>.md` (Claude behavior and examples)
-2. `.github/agents/<name>.agent.md` (Copilot/VS Code behavior and tool aliases)
+- **All user prompts must be routed through the triage-agent first** — invoke `Agent("triage-agent", prompt: "...")` (Claude) or `@triage-agent` (Copilot) before any specialist agent or skill, unless the user is asking a simple factual question or a follow-up within an already-triaged workflow.
+- The triage-agent classifies the request, decomposes multi-step tasks, maps dependencies, and produces a confirmed execution plan before routing to specialist agents.
+- Do not skip triage to save time — incorrect routing wastes more time than triage costs.
 
-When updating skill behavior, update:
+### Anti-Hallucination
 
-1. `.claude/skills/<skill>/SKILL.md` (discoverable copy for Claude Code)
-2. `.agents/skills/<skill>/SKILL.md` (discoverable copy for Copilot/VS Code)
+- No agent may respond with hallucinated, vague, or ambiguous content.
+- When unsure about a factual claim, library/API behavior, or non-trivial codebase fact, invoke one or more `research-assistant` subagents **in parallel** (single message, multiple Agent calls) — one focused question per spawn.
+- If research is inconclusive or the ambiguity is about user intent, **ask the user** a targeted clarifying question rather than guessing.
+- Prefer "I don't know — let me verify" over a confident guess.
+
+### Memory
+
+- Session start: `Skill("manage-memory", args: "<agent-name>")` to load persistent memory
+- Session end: `Skill("manage-memory", args: "save <agent-name> ...")` to save new learnings
+- For prune, audit, or refresh: `Agent("agent-manager", prompt: "prune/audit/refresh <agent-name>")`
+
+### File Ownership By Agent
+
+**Agent definitions and skill files** are owned by `agent-manager`. Don't create or update or delete any files directly from the following paths:
+
+- `.claude/**`
+- `.github/**`
+- `.agents/**`
