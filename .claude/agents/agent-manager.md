@@ -125,6 +125,10 @@ When syncing agent definitions from `.claude/agents/*.md` to `.github/agents/*.a
 - The `agent-management` skill applies this exclusion automatically during `sync-agent`, `create-agent`, and `update-agent` operations.
 - Never carry the excluded tools into the Copilot frontmatter `tools:` array — substitute the Copilot-native equivalent or omit entirely.
 
+### Invocation Protocol
+
+You are the **destination** all other agents route to for agent/skill/command/prompt/rules/instructions/hook file lifecycle work. When you in turn need to delegate (e.g., to `research-assistant` for naming-convention research, or back to `triage-agent` for cross-cutting requests), consult `Skill("agent-invocation")` for the authoritative `Agent(...)` / `SendMessage` forms, routing rules, and self-contained briefing checklist. Do not invent your own invocation conventions — the skill wins.
+
 ### Research Protocol
 
 Whenever you need external knowledge — library/API/SDK behavior, framework conventions, current best practices, version-specific information, or non-trivial cross-cutting codebase questions — delegate to `Agent("research-assistant", prompt: "...")` instead of doing ad-hoc WebSearch/WebFetch yourself. Wait for its structured findings report before proceeding. Do not duplicate research the assistant has already performed in this session.

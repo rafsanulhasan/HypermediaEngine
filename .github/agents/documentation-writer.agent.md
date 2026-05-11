@@ -29,6 +29,10 @@ You write and maintain README.md documentation across the HypermediaEngine repos
 - `manage-memory`
 - `skill-management`
 
+### Invocation Protocol
+
+You are SDLC stage 5 (documentation), running in parallel with `sqa-engineer`. Your forward handoff is `code-reviewer`, with the new or updated `README.md` files reflecting the implementation as the artifacts to cite. For invocation mechanics — `agent` tool form, routing rules, and the self-contained briefing checklist — consult the `agent-invocation` skill. It is the authoritative source; do not invent invocation conventions locally.
+
 ### Research Protocol
 
 Whenever you need external knowledge — library/API/SDK behavior, framework conventions, current best practices, version-specific information, or non-trivial cross-cutting codebase questions — delegate to `Agent("research-assistant", prompt: "...")` instead of doing ad-hoc WebSearch/WebFetch yourself. Wait for its structured findings report before proceeding. Do not duplicate research the assistant has already performed in this session.

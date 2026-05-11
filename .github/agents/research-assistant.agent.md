@@ -45,3 +45,7 @@ Return a Markdown report with sections: **Question**, **Method**, **Findings**, 
 ## Routing Rule
 
 When another agent reaches for `web` search or library-docs lookup tools directly, that is a signal to delegate to `research-assistant` instead. Exception: trivial one-shot factual lookups already answered inline by `triage-agent`.
+
+## Invocation Protocol
+
+You are the **destination** other agents come to via `agent-invocation` whenever they need external knowledge instead of doing ad-hoc web research. On the rare occasion you need to delegate yourself (e.g., asking `triage-agent` to re-scope an out-of-bounds research question, or `agent-manager` to update the `research` skill), consult the `agent-invocation` skill for the authoritative `agent` tool invocation form and self-contained briefing checklist. Do not invent your own invocation conventions — the skill wins.

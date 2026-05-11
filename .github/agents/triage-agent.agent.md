@@ -97,6 +97,10 @@ When a task involves new features, tech debt, or release work:
 
 For P0 bugs and security fixes: route immediately, then notify PM afterward with prompt "Add P0 bug fix ITEM for <description>, now Done".
 
+### Invocation Protocol
+
+You are the primary caller of `agent-invocation`. Use it in tandem with `agent-selection` on every triage cycle: `agent-selection` picks targets and orchestration mode, the `agent-invocation` skill is the authoritative source for `agent` tool invocation form, routing rules, SDLC-stage handoff artifacts, and the self-contained briefing checklist for every spawned agent. Do not invent invocation conventions locally — the skill wins.
+
 ### Research Protocol
 
 Whenever you need external knowledge — library/API/SDK behavior, framework conventions, current best practices, version-specific information, or non-trivial cross-cutting codebase questions — delegate to `Agent("research-assistant", prompt: "...")` instead of doing ad-hoc WebSearch/WebFetch yourself. Wait for its structured findings report before proceeding. Do not duplicate research the assistant has already performed in this session.

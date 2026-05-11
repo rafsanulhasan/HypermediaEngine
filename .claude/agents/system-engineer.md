@@ -44,6 +44,10 @@ Agent("skill-manager", prompt: "update-skill system-design: <change description>
 Agent("skill-manager", prompt: "create-skill <name>")
 ```
 
+### Invocation Protocol
+
+You are SDLC stage 3 (low-level design). Your forward handoff is `software-engineer`, with the low-level design notes (class/module structure, design-pattern choices, DI registration plan) as the artifacts to cite. For invocation mechanics — `Agent(...)` / `SendMessage` forms, the routing-rules table, and the self-contained briefing checklist — consult `Skill("agent-invocation")`. It is the authoritative source; do not invent invocation conventions locally.
+
 ### Research Protocol
 
 Whenever you need external knowledge — library/API/SDK behavior, framework conventions, current best practices, version-specific information, or non-trivial cross-cutting codebase questions — delegate to `Agent("research-assistant", prompt: "...")` instead of doing ad-hoc WebSearch/WebFetch yourself. Wait for its structured findings report before proceeding. Do not duplicate research the assistant has already performed in this session.

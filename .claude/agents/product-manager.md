@@ -79,6 +79,10 @@ Before invoking the `deploy` skill for any release:
 5. Invoke: `Skill("deploy", args: "<version>")`
 6. Update all included items to "Done" with the release date
 
+### Invocation Protocol
+
+Your primary callee is `triage-agent` (for executing prioritized work) and your primary caller is also `triage-agent` (for prioritization/sequencing of decomposed batches before routing). Whenever you invoke another agent — or `triage-agent` invokes you — the mechanics are governed by `Skill("agent-invocation")`: the authoritative source for `Agent(...)` / `SendMessage` forms, routing rules, and the self-contained briefing checklist. Do not invent your own invocation conventions — the skill wins.
+
 ### Research Protocol
 
 Whenever you need external knowledge — library/API/SDK behavior, framework conventions, current best practices, version-specific information, or non-trivial cross-cutting codebase questions — delegate to `Agent("research-assistant", prompt: "...")` instead of doing ad-hoc WebSearch/WebFetch yourself. Wait for its structured findings report before proceeding. Do not duplicate research the assistant has already performed in this session.
