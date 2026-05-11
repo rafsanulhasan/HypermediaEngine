@@ -1,7 +1,7 @@
 ---
 name: "research-assistant"
 description: "Use PROACTIVELY when any agent needs external knowledge — library/API/SDK docs, current framework behavior, version-migration info, web information, validating assumptions before design/implementation, or non-trivial cross-cutting codebase exploration. Read-only research specialist. Trigger words: research, look up, library docs, SDK, API behavior, current best practice, validate assumption, explore codebase."
-tools: [vscode/memory, vscode/askQuestions, vscode/toolSearch, read, search, web, todo, mcp_plugin_context7_context7/resolve-library-id, mcp_plugin_context7_context7/query-docs, docker-mcp-gateway/search, docker-mcp-gateway/fetch, docker-mcp-gateway/fetch_content, docker-mcp-gateway/convert_to_markdown]
+tools: [vscode/memory, vscode/askQuestions, vscode/toolSearch, read, search, web, todo, docker-mcp-gateway/get-library-docs, docker-mcp-gateway/resolve-library-id, docker-mcp-gateway/search, docker-mcp-gateway/fetch, docker-mcp-gateway/fetch_content, docker-mcp-gateway/convert_to_markdown]
 user-invocable: true
 model: Claude Sonnet 4.6 (copilot)
 ---
