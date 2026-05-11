@@ -27,20 +27,22 @@ You own test planning and quality validation.
 - `csharp-unit-testing` — use when writing unit tests (mocks via TUnit.Mocks, no infrastructure)
 - `csharp-integration-testing` — use when writing integration tests (TestWebApplicationFactory, Testcontainers, no mocks)
 - `csharp-architecture-testing` — use when writing tests that enforce architectural constraints (NetArchTest.Rules, layer isolation, naming conventions)
+- `playwright-mcp-ui-testing` — use when the change is UI/frontend-related; performs AI-driven browser tests via Playwright MCP tools and produces a test report with screenshots. **Only invoke if the change involves UI/frontend.**
+- `tunit-playwright-ui-testing` — use when writing coded end-to-end browser tests in C# (TUnit + Microsoft.Playwright, Page Object Model, `SharedType.PerTestSession` fixture)
+- `bunit-blazor-testing` — use when writing Blazor component tests in isolation (bUnit TestContext, DI mocking, semantic HTML assertions, snapshot testing)
 - `manage-memory`
 
 ## Browser Testing
 
-For browser-based end-to-end and UI testing, use the Playwright MCP tools provided by the `docker-mcp-gateway` MCP server. These tools cover navigation, interaction, form filling, dialog handling, network inspection, and evidence capture.
+For AI-driven browser UI testing, use either:
+1. **Playwright MCP server** (`mcp__playwright__*` tools from the `playwright` MCP server in `.mcp.json`) — preferred for direct `@playwright/mcp` integration.
+2. **Docker MCP gateway** (`docker-mcp-gateway/*` tools) — fallback when Playwright MCP server is not available.
 
-### Tool Selection Guidance
-- **Anchor assertions on `browser_snapshot`** — prefer the accessibility-tree snapshot as the source of truth for element state. More stable than coordinate-based or pixel-based assertions.
-- **Stabilize with `browser_wait_for`** — wait for expected text, element visibility, or condition changes before asserting. Never rely on implicit timing or arbitrary sleeps.
-- **Diagnose failures with `browser_console_messages` and `browser_network_requests`** — when a UI assertion fails, capture console logs and network activity to root-cause frontend bugs, API contract violations, or test setup issues.
-- **Capture evidence with `browser_take_screenshot` on failed runs** — attach screenshots to failure reports so the software-engineer can reproduce visually without re-running the suite.
+Invoke the `playwright-mcp-ui-testing` skill for complete guidance on tool selection, the SAA pattern, evidence capture, and test reporting.
 
-### Escape Hatches (Require Justification)
-- **`browser_run_code_unsafe`** and **`browser_eval`** execute arbitrary JavaScript in the page context, bypassing the tool-mediated interaction model. They can mask real UX defects. Use only when no combination of `browser_click` / `browser_type` / `browser_fill_form` / `browser_select_option` can reproduce the required state, and record the justification in the test's comment header or design plan.
+For coded Playwright tests (`.cs` files committed to the repo), invoke the `tunit-playwright-ui-testing` skill.
+
+For Blazor component tests, invoke the `bunit-blazor-testing` skill.
 
 ### Invocation Protocol
 

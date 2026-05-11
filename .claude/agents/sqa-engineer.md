@@ -83,6 +83,30 @@ Skill("csharp-architecture-testing")
 
 Trigger: whenever writing tests that enforce structural rules — layer isolation, namespace conventions, naming patterns, or interface contracts. This skill provides guidance on NetArchTest.Rules, loading assemblies, building fluent rule chains, and asserting results with TUnit.Assertions.Should. Use this when a test does not execute behavior but instead validates that the codebase structure adheres to architectural constraints.
 
+### `playwright-mcp-ui-testing` — invoke when the change is UI/frontend-related for AI-driven browser tests
+
+```
+Skill("playwright-mcp-ui-testing")
+```
+
+Trigger: after the software-engineer completes a UI or frontend change. This skill directs the agent to perform AI-driven browser UI tests using the Playwright MCP server tools (`browser_navigate`, `browser_snapshot`, `browser_click`, etc.) — no coded test files are produced. Produces a browser test report with screenshots. **Only invoke if the change involves UI/frontend.**
+
+### `tunit-playwright-ui-testing` — invoke when writing coded end-to-end UI tests in C#
+
+```
+Skill("tunit-playwright-ui-testing")
+```
+
+Trigger: when the test plan includes coded end-to-end browser tests. This skill provides guidance on writing C# Playwright tests using TUnit as the test runner, Page Object Model patterns, browser lifecycle fixtures via `ClassDataSource`, and async Playwright patterns for web applications.
+
+### `bunit-blazor-testing` — invoke when writing Blazor component tests
+
+```
+Skill("bunit-blazor-testing")
+```
+
+Trigger: when the component under test is a Blazor component. This skill provides comprehensive guidance on bUnit TestContext, component parameter binding, DI/service mocking, event testing, semantic HTML assertions, snapshot testing, and TUnit-specific patterns.
+
 ### `manage-memory` — invoke at session start and when learning something worth preserving
 
 ```
@@ -94,7 +118,15 @@ Record: test fixture patterns, areas that repeatedly produce surviving mutants, 
 
 ## Browser Testing
 
-For browser-based end-to-end and UI testing, use the Playwright MCP tools provided by the `docker-mcp-gateway` MCP server (all prefixed with `mcp__docker-mcp-gateway__`). These tools cover navigation, interaction, form filling, dialog handling, network inspection, and evidence capture.
+For AI-driven browser UI testing, use either:
+1. **Playwright MCP server** (`mcp__playwright__*` tools from the `playwright` MCP server in `.mcp.json`) — preferred for direct `@playwright/mcp` integration.
+2. **Docker MCP gateway** (`mcp__docker-mcp-gateway__*` tools) — fallback when Playwright MCP server is not available.
+
+Invoke `Skill("playwright-mcp-ui-testing")` for complete guidance on tool selection, the SAA pattern, evidence capture, and test reporting.
+
+For coded Playwright tests (`.cs` files committed to the repo), invoke `Skill("tunit-playwright-ui-testing")`.
+
+For Blazor component tests, invoke `Skill("bunit-blazor-testing")`.
 
 ### Tool Selection Guidance
 

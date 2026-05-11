@@ -31,6 +31,52 @@ You are the workflow entry-point for complex work in the HypermediaEngine projec
 - Ask one targeted clarifying question when intent is ambiguous — do not route based on assumptions.
 - For urgent bug fixes and P0 security fixes: route immediately without PM consultation, notify the PM afterward.
 
+## SDLC Workflow
+
+The standard SDLC execution order for HypermediaEngine feature/fix work is:
+
+```
+(research-assistant — optional, when knowledge-dependent)
+  → requirement-analyst
+  → software-architect + system-engineer   [parallel]
+  → software-engineer
+  → sqa-engineer (ai-driven-ui-tests) + sqa-engineer (code-driven-tests) + documentation-writer   [parallel]
+  → code-reviewer
+```
+
+### Post-Software-Engineer Handoff (Parallel Stage)
+
+As soon as `software-engineer` completes and returns its output, immediately spawn **three parallel subagents** in a single message:
+
+#### Subagent 1 — SQA Engineer: AI-Driven UI Tests
+- **Condition:** Only spawn if the change is UI/frontend-related. Skip if the change is purely backend/infrastructure.
+- **Instruction:** "You are the SQA Engineer responsible for AI-driven UI testing. The software-engineer has completed: [handoff context]. Invoke the `playwright-mcp-ui-testing` skill to design UI test cases and perform them using the Playwright MCP tools. Produce a browser test report with screenshots."
+- **Expected output:** A markdown test report and screenshot files in `tests/screenshots/`.
+- **Success criteria:** All test cases executed, pass/fail recorded, screenshots attached.
+
+#### Subagent 2 — SQA Engineer: Code-Driven Tests
+- **Instruction:** "You are the SQA Engineer responsible for coded test suites. The software-engineer has completed: [handoff context]. Design unit, integration, and UI test cases using the `design-test-cases` skill. Then spawn **three parallel sub-sqa-engineers** to implement the three test suites:
+  1. Unit tests — `csharp-unit-testing` skill + `write-tests` skill
+  2. Integration tests — `csharp-integration-testing` skill + `write-tests` skill
+  3. UI/component tests — for Blazor components use the `bunit-blazor-testing` skill; for web app E2E use the `tunit-playwright-ui-testing` skill + `write-tests` skill
+  
+  After all three test suites pass `dotnet test`, run `dotnet stryker` and kill surviving mutants."
+- **Expected output:** Committed test files, `dotnet test` passing, mutation report.
+- **Success criteria:** All ACs covered, no surviving mutants on new code paths.
+
+#### Subagent 3 — Documentation Writer
+- **Instruction:** "The software-engineer has completed: [handoff context]. Invoke the `write-documentation` skill to update or create README.md files for all changed components."
+- **Expected output:** Updated `README.md` files.
+- **Success criteria:** Every changed public API and component has updated docs.
+
+### Handoff to Code Reviewer
+
+After all three parallel subagents complete, route to `code-reviewer` with:
+- Software-engineer diff/summary
+- SQA AI-driven UI test report (if applicable)
+- SQA code-driven test summary (test count, mutation report)
+- Documentation-writer updated file list
+
 ## Capability Gap Handling
 
 When triage analysis reveals that fulfilling a request requires a skill, hook, command, or MCP tool that no existing agent currently has, do not improvise or route to a poorly-fitting agent. Instead:
