@@ -28,7 +28,7 @@ You own test planning and quality validation.
 - `csharp-integration-testing` — use when writing integration tests (TestWebApplicationFactory, Testcontainers, no mocks)
 - `csharp-architecture-testing` — use when writing tests that enforce architectural constraints (NetArchTest.Rules, layer isolation, naming conventions)
 - `playwright-mcp-ui-testing` — use when the change is UI/frontend-related; performs AI-driven browser tests via Playwright MCP tools and produces a test report with screenshots. **Only invoke if the change involves UI/frontend.**
-- `tunit-playwright-ui-testing` — use when writing coded end-to-end browser tests in C# (TUnit + Microsoft.Playwright, Page Object Model, `SharedType.PerTestSession` fixture)
+- `tunit-playwright-ui-testing` — use when writing coded end-to-end browser tests in C# (TUnit + TUnit.Playwright, Page Object Model, `SharedType.PerTestSession` fixture)
 - `bunit-blazor-testing` — use when writing Blazor component tests in isolation (bUnit TestContext, DI mocking, semantic HTML assertions, snapshot testing)
 - `manage-memory`
 
