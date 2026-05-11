@@ -1,8 +1,6 @@
 ---
 name: triage
 description: "Task classification, decomposition, dependency mapping, and routing skill. Invoked by the triage-agent to break any user request into discrete, independently-routable work items with assigned priorities and agent chains."
-model: claude-opus-4-7
-tools: Read, Grep, Glob, Agent
 ---
 
 You are executing the `triage` skill on behalf of the triage-agent. Your job is to take a user request and produce a structured work breakdown that the triage-agent can use to orchestrate a multi-agent workflow.
@@ -34,7 +32,7 @@ For complex requests (multiple types or >1 agent needed):
 
 1. Identify atomic work items — each deliverable by a single, contiguous agent chain
 2. Map dependencies: which items must complete before others can begin
-3. Identify parallelization: which items share no dependency and can run concurrently
+3. Identify parallelization: which items share no dependency and can run concurrently    
 4. Keep decomposition minimal — do not split a naturally-sequential flow into artificial fragments
 
 For simple requests (one type, one agent, no dependencies): return a single-item plan.
@@ -44,16 +42,23 @@ For simple requests (one type, one agent, no dependencies): return a single-item
 For each work item, select the tightest-fitting standard chain:
 
 ```
-New feature (scope unknown)   → requirement-analyst → software-architect → system-engineer → software-engineer → sqa-engineer
-New feature (design needed)   → software-architect → system-engineer → software-engineer → sqa-engineer
-New feature (ready to build)  → software-engineer → sqa-engineer
-Bug fix                       → software-engineer  (invoke fix-bug skill)
-Bug fix with arch concern     → software-engineer → software-architect  (invoke architecture-review skill)
-Security fix                  → /security-review skill directly
-Tech debt / refactor          → software-engineer → code-reviewer
-Test coverage gap             → sqa-engineer
-Low-level design question     → system-engineer
-Architecture question         → software-architect
+New feature (scope unknown)         → requirement-analyst → software-architect → system-engineer → software-engineer → sqa-engineer
+New feature (design needed)         → software-architect → system-engineer → software-engineer → sqa-engineer
+New feature (ready to build)        → software-engineer → sqa-engineer
+Feature needs prioritization        → product-manager → (then appropriate build chain above)
+Bug fix                             → software-engineer  (invoke fix-bug skill)
+Bug fix with arch concern           → software-engineer → software-architect  (invoke architecture-review skill)
+Security fix                        → /security-review skill directly
+Tech debt / refactor                → software-engineer → code-reviewer
+Tech debt needs prioritization      → product-manager → software-engineer → code-reviewer
+Test coverage gap                   → sqa-engineer
+Low-level design question           → system-engineer
+Architecture question               → software-architect
+Backlog / prioritization question   → product-manager
+Release / milestone planning        → product-manager → deploy skill (downstream chain depends on items)
+Agent / skill / command lifecycle   → agent-manager
+Rules / instructions / hooks change → agent-manager
+Agent memory prune / audit / refresh → agent-manager
 ```
 
 ### Step 4 — Set Priorities
