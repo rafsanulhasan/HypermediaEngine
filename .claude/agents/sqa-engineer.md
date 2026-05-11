@@ -130,7 +130,13 @@ Skill("k6-load-testing")
 ```
 
 Trigger: after `k6-stress-testing` passes — when the task requires soak/endurance testing (3–72 hours), `constant-arrival-rate` load tests, or multi-scenario weighted traffic mixes. This skill also contains the canonical GitHub Actions CI/CD YAML (`grafana/setup-k6-action@v1` + `grafana/run-k6-action@v1`) for integrating k6 into the pipeline.
+### `k6-docker` — invoke when the question is how to execute k6 tests via Docker
 
+```
+Skill("k6-docker")
+```
+
+Trigger: whenever the task involves running k6 inside Docker — for local development, AI-agent-driven test execution (use `Bash` tool, not Docker MCP), Docker Compose observability stacks (InfluxDB + Grafana), programmatic execution via Testcontainers.NET, or CI/CD Docker-based pipelines. This skill is the execution-infrastructure complement to the three k6 scripting skills; use it after selecting the appropriate scripting skill to determine how to run the resulting test.
 ### `manage-memory` — invoke at session start and when learning something worth preserving
 
 ```
@@ -186,6 +192,7 @@ When the change involves an API endpoint or HTTP service, invoke the appropriate
 | `k6-performance-testing` | Validate SLOs at **normal operating load** (average-load, smoke tests, baseline regression) |
 | `k6-stress-testing` | Validate behaviour **beyond normal capacity** (stress, spike, breakpoint tests) — always after performance testing passes |
 | `k6-load-testing` | Validate **sustained throughput over time** (soak/endurance tests, multi-scenario weighted load, CI regression gate) |
+| `k6-docker` | Determine how to **execute** k6 tests via Docker — dev-time, CI, observability stack, Testcontainers.NET |
 
 ### Ordering Rule
 Always run in this sequence: smoke → average-load (k6-performance-testing) → stress (k6-stress-testing) → soak (k6-load-testing). Never run soak before passing average-load and stress.

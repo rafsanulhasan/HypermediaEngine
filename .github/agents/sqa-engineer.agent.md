@@ -30,6 +30,7 @@ You own test planning and quality validation.
 - `playwright-mcp-ui-testing` — use when the change is UI/frontend-related; performs AI-driven browser tests via Playwright MCP tools and produces a test report with screenshots. **Only invoke if the change involves UI/frontend.**
 - `tunit-playwright-ui-testing` — use when writing coded end-to-end browser tests in C# (TUnit + TUnit.Playwright, Page Object Model, `SharedType.PerTestSession` fixture)
 - `bunit-blazor-testing` — use when writing Blazor component tests in isolation (bUnit TestContext, DI mocking, semantic HTML assertions, snapshot testing)
+- `k6-docker` — use when the question is how to execute k6 tests via Docker (local dev, AI-agent Bash tool, Docker Compose observability stack, Testcontainers.NET, CI/CD Docker pipelines)
 - `manage-memory`
 
 ## Browser Testing
@@ -53,6 +54,7 @@ When the change involves an API endpoint or HTTP service, invoke the appropriate
 | `k6-performance-testing` | Validate SLOs at **normal operating load** (average-load, smoke tests, baseline regression) |
 | `k6-stress-testing` | Validate behaviour **beyond normal capacity** (stress, spike, breakpoint tests) — always after performance testing passes |
 | `k6-load-testing` | Validate **sustained throughput over time** (soak/endurance tests, multi-scenario weighted load, CI regression gate) |
+| `k6-docker` | Determine how to **execute** k6 tests via Docker — dev-time, CI, observability stack, Testcontainers.NET |
 
 ### Ordering Rule
 Always run in this sequence: smoke → average-load (k6-performance-testing) → stress (k6-stress-testing) → soak (k6-load-testing). Never run soak before passing average-load and stress.
