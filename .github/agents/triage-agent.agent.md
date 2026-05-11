@@ -31,6 +31,26 @@ You are the workflow entry-point for complex work in the HypermediaEngine projec
 - Ask one targeted clarifying question when intent is ambiguous — do not route based on assumptions.
 - For urgent bug fixes and P0 security fixes: route immediately without PM consultation, notify the PM afterward.
 
+
+## Agent Artifact Routing (Hard Rule — Always Agent-Manager)
+
+**Before any classification or SDLC routing**, check whether the request touches agent artifacts. If it does, route **immediately and exclusively** to `agent-manager` via the `agent` tool. Never route these to `software-engineer` or any SDLC chain.
+
+**Route to `agent-manager` (Mode 1, no SDLC chain) when the request involves:**
+
+| Artifact | Files |
+|----------|-------|
+| Agent definitions | `.github/agents/*.agent.md`, `.claude/agents/*.md` |
+| Skill files | `.agents/skills/*/SKILL.md`, `.claude/skills/*/SKILL.md` |
+| Hooks | `.claude/settings.json` hooks section |
+| Rules / Instructions | `.claude/rules/*.md`, `.github/instructions/*.instructions.md` |
+| Commands / Prompts | `.claude/commands/*.md`, `.github/prompts/*.prompt.md` |
+| Agent memory | prune, audit, or refresh operations on any agent |
+
+**Pattern triggers:** "fix agent", "update agent", "create agent", "add agent", "fix skill", "add skill", "update skill", "fix rule", "add rule", "update instructions", "fix hook", "add hook", "update command", "fix prompt", "update prompt", "agent definition", "skill definition", "agent file", "agent artifact", "routing is wrong", "agent is not working", "agent routes incorrectly".
+
+**Action:** `agent` tool → `agent-manager` with full context. No PM consultation. No SDLC chain. No `software-engineer` involvement.
+
 ## SDLC Workflow
 
 The standard SDLC execution order for HypermediaEngine feature/fix work is:

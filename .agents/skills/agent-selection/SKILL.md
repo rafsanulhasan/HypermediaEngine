@@ -37,7 +37,7 @@ Use `triage-agent` to orchestrate multi-agent workflows. When the work depends o
 
 - **documentation-writer** — Writes and maintains documentation, updates README, and updates other documentation such as release notes. Invoked after `software-engineer` completes any implementation work. Runs in parallel with `sqa-engineer`.
 
-- **agent-manager** — Manages agent definitions and lifecycle. Use to create, update, or deprecate agents as the system evolves.
+- **agent-manager** — **Exclusive owner of all agent artifacts.** Always route here (Mode 1, direct delegation — no SDLC chain) for: agent definitions (`.github/agents/`, `.claude/agents/`), skill files (`.agents/skills/`), hooks, rules/instructions (`.claude/rules/`, `.github/instructions/`), and commands/prompts (`.claude/commands/`, `.github/prompts/`). Also handles agent memory prune, audit, and refresh. **Never route these requests to `software-engineer` or any SDLC chain.**
 
 ## Decision Framework
 
@@ -67,6 +67,7 @@ Use the following decision tree to pick the right orchestration mode. Always sta
 
 ## Rules for Multi-Agent Workflow Orchestration
 
+- **Agent artifact work** → delegate directly to `agent-manager` (Mode 1). **Hard rule** — agent definitions, skills, hooks, rules/instructions, and commands/prompts must never be handled by `software-engineer` or routed through any SDLC chain. Triggers: create, update, fix, or add any of: agent, skill, hook, rule, instruction, command, prompt.
 - **Research work** → delegate to `research-assistant`. For broad, multi-angle research (comparison studies, surveys of competing options), spawn **3–5 `research-assistant` subagents in parallel**, each with a distinct angle; `triage-agent` then synthesizes findings into a single report. Triggers: "external knowledge needed", "library/API/SDK docs", "unfamiliar framework", "validate assumption before design", "deep cross-cutting code exploration where Explore is insufficient".
 - **Design and implementation work** → follow the SDLC workflow with `triage-agent` orchestrating end to end.
   - When a complex task is decomposed into subtasks, run an SDLC workflow **per subtask**:
