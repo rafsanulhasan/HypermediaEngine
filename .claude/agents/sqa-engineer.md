@@ -107,6 +107,30 @@ Skill("bunit-blazor-testing")
 
 Trigger: when the component under test is a Blazor component. This skill provides comprehensive guidance on bUnit TestContext, component parameter binding, DI/service mocking, event testing, semantic HTML assertions, snapshot testing, and TUnit-specific patterns.
 
+### `k6-performance-testing` — invoke when validating SLOs at normal operating load
+
+```
+Skill("k6-performance-testing")
+```
+
+Trigger: when writing k6 tests for smoke testing, average-load validation, or baseline SLO regression gates. This skill covers the test lifecycle hooks, `SharedArray` parameterization, threshold syntax, per-endpoint tags, CLI usage, and output formats. Use for the first k6 test type in every feature's load-testing sequence.
+
+### `k6-stress-testing` — invoke when testing beyond normal capacity
+
+```
+Skill("k6-stress-testing")
+```
+
+Trigger: after `k6-performance-testing` passes — when the task is to validate behaviour under stress, spike, or breakpoint conditions. This skill covers the open-model `ramping-arrival-rate` executor, multi-phase scenarios with per-scenario tags, `abortOnFail`/`delayAbortEval` threshold patterns, breaking-point detection signals, and anti-patterns (no sleep, closed-model coordinator omission, undersized VU pools).
+
+### `k6-load-testing` — invoke when validating sustained throughput or soak endurance
+
+```
+Skill("k6-load-testing")
+```
+
+Trigger: after `k6-stress-testing` passes — when the task requires soak/endurance testing (3–72 hours), `constant-arrival-rate` load tests, or multi-scenario weighted traffic mixes. This skill also contains the canonical GitHub Actions CI/CD YAML (`grafana/setup-k6-action@v1` + `grafana/run-k6-action@v1`) for integrating k6 into the pipeline.
+
 ### `manage-memory` — invoke at session start and when learning something worth preserving
 
 ```
@@ -150,6 +174,29 @@ To update a skill or create a new one:
 Agent("skill-manager", prompt: "update-skill write-tests: <change description>")
 Agent("skill-manager", prompt: "create-skill <name>")
 ```
+
+## k6 Performance, Load, and Stress Testing
+
+Invoke the matching `Skill(...)` from the `## Skills` section above for the active test type.
+
+When the change involves an API endpoint or HTTP service, invoke the appropriate k6 skill based on test objective:
+
+| Skill | When to Invoke |
+|-------|----------------|
+| `k6-performance-testing` | Validate SLOs at **normal operating load** (average-load, smoke tests, baseline regression) |
+| `k6-stress-testing` | Validate behaviour **beyond normal capacity** (stress, spike, breakpoint tests) — always after performance testing passes |
+| `k6-load-testing` | Validate **sustained throughput over time** (soak/endurance tests, multi-scenario weighted load, CI regression gate) |
+
+### Ordering Rule
+Always run in this sequence: smoke → average-load (k6-performance-testing) → stress (k6-stress-testing) → soak (k6-load-testing). Never run soak before passing average-load and stress.
+
+### File Placement
+- k6 test scripts go in `tests/load/` directory
+- Script naming convention: `<feature>-<test-type>.js` (e.g., `items-api-load.js`, `items-api-stress.js`, `items-api-soak.js`)
+- Test data fixtures go in `tests/load/test-data/`
+
+### GitHub Actions Integration
+Use `grafana/setup-k6-action@v1` + `grafana/run-k6-action@v1`. Never use the archived `grafana/k6-action`. See `k6-load-testing` skill for the full workflow YAML.
 
 ### Invocation Protocol
 

@@ -44,6 +44,27 @@ For coded Playwright tests (`.cs` files committed to the repo), invoke the `tuni
 
 For Blazor component tests, invoke the `bunit-blazor-testing` skill.
 
+## k6 Performance, Load, and Stress Testing
+
+When the change involves an API endpoint or HTTP service, invoke the appropriate k6 skill based on test objective:
+
+| Skill | When to Invoke |
+|-------|----------------|
+| `k6-performance-testing` | Validate SLOs at **normal operating load** (average-load, smoke tests, baseline regression) |
+| `k6-stress-testing` | Validate behaviour **beyond normal capacity** (stress, spike, breakpoint tests) — always after performance testing passes |
+| `k6-load-testing` | Validate **sustained throughput over time** (soak/endurance tests, multi-scenario weighted load, CI regression gate) |
+
+### Ordering Rule
+Always run in this sequence: smoke → average-load (k6-performance-testing) → stress (k6-stress-testing) → soak (k6-load-testing). Never run soak before passing average-load and stress.
+
+### File Placement
+- k6 test scripts go in `tests/load/` directory
+- Script naming convention: `<feature>-<test-type>.js` (e.g., `items-api-load.js`, `items-api-stress.js`, `items-api-soak.js`)
+- Test data fixtures go in `tests/load/test-data/`
+
+### GitHub Actions Integration
+Use `grafana/setup-k6-action@v1` + `grafana/run-k6-action@v1`. Never use the archived `grafana/k6-action`. See `k6-load-testing` skill for the full workflow YAML.
+
 ### Invocation Protocol
 
 You are SDLC stage 5 (testing), running in parallel with `documentation-writer`. Your forward handoff is `code-reviewer`, with the test plan, implemented tests, mutation report (surviving-mutant rationale), and AC-traceability table as the artifacts to cite. Any deviation discovered against the spec goes back to `requirement-analyst` (via `spec-driven-development`) before adjusting tests. For invocation mechanics — `agent` tool form, routing rules, and the self-contained briefing checklist — consult the `agent-invocation` skill. It is the authoritative source; do not invent invocation conventions locally.
