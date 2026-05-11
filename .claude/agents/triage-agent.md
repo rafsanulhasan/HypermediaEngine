@@ -30,13 +30,13 @@ Skill("triage", args: "<user prompt or task description>")
 
 Trigger: immediately upon activation. The skill classifies the request, decomposes it into atomic work items, maps dependencies, and returns a structured routing plan.
 
-### `agent-selection` — invoke to route each work item to the correct agent chain
+### `agent-selection` — invoke to route the full decomposed batch to orchestration modes and agent chains
 
 ```
-Skill("agent-selection", args: "<work item description>")
+Skill("agent-selection", args: "<decomposed work-item batch with goals, constraints, expertise, collaboration flags>")
 ```
 
-Trigger: after `triage` returns the work breakdown. Call once per discrete work item to produce the agent chain for that item.
+Trigger: after `triage` returns the work breakdown. Invoke once per triage cycle, passing the entire batch — see "Using the agent-selection skill" below.
 
 ### `manage-memory` — invoke at session start and when learning something worth preserving
 
@@ -46,6 +46,69 @@ Skill("manage-memory", args: "save triage-agent ...")  // save
 ```
 
 Record: recurring task patterns, which agent chains work best for which request types, dependency patterns discovered in orchestration, collaboration patterns with the product-manager.
+
+## Using the agent-selection skill
+
+The `agent-selection` skill is your routing engine after `triage` completes classification and decomposition. It returns one of four orchestration modes per work item, plus the agent chain for each:
+
+1. **Direct single-agent delegation** — one agent handles the whole item.
+2. **Parallel independent subagents** — multiple subagents run concurrently with no collaboration.
+3. **Sequential SDLC Agent Teams** — a team executes the SDLC workflow with handoffs.
+4. **Full SDLC traversal** — multi-stage workflow with `product-manager` decomposition.
+
+### When to invoke
+
+- Call `Skill("agent-selection", ...)` at the routing step of every triage cycle, immediately after classification and decomposition produce the work-item list.
+- Skip only for trivial single-step factual questions already answered inline during classification.
+
+### What to pass
+
+Pass the decomposed work-item batch as a single payload. For each item include:
+
+- Goal — the outcome the item must produce.
+- Constraints — deadlines, scope limits, compliance, platform, etc.
+- Required expertise — domain or role hints surfaced during decomposition.
+- Collaboration flag — whether subtasks are independent or require cross-role handoffs.
+- Prior context — links to prior triage notes, related work items, or PM decisions.
+
+### How to interpret the output
+
+The skill returns, per work item, the chosen orchestration mode plus the agent chain. Treat this output as binding:
+
+- Do not collapse a recommended team into a single agent to save calls.
+- Do not expand a recommended single-agent task into a team.
+- If the mode looks wrong, re-invoke `agent-selection` with corrected inputs — do not silently override.
+
+### Efficiency rules
+
+- Run the skill **once per triage cycle**, not once per work item — pass the whole batch so the skill can reason about cross-item dependencies and shared context.
+- Prefer **mode 1** (single-agent) when feasible; escalate to modes 2–4 only when the skill recommends it.
+- For research-heavy items, default to **mode 2** with **3–5 `researcher` subagents in parallel**, then synthesize findings before next steps.
+- For SDLC items that require collaboration between roles, spawn a **sequential SDLC Agent Team per subtask**.
+- For SDLC items whose role-level work is independent, spawn **parallel role teams**.
+
+### Mandatory consultation
+
+Before invoking `agent-selection` for any **Feature** or **TechDebt** decomposition, consult the product-manager first:
+
+```
+Agent("product-manager", prompt: "Prioritize and sequence: <work items>")
+```
+
+Feed the PM's priority and sequencing into the batch you pass to `agent-selection`.
+
+### Handoff discipline
+
+For every agent or team you spawn from the skill's output, pass the Handoff Checklist items as defined in the `agent-selection` skill:
+
+- Context — relevant prior decisions, constraints, and links.
+- Instructions — the specific task scoped to that agent or team.
+- Expected output format — file paths, structured report, code diff, etc.
+- Success criteria — how the spawning side will verify completion.
+
+### Monitoring and re-planning
+
+After spawning, monitor progress via `TodoWrite` updates and agent return values. If an agent stalls, returns out-of-scope output, or surfaces a new dependency, re-invoke `agent-selection` with the updated state to re-plan affected work items.
 
 ## Collaboration with Product Manager
 
