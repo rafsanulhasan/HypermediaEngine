@@ -2,6 +2,8 @@ using Shouldly;
 
 using NUnit.Framework;
 
+using EntityTagCaching.Models;
+
 using HypermediaEngine.Builders;
 using HypermediaEngine.Responses;
 
@@ -47,18 +49,21 @@ public sealed class HypermediaBuilderTests
     {
         var builder = new HypermediaObjectBuilder<Product>();
         object act() => builder.WithSelfLink(string.Empty);
-        Should.Throw<ArgumentNullException>(() => act());
+        Should.Throw<ArgumentException>(() => act());
     }
 
     [TestCase]
     public void WithMetadata_ShouldAddMetadataToResponse()
     {
+        ObjectResponseMetadata metadata = new(EntityTag.Empty, "v1", 1);
         var builder = new HypermediaObjectBuilder<Product>()
-            .WithData(new Product(1, "Widget", 9.99m));
+            .WithData(new Product(1, "Widget", 9.99m))
+            .WithMetadata(metadata);
 
         var response = builder.Build();
 
         response.Meta.ShouldNotBeNull();
+        response.Meta.ShouldBe(metadata);
     }
 
     [TestCase]

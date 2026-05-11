@@ -56,7 +56,8 @@ public static class HttpContextHelpers
             }
 
             if (query.TryGetValue(nameof(CursorPaging.Limit), out StringValues limitStr)
-             && query.TryGetValue(nameof(CursorPaging.Cursor), out StringValues cursorStr))
+             && query.TryGetValue(nameof(CursorPaging.Cursor), out StringValues cursorStr)
+             && query.TryGetValue(nameof(CursorPaging.Field), out StringValues fieldStr))
             {
                 if (StringValues.IsNullOrEmpty(limitStr)
                  || !int.TryParse(limitStr, CultureInfo.InvariantCulture, out int limit))
@@ -65,13 +66,13 @@ public static class HttpContextHelpers
                         new InvalidDataException($"The value of {nameof(CursorPaging.Limit)} should be valid non-negetive number"));
                 }
 
-                if (StringValues.IsNullOrEmpty(cursorStr))
+                if (StringValues.IsNullOrEmpty(fieldStr))
                 {
                     return new OptionalResult<OffsetOrCursorPaging>(
-                        new InvalidDataException($"The value of {nameof(CursorPaging.Cursor)} should not be empty"));
+                        new InvalidDataException($"The value of {nameof(CursorPaging.Field)} should not be empty"));
                 }
 
-                OffsetOrCursorPaging cp = new(new CursorPaging(cursorStr, limit));
+                OffsetOrCursorPaging cp = new(new CursorPaging(limit, cursorStr, fieldStr));
                 return OptionalResult<OffsetOrCursorPaging>.Some(cp);
             }
 

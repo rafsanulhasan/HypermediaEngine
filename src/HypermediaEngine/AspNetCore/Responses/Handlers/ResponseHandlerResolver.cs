@@ -11,8 +11,8 @@ internal sealed class ResponseHandlerResolver<T>(
     IHypermediaObjectBuilder<T> objectBuilder,
     IHypermediaCollectionBuilder<T> collectionBuilder,
     AbstractObjectResponseHandler<T> objectHandler,
-    MartenQueryableCollectionResponseHandler<T> martenHandler,
-    QueryableCollectionResponseHandler<T> queryableHandler,
+    MartenQueryableResponseHandler<T> martenHandler,
+    QueryableResponseHandler<T> queryableHandler,
     EnumerableCollectionResponseHandler<T> enumerableHandler,
     IHttpContextAccessor httpContextAccessor,
     IServiceProvider serviceProvider
@@ -21,27 +21,27 @@ internal sealed class ResponseHandlerResolver<T>(
 {
     internal EndpointFilterInvocationContext? DefaultEndpointFilterInvocationContext { get; set; }
 
-    public async ValueTask<IResponseHandler> ResolveHandler(object response)
+    public ValueTask<IResponseHandler> ResolveHandler(object response)
     {
-        return response switch
+        IResponseHandler handler = response switch
         {
             IMartenQueryable<T> or Ok<IMartenQueryable<T>> or JsonHttpResult<IMartenQueryable<T>>
-                => (await martenHandler.WithQueryParams().ConfigureAwait(false))
+                => martenHandler
                         .WithResponseBuilder(collectionBuilder)
                         .WithEndpointInvocationFilterContext(DefaultEndpointFilterInvocationContext),
 
             IQueryable<T> or Ok<IQueryable<T>> or JsonHttpResult<IQueryable<T>>
-                => (await queryableHandler.WithQueryParams().ConfigureAwait(false))
+                => queryableHandler
                         .WithResponseBuilder(collectionBuilder)
                         .WithEndpointInvocationFilterContext(DefaultEndpointFilterInvocationContext),
 
             T[] or Ok<T[]> or JsonHttpResult<T[]>
-                => (await enumerableHandler.WithQueryParams().ConfigureAwait(false))
+                => enumerableHandler
                         .WithResponseBuilder(collectionBuilder)
                         .WithEndpointInvocationFilterContext(DefaultEndpointFilterInvocationContext),
 
             IEnumerable<T> or Ok<IEnumerable<T>> or JsonHttpResult<IEnumerable<T>>
-                => (await enumerableHandler.WithQueryParams().ConfigureAwait(false))
+                => enumerableHandler
                         .WithResponseBuilder(collectionBuilder)
                         .WithEndpointInvocationFilterContext(DefaultEndpointFilterInvocationContext),
 
@@ -52,12 +52,14 @@ internal sealed class ResponseHandlerResolver<T>(
                   && serviceProvider.GetService(handlerType) is IResponseHandler elementHandler
                 => elementHandler,
 
-            T or Ok<T> or JsonHttpResult<T> when objectHandler is TResponseHandler<T> handler
-                => handler
+            T or Ok<T> or JsonHttpResult<T> when objectHandler is TResponseHandler<T> objectHandleer
+                => objectHandleer
                         .WithResponsBuilder(objectBuilder)
                         .WithEndpointInvocationFilterContext(DefaultEndpointFilterInvocationContext),
 
             _ => throw new InvalidOperationException("Unknown response type"),
         };
+
+        return ValueTask.FromResult(handler);
     }
 }

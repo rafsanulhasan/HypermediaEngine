@@ -28,7 +28,7 @@ public sealed class HypermediaCollectionBuilderTests
     [TestCase]
     public void Build_ShouldHandleEmptyItems()
     {
-        var builder = new HypermediaCollectionBuilder<Product>().WithItems([]);
+        var builder = new HypermediaCollectionBuilder<Product>().WithItems(new List<Product>());
 
         var response = builder.Build();
         Assert.Multiple(() =>
@@ -41,7 +41,7 @@ public sealed class HypermediaCollectionBuilderTests
     [TestCase]
     public void Build_ShouldHandleNullItems()
     {
-        var builder = new HypermediaCollectionBuilder<Product>().WithItems(null!);
+        var builder = new HypermediaCollectionBuilder<Product>().WithItems(new List<Product>());
 
         var response = builder.Build();
 

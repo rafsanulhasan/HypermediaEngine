@@ -80,6 +80,6 @@ public class ETagService : IETagService
     public bool IsETagStale(string etag, string? ifNoneMatch)
     {
         return string.IsNullOrEmpty(ifNoneMatch)
-            || !etag.Equals(ifNoneMatch, StringComparison.Ordinal);
+            || !etag.Equals(ifNoneMatch, StringComparison.OrdinalIgnoreCase);
     }
 }

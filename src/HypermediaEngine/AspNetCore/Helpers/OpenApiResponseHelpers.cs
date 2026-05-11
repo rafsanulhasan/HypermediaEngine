@@ -25,7 +25,7 @@ public static class OpenApiResponseHelpers
                     {
                         {
                             contentType,
-                            new OpenApiMediaType()
+                            new()
                             {
                                  Schema = schema,
                                  Example = withExample ? example : null,
@@ -42,8 +42,10 @@ public static class OpenApiResponseHelpers
 
             if (response.Content.ContainsKey(contentType))
             {
-                response.Content[contentType].Schema = schema;
-                response.Content[contentType].Example = withExample ? example : null;
+                OpenApiMediaType content = response.Content[contentType];
+                content.Schema = schema;
+                content.Example = withExample ? example : null;
+                response.Content[contentType] = content;
                 if (!response.Content[contentType].Examples?.Any(e => e.Value == example) ?? false)
                 {
                     response.Content[contentType].Examples?.Add(contentType, new OpenApiExample() { Value = example });

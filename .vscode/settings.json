@@ -1,0 +1,25 @@
+{
+  "chat.hookFilesLocations": {
+    ".github/hooks": true,
+    ".claude/settings.local.json": true,
+    ".claude/settings.json": true,
+    "~/.copilot/hooks": true,
+    "~/.claude/settings.json": true,
+    "~/.agents/hooks": true
+  },
+  "chat.mcp.serverSampling": {
+    "HypermediaEngine/.mcp.json: docker_mcp_gateway": {
+      "allowedModels": [
+        "copilot/auto",
+        "copilotcli/claude-sonnet-4.6",
+        "claude-code/claude-haiku-4.5",
+        "copilot/gemini-2.5-pro",
+        "copilotcli/gpt-5-mini",
+        "copilotcli/gpt-5.2-codex",
+        "copilotcli/gpt-5.4",
+        "copilotcli/gpt-5.4-mini",
+        "copilot/grok-code-fast-1"
+      ]
+    }
+  }
+}
