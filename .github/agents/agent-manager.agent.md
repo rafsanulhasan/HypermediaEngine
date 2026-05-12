@@ -94,6 +94,61 @@ Skill("rules-management", args: "sync <name>")
 
 Trigger: any time a request involves creating, modifying, or deleting a `.claude/rules/*.md` or `.github/instructions/*.instructions.md` file. Always route rules/instructions lifecycle operations through this skill — never edit those files directly without it.
 
+### `agent-sync` — detect and resolve drift between Claude and Copilot agent definitions
+
+```
+Skill("agent-sync", args: "audit")
+Skill("agent-sync", args: "sync <name>")
+Skill("agent-sync", args: "sync-all")
+Skill("agent-sync", args: "diff <name>")
+```
+
+Trigger: any time a full roster audit is needed, a single agent is known to have drifted, or all agents need to be pushed to parity. Applies the Claude-only Tool Exclusion List automatically — never invoke directly to edit agent files.
+
+### `command-prompt-sync` — detect and resolve drift between Claude commands and Copilot prompts
+
+```
+Skill("command-prompt-sync", args: "audit")
+Skill("command-prompt-sync", args: "sync <name>")
+Skill("command-prompt-sync", args: "sync-all")
+Skill("command-prompt-sync", args: "diff <name>")
+```
+
+Trigger: any time a command/prompt inventory audit is needed, a single pair is known to have drifted, or all command/prompt pairs need to be pushed to parity.
+
+### `hooks-sync` — detect and resolve drift between Claude Code hooks and Copilot hooks
+
+```
+Skill("hooks-sync", args: "audit")
+Skill("hooks-sync", args: "sync <name>")
+Skill("hooks-sync", args: "sync-all")
+Skill("hooks-sync", args: "diff <name>")
+```
+
+Trigger: any time a hook inventory audit is needed, a single hook is known to have drifted between `.claude/hooks/` + `settings.json` and `.github/hooks/`, or all hooks need to be pushed to parity.
+
+### `skills-sync` — detect and resolve drift between Claude and GitHub skill directories
+
+```
+Skill("skills-sync", args: "audit")
+Skill("skills-sync", args: "sync <name>")
+Skill("skills-sync", args: "sync-all")
+Skill("skills-sync", args: "diff <name>")
+```
+
+Trigger: any time a full skills audit is needed (verifying all four required files per skill), a single skill SKILL.md has drifted between platforms, or all skills need to be pushed to parity.
+
+### `rules-instructions-sync` — detect and resolve drift between Claude rules and Copilot instructions
+
+```
+Skill("rules-instructions-sync", args: "audit")
+Skill("rules-instructions-sync", args: "sync <name>")
+Skill("rules-instructions-sync", args: "sync-all")
+Skill("rules-instructions-sync", args: "diff <name>")
+```
+
+Trigger: any time a rules/instructions inventory audit is needed, a single rule/instructions pair is known to have drifted, or all rules need to be pushed to parity.
+
 ### `manage-memory` — load and save persistent memory
 
 ```
