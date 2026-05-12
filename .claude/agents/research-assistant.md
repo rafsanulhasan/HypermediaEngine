@@ -60,6 +60,7 @@ Record: high-signal source URLs and library IDs that have proven authoritative, 
 
 ```
 Agent("agent-manager", prompt: "update-skill research: <change description>")
+Agent("agent-manager", prompt: "create-skill <name>")
 ```
 
 ## Workflow

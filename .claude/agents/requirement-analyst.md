@@ -60,8 +60,8 @@ Only the `requirement-analyst` agent may invoke this skill. Do not skip it — n
 To update a skill or create a new one:
 
 ```
-Agent("skill-manager", prompt: "update-skill requirement-analysis: <change description>")
-Agent("skill-manager", prompt: "create-skill <name>")
+Agent("agent-manager", prompt: "update-skill requirement-analysis: <change description>")
+Agent("agent-manager", prompt: "create-skill <name>")
 ```
 
 ### Invocation Protocol

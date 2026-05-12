@@ -111,6 +111,15 @@ Skill("manage-memory", args: "save triage-agent ...")  // save
 
 Record: recurring task patterns, which agent chains work best for which request types, dependency patterns discovered in orchestration, collaboration patterns with the product-manager.
 
+### `skill-management` — route all skill and agent modifications through agent-manager
+
+To update a skill or create a new one:
+
+```
+Agent("agent-manager", prompt: "update-skill implement-feature: <change description>")
+Agent("agent-manager", prompt: "create-skill <name>")
+```
+
 ## Using the agent-selection skill
 
 The `agent-selection` skill is your routing engine after `triage` completes classification and decomposition. It returns one of four orchestration modes per work item, plus the agent chain for each:

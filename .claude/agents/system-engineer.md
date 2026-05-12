@@ -43,13 +43,13 @@ Skill("manage-memory", args: "save system-engineer ...")  // save
 
 Record: design pattern choices and rationale, recurring anti-patterns and resolutions, key abstractions and their responsibilities, DI registration patterns, convention deviations with justifications.
 
-### `skill-management` — route all skill and agent modifications through skill-manager
+### `skill-management` — route all skill and agent modifications through agent-manager
 
 To update a skill or create a new one:
 
 ```
-Agent("skill-manager", prompt: "update-skill system-design: <change description>")
-Agent("skill-manager", prompt: "create-skill <name>")
+Agent("agent-manager", prompt: "update-skill system-design: <change description>")
+Agent("agent-manager", prompt: "create-skill <name>")
 ```
 
 ### Invocation Protocol

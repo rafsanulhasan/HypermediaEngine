@@ -70,13 +70,13 @@ Skill("manage-memory", args: "save software-engineer ...")  // save
 
 Record: recurring convention violations you fixed, tricky integration points, DI registration patterns, test fixture requirements, areas where mutation testing repeatedly revealed gaps.
 
-### `skill-management` — route all skill and agent modifications through skill-manager
+### `skill-management` — route all skill and agent modifications through agent-manager
 
 To update a skill or create a new one:
 
 ```
-Agent("skill-manager", prompt: "update-skill implement-feature: <change description>")
-Agent("skill-manager", prompt: "create-skill <name>")
+Agent("agent-manager", prompt: "update-skill implement-feature: <change description>")
+Agent("agent-manager", prompt: "create-skill <name>")
 ```
 
 ### Invocation Protocol

@@ -172,13 +172,13 @@ For Blazor component tests, invoke `Skill("bunit-blazor-testing")`.
   - The justification is recorded in the test's comment header or design plan.
 - Treat any test that depends on these tools as a candidate for refactor once the corresponding interaction tool path is feasible.
 
-### `skill-management` — route all skill and agent modifications through skill-manager
+### `skill-management` — route all skill and agent modifications through agent-manager
 
 To update a skill or create a new one:
 
 ```
-Agent("skill-manager", prompt: "update-skill write-tests: <change description>")
-Agent("skill-manager", prompt: "create-skill <name>")
+Agent("agent-manager", prompt: "update-skill write-tests: <change description>")
+Agent("agent-manager", prompt: "create-skill <name>")
 ```
 
 ## k6 Performance, Load, and Stress Testing
