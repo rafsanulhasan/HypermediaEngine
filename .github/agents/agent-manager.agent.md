@@ -111,7 +111,7 @@ Record: naming conventions decided, agents created/deprecated, skills created/de
 - Every Copilot agent (`.github/agents/*.agent.md`) must have a matching Claude agent (`.claude/agents/*.md`).
 - Agent names must be kebab-case and identical across both platform files.
 - Always scaffold `.claude/agent-memory/<name>/MEMORY.md` when creating a new agent.
-- When creating a new skill, always create all four files: `.agents/skills/<name>/SKILL.md`, `.claude/skills/<name>/SKILL.md`, `.github/prompts/<name>.prompt.md`, and `.claude/commands/<name>.md`.
+- When creating a new skill, always create all four files: `.github/skills/<name>/SKILL.md`, `.claude/skills/<name>/SKILL.md`, `.github/prompts/<name>.prompt.md`, and `.claude/commands/<name>.md`.
 - Any request to create, modify, or delete hooks must invoke `Skill("hook-management", ...)` for both Claude Code hooks and GitHub Copilot hook integrations.
 - Any request to create, modify, or delete commands or prompts must invoke `Skill("command-management", ...)` for both `.claude/commands/*.md` and `.github/prompts/*.prompt.md` files.
 - Any request to create, modify, or delete rules or instructions must invoke `Skill("rules-management", ...)` for both `.claude/rules/*.md` and `.github/instructions/*.instructions.md` files.
@@ -170,12 +170,12 @@ Whenever you need external knowledge — library/API/SDK behavior, framework con
 
 - When creating a new skill or updating an existing one, always create/update both:
   1. `.claude/skills/<name>/SKILL.md`
-  2. `.agents/skills/<name>/SKILL.md`
+  2. `.github/skills/<name>/SKILL.md`
 
 - When deleting skill, delete both directories recursively:
 
   1. `.claude/skills/<name>/`
-  2. `.agents/skills/<name>/`
+  2. `.github/skills/<name>/`
 
 ### Hooks
 
@@ -186,7 +186,7 @@ Whenever you need external knowledge — library/API/SDK behavior, framework con
 - When deleting skill behavior, delete both :
 
   1. `.claude/hooks/<name>.ps1` and remove the specific hook from `.claude/settings.json` json files Hooks section
-  2. `.agents/skills/<name>/` and `.github/hooks/<name>.json`
+  2. `.github/skills/<name>/` and `.github/hooks/<name>.json`
 
 ### Rules / Instructions
 

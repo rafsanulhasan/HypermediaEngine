@@ -99,14 +99,14 @@ Agent("skill-manager", prompt: "update-skill <skill-name>: <change description>"
 1. Validate `<name>` is kebab-case; fail if 
    a. `.claude/skills/<name>/SKILL.md` already exists
    b. `.claude/commands/<name>.md` already exists
-   c. `.agents/skills/<name>.agent.md` already exists
+   c. `.github/skills/<name>.agent.md` already exists
 2. Ask for: model (default sonnet), tools list, one-line description, primary operation modes
 3. Create Directories: 
    a. `.claude/skills/<name>/` directory via Bash: `mkdir -p .claude/skills/<name>`
-   b. `.agents/skills/<name>/` directory via Bash: `mkdir -p .agents/skills/<name>`
+   b. `.github/skills/<name>/` directory via Bash: `mkdir -p .github/skills/<name>`
 4. Write `.claude/skills/<name>/SKILL.md` using the Skill File Template below
    a. Write to the `.claude/skills/<name>/SKILL.md` file with the same content for Claude Code discoverability. 
-   b. Write to the `.agents/skills/<name>/SKILL.md` file with the same content for Copilot/VS Code discoverability
+   b. Write to the `.github/skills/<name>/SKILL.md` file with the same content for Copilot/VS Code discoverability
 5. Write `.claude/commands/<name>.md` using the Command File Template below
 6. Confirm: "Skill '<name>' created. Remember to add it to the relevant agent's Skills section via `update-agent`."
 
@@ -161,7 +161,7 @@ description: <same one-line description as SKILL.md>
 
 1. Read files; fail if it does not exist
    a. `.claude/skills/<name>/SKILL.md`
-   b. `.agents/skills/<name>/SKILL.md`
+   b. `.github/skills/<name>/SKILL.md`
 2. Read `.claude/commands/<name>.md`
 3. Parse `<change-description>` to determine what to change
 4. Apply the change using Edit on the relevant file(s)

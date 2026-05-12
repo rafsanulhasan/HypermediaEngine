@@ -37,7 +37,7 @@ Use `triage-agent` to orchestrate multi-agent workflows. When the work depends o
 
 - **documentation-writer** — Writes and maintains documentation, updates README, and updates other documentation such as release notes. Invoked after `software-engineer` completes any implementation work. Runs in parallel with `sqa-engineer`.
 
-- **agent-manager** — **Exclusive owner of all agent artifacts.** Always route here (Mode 1, direct delegation — no SDLC chain) for: agent definitions (`.github/agents/`, `.claude/agents/`), skill files (`.agents/skills/`), hooks, rules/instructions (`.claude/rules/`, `.github/instructions/`), and commands/prompts (`.claude/commands/`, `.github/prompts/`). Also handles agent memory prune, audit, and refresh. **Never route these requests to `software-engineer` or any SDLC chain.**
+- **agent-manager** — **Exclusive owner of all agent artifacts.** Always route here (Mode 1, direct delegation — no SDLC chain) for: agent definitions (`.github/agents/`, `.claude/agents/`), skill files (`.github/skills/`), hooks, rules/instructions (`.claude/rules/`, `.github/instructions/`), and commands/prompts (`.claude/commands/`, `.github/prompts/`). Also handles agent memory prune, audit, and refresh. **Never route these requests to `software-engineer` or any SDLC chain.**
 
 ## Decision Framework
 

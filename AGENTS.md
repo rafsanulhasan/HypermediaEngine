@@ -7,7 +7,7 @@ This repository is configured for **Claude Code**, **GitHub Copilot CLI**, and *
 - `.claude/agents/*.md` and `.claude/commands/*.md` are the Claude-first agent definitions and command workflows.
 - `.claude/skills/*/SKILL.md` is the Claude Code skill discovery layer.
 - `.github/agents/*.agent.md` is the Copilot/VS Code custom agent layer.
-- `.agents/skills/*/SKILL.md` is the shared skill layer for Copilot/VS Code skill discovery.
+- `.github/skills/*/SKILL.md` is the shared skill layer for Copilot/VS Code skill discovery.
 
 ## Agent Name Mapping
 

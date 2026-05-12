@@ -12,7 +12,7 @@ This skill is the single source of truth for how any agent in the HypermediaEngi
 - You are about to spawn another agent, hand off work, or send a message to a previously spawned agent.
 - The user's request spans more than one agent's responsibility and you are unsure who should own it.
 - You catch yourself reaching for `web` search or library-docs lookup tools directly — that is a signal to delegate to `research-assistant` (see Routing rules).
-- You are about to edit any file under `.claude/agents/`, `.github/agents/`, `.agents/skills/`, `.claude/skills/`, `.claude/commands/`, `.github/prompts/`, `.claude/rules/`, `.github/instructions/`, or any hook configuration — stop and route to `agent-manager` instead.
+- You are about to edit any file under `.claude/agents/`, `.github/agents/`, `.github/skills/`, `.claude/skills/`, `.claude/commands/`, `.github/prompts/`, `.claude/rules/`, `.github/instructions/`, or any hook configuration — stop and route to `agent-manager` instead.
 
 ## When NOT to invoke another agent
 
@@ -56,7 +56,7 @@ This skill is the single source of truth for how any agent in the HypermediaEngi
 ## Routing rules every caller must respect
 
 - **Non-trivial / multi-step / ambiguous user requests → `triage-agent` first.** Triage classifies, decomposes, maps dependencies, and produces a confirmed execution plan before any specialist agent is invoked. Skipping triage to save time costs more than it saves.
-- **Any agent / skill / command / prompt / rules / instructions / hook file lifecycle work → `agent-manager`.** No other agent edits files under `.claude/agents/`, `.github/agents/`, `.agents/skills/`, `.claude/skills/`, `.claude/commands/`, `.github/prompts/`, `.claude/rules/`, `.github/instructions/`, or any hook configuration. `agent-manager` is the single authority.
+- **Any agent / skill / command / prompt / rules / instructions / hook file lifecycle work → `agent-manager`.** No other agent edits files under `.claude/agents/`, `.github/agents/`, `.github/skills/`, `.claude/skills/`, `.claude/commands/`, `.github/prompts/`, `.claude/rules/`, `.github/instructions/`, or any hook configuration. `agent-manager` is the single authority.
 - **External knowledge (library / API / SDK docs, framework conventions, version-specific behavior, current best practices) and non-trivial cross-cutting codebase exploration → `research-assistant`.** Prefer **context7** over web search for library docs. Never run ad-hoc `web` / library-docs tools yourself when a `research-assistant` call would do the job.
 - **Backlog management, prioritization, milestone planning, and release work → `product-manager`.** `triage-agent` consults the PM before invoking `agent-selection` for any Feature or TechDebt batch; feed PM priorities into the routing decision.
 - **SDLC forward chain** — implementation work flows through this order, with each role producing an explicit artifact for the next:
