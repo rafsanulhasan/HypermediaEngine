@@ -1,10 +1,10 @@
 ---
 name: agent-invocation skill rolled out as single source of truth for inter-agent invocation
-description: Shared skill created in .claude/skills/ and .agents/skills/; every agent (both platforms) carries a short Invocation Protocol pointer instead of duplicated invocation content.
+description: Shared skill created in .claude/skills/ and .github/skills/; every agent (both platforms) carries a short Invocation Protocol pointer instead of duplicated invocation content.
 type: project
 ---
 
-The `agent-invocation` skill is the authoritative source for how any agent spawns or invokes another agent. Created on 2026-05-11 at both `.claude/skills/agent-invocation/SKILL.md` and `.agents/skills/agent-invocation/SKILL.md`.
+The `agent-invocation` skill is the authoritative source for how any agent spawns or invokes another agent. Created on 2026-05-11 at both `.claude/skills/agent-invocation/SKILL.md` and `.github/skills/agent-invocation/SKILL.md`.
 
 **Why:** Previously, invocation mechanics, routing rules, the SDLC chain, and the briefing checklist were duplicated across triage-agent, software-architect, and requirement-analyst — and the project's hook/linter was actively pruning these duplicate sections, leaving incomplete fragments. A shared skill removes the duplication and lets the linter stop fighting agent files.
 

@@ -81,7 +81,7 @@ Agent("agent-manager", prompt: "update-skill write-documentation: <change descri
 Agent("agent-manager", prompt: "create-skill <name>")
 ```
 
-Never directly edit `.agents/skills/`, `.claude/skills/`, or `.claude/commands/` files.
+Never directly edit `.github/skills/`, `.claude/skills/`, or `.claude/commands/` files.
 
 ## Protocols
 

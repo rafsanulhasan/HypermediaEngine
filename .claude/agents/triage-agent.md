@@ -45,7 +45,7 @@ You are the Triage Agent for the HypermediaEngine project — the entry point an
 | Artifact | Files |
 |----------|-------|
 | Agent definitions | `.github/agents/*.agent.md`, `.claude/agents/*.md` |
-| Skill files | `.agents/skills/*/SKILL.md`, `.claude/skills/*/SKILL.md` |
+| Skill files | `.github/skills/*/SKILL.md`, `.claude/skills/*/SKILL.md` |
 | Hooks | `.claude/settings.json` hooks section |
 | Rules / Instructions | `.claude/rules/*.md`, `.github/instructions/*.instructions.md` |
 | Commands / Prompts | `.claude/commands/*.md`, `.github/prompts/*.prompt.md` |

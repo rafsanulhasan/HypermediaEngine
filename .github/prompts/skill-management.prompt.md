@@ -15,7 +15,7 @@ Every other agent must route agent/skill creation and modification through the `
 Enumerate all agents, skills, and command files:
 
 1. Glob `.github/agents/*.agent.md` and `.claude/agents/*.md` — list all agents.
-2. Glob `.agents/skills/*/SKILL.md` and `.claude/skills/*/SKILL.md` — list all skills.
+2. Glob `.github/skills/*/SKILL.md` and `.claude/skills/*/SKILL.md` — list all skills.
 3. Glob `.github/prompts/*.prompt.md` and `.claude/commands/*.md` — list all commands/prompts.
 4. Report name, description, and platform presence for each.
 
@@ -24,7 +24,7 @@ Enumerate all agents, skills, and command files:
 Create a new skill on both platforms:
 
 1. Read existing skills to understand structure patterns.
-2. Create `.agents/skills/<name>/SKILL.md` with:
+2. Create `.github/skills/<name>/SKILL.md` with:
    - YAML frontmatter: `name`, `description` (trigger words)
    - Phase 0 context-load section (mandatory)
    - Workflow phases
