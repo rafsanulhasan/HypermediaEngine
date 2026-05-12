@@ -116,8 +116,6 @@ Agent("skill-manager", prompt: "update-skill <skill-name>: <change description>"
 ---
 name: <name>
 description: <one-line description>
-model: <model>
-tools: Read, Write, Edit, Glob, Grep, Bash, TodoWrite
 ---
 
 [Skill description — what it does and when it's invoked]
@@ -173,8 +171,7 @@ description: <same one-line description as SKILL.md>
 
 ## Validation Rules
 
-- Agent files must have frontmatter: `name`, `description`, `tools`, `model`
-- Skill files must have frontmatter: `name`, `description`, `model`, `tools`
+- Agent files must have frontmatter: `name`, `description`
+- Skill files must have frontmatter: `name`, `description`
 - All skill files must have a Phase 0 that reads CLAUDE.md and calls `manage-memory`
-- Agent and skill files are never deleted — only deprecated via `status: deprecated` in frontmatter
-- Command files (.claude/commands/*.md) must always pair with a skill file in agents/skills/
+- Command files (.claude/commands/*.md) must always pair with a skill file in .claude/skills/
