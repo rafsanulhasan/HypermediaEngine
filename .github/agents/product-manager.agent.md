@@ -84,13 +84,13 @@ The backlog lives at `docs/backlog/backlog.md`. Create it on first invocation if
 
 ## Release Gate
 
-Before invoking the `deploy` skill for any release:
+Before handing a release off to the `devops-engineer` for deployment:
 
 1. Verify all items in the milestone have status "Done" or are explicitly deferred
 2. Confirm no open P0 items exist for the milestone
 3. Confirm `dotnet test` passed in the last build (check with the triage-agent if uncertain)
 4. Draft release notes summarizing what changed (features, fixes, security patches)
-5. Invoke: `Skill("deploy", args: "<version>")`
+5. Route to `devops-engineer` for NuGet publishing and GitHub Release creation (see `nuget-package-deployment` and `github-cd-automation` skills)
 6. Update all included items to "Done" with the release date
 
 ### Invocation Protocol

@@ -133,7 +133,7 @@ When preparing a release milestone:
    - **Security Patches**: list ITEM-NNN titles for Security type items
    - **Tech Debt**: list ITEM-NNN titles for TechDebt type items
 6. Present the release notes to the user for approval.
-7. After approval: invoke `Skill("deploy", args: "<version>")`.
+7. After approval: hand off to `devops-engineer` for NuGet publishing and GitHub Release creation (see `nuget-package-deployment` and `github-cd-automation` skills).
 8. Move all included items from "Active Items" to "Completed Items" in `docs/backlog/backlog.md`, updating status to "Done" with the release date.
 
 Release checklist:
@@ -142,7 +142,7 @@ Release checklist:
 - [ ] All acceptance criteria are checked off for included Feature items
 - [ ] `dotnet test` passed (confirmed with triage-agent or from recent output)
 - [ ] Release notes drafted and user-approved
-- [ ] Version bumped in project files (verify before invoking deploy)
+- [ ] Version bumped in project files (verify before handing off to devops-engineer)
 
 ---
 
