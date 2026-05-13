@@ -1,9 +1,9 @@
 ---
 name: agent-sync
 description: Detects and resolves platform drift between .claude/agents/*.md (Claude Code) and .github/agents/*.agent.md (Copilot/VS Code). Produces a drift report and applies corrective edits. Invoked exclusively by the agent-manager agent.
-model: claude-sonnet-4-6
-tools: Read, Write, Edit, Glob, Grep, Bash, TodoWrite
 ---
+
+# Agent Sync
 
 Use this skill when agent definitions on Claude Code and GitHub Copilot/VS Code have drifted apart, when a new agent was added to one platform but not the other, or when a full roster audit is needed. Parse the args to determine the operation mode, then execute the corresponding procedure.
 

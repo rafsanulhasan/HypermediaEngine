@@ -1,9 +1,9 @@
 ---
 name: rules-instructions-sync
 description: Detects and resolves drift between .claude/rules/*.md (Claude rules) and .github/instructions/*.instructions.md (Copilot instructions files). Ensures every rule has a matching instructions file and vice versa. Invoked exclusively by the agent-manager agent.
-model: claude-sonnet-4-6
-tools: Read, Write, Edit, Glob, Grep, Bash, TodoWrite
 ---
+
+# Rules and Instructions Sync
 
 Use this skill when rule and instructions files have drifted apart, when a rule was added to one platform but not the other, or when a full rules/instructions audit is needed. Parse the args to determine the operation mode, then execute the corresponding procedure.
 

@@ -1,9 +1,9 @@
 ---
 name: command-prompt-sync
 description: Detects and resolves drift between .claude/commands/*.md (Claude commands) and .github/prompts/*.prompt.md (Copilot prompt files). Ensures every command has a matching prompt and vice versa. Invoked exclusively by the agent-manager agent.
-model: claude-sonnet-4-6
-tools: Read, Write, Edit, Glob, Grep, Bash, TodoWrite
 ---
+
+# Command-Prompt Sync
 
 Use this skill when command and prompt files have drifted apart, when a command was added to one platform but not the other, or when a full inventory audit is needed. Parse the args to determine the operation mode, then execute the corresponding procedure.
 

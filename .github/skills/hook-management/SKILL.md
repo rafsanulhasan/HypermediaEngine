@@ -1,9 +1,9 @@
 ---
 name: hook-management
 description: Create, modify, and delete Claude Code hooks and GitHub Copilot hook integrations safely using a discovery-first, non-destructive workflow.
-model: claude-sonnet-4-6
-tools: Read, Write, Edit, Glob, Grep, Bash, TodoWrite
 ---
+
+# Hook Management
 
 Use this skill when a user asks to create, update, migrate, or remove hook behavior for either Claude Code or GitHub Copilot in this repository.
 

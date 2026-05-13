@@ -1,9 +1,9 @@
 ---
 name: skill-management
-description: Creates, updates, and lists skill files (.claude/skills/*/SKILL.md) and command files (.github/skills/*/SKILL.md) for the HypermediaEngine multi-agent system. Invoked exclusively by the agent-manager agent.
+description: Creates, updates, and lists skill files (.claude/skills/*/SKILL.md) and (.github/skills/*/SKILL.md) for the HypermediaEngine multi-agent system. Invoked exclusively by the agent-manager agent.
 ---
 
-You scaffold and maintain all skill files, and command files. Parse the args to determine the operation mode, then execute the corresponding procedure.
+You scaffold and maintain all skill files. Parse the args to determine the operation mode, then execute the corresponding procedure.
 
 ---
 
@@ -11,9 +11,9 @@ You scaffold and maintain all skill files, and command files. Parse the args to 
 
 **Args:** `list`
 
-1. Glob `.claude/skills/*.md` — collect skill names and descriptions
-2. Glob `.github/skills/*.md` — collect skill names and descriptions
-3. Return a formatted summary table: skills
+1. Glob `.claude/skills/*/SKILL.md` — collect skill names and descriptions
+2. Glob `.github/skills/*/SKILL.md` — collect skill names and descriptions
+3. Return a formatted summary table: skills 
 
 ## Mode: create-skill
 
@@ -21,7 +21,8 @@ You scaffold and maintain all skill files, and command files. Parse the args to 
 
 1. Validate `<name>` is kebab-case; fail if 
    a. `.claude/skills/<name>/SKILL.md` already exists
-   b. `.github/skills/<name>.agent.md` already exists
+   b. `.claude/commands/<name>.md` already exists
+   c. `.github/skills/<name>.agent.md` already exists
 2. Ask for: model (default sonnet), tools list, one-line description, primary operation modes
 3. Create Directories: 
    a. `.claude/skills/<name>/` directory via Bash: `mkdir -p .claude/skills/<name>`

@@ -1,9 +1,9 @@
 ---
 name: command-management
 description: Create, modify, and delete GitHub Copilot prompt files (.github/prompts/*.prompt.md) and Claude command files (.claude/commands/*.md) safely using a discovery-first, non-destructive workflow. Invoked by agent-manager whenever a command or prompt needs to be created, modified, or deleted.
-model: claude-sonnet-4-6
-tools: Read, Write, Edit, Glob, Grep, Bash, TodoWrite
 ---
+
+# Command and Prompt Management
 
 Use this skill when a user asks to create, update, or remove a command or prompt on either the Claude Code or GitHub Copilot platform in this repository.
 

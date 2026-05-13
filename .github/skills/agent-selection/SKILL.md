@@ -3,7 +3,7 @@ name: agent-selection
 description: Expert agent selection and orchestration skill. Use PROACTIVELY to pick the most suitable agent for a task and to decide among four orchestration modes — direct single-agent delegation, parallel independent subagents, sequential SDLC Agent Teams, or a full SDLC traversal — based on task complexity, required expertise, and whether the work needs collaboration.
 ---
 
-# agent-selection
+# Agent Selection and Orchestration
 
 This is the expert agent selection skill. Use PROACTIVELY to select the most suitable agent for a given task, based on the task requirements and agent capabilities. Also use this skill to orchestrate multi-agent workflows when a task requires multiple agents, skills, or expertise.
 
@@ -68,6 +68,7 @@ Use the following decision tree to pick the right orchestration mode. Always sta
 ## Rules for Multi-Agent Workflow Orchestration
 
 - **Agent artifact work** → delegate directly to `agent-manager` (Mode 1). **Hard rule** — agent definitions, skills, hooks, rules/instructions, and commands/prompts must never be handled by `software-engineer` or routed through any SDLC chain. Triggers: create, update, fix, or add any of: agent, skill, hook, rule, instruction, command, prompt.
+
 - **Research work** → delegate to `research-assistant`. For broad, multi-angle research (comparison studies, surveys of competing options), spawn **3–5 `research-assistant` subagents in parallel**, each with a distinct angle; `triage-agent` then synthesizes findings into a single report. Triggers: "external knowledge needed", "library/API/SDK docs", "unfamiliar framework", "validate assumption before design", "deep cross-cutting code exploration where Explore is insufficient".
 - **Design and implementation work** → follow the SDLC workflow with `triage-agent` orchestrating end to end.
   - When a complex task is decomposed into subtasks, run an SDLC workflow **per subtask**:

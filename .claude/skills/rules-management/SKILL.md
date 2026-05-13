@@ -1,9 +1,9 @@
 ---
 name: rules-management
 description: Create, modify, delete, and sync Claude rules files (.claude/rules/*.md) and GitHub Copilot instruction files (.github/instructions/*.instructions.md) safely using a discovery-first, non-destructive workflow. Invoked by agent-manager whenever a rules or instructions file lifecycle operation is requested.
-model: claude-sonnet-4-6
-tools: Read, Write, Edit, Glob, Grep, Bash, TodoWrite
 ---
+
+# Rules and Instructions Management
 
 Use this skill when a user asks to create, update, or remove a repository rule or instruction file on either the Claude Code or GitHub Copilot platform in this repository.
 

@@ -1,9 +1,9 @@
 ---
 name: product-planning
 description: "Product backlog management and release planning skill. Invoked by the product-manager agent to add items, review backlog health, re-prioritize, plan releases, or update item status. Reads and writes docs/backlog/backlog.md as the persistent source of truth."
-model: claude-opus-4-7
-tools: Read, Write, Grep, Glob, Bash
 ---
+
+# Product Planning
 
 You are executing the `product-planning` skill on behalf of the product-manager agent. You manage the backlog file at `docs/backlog/backlog.md` and apply prioritization rules consistently.
 
@@ -16,7 +16,7 @@ The calling agent passes an action verb as `args`:
 | `review-backlog` | Summarize current backlog state and recommend next actions |
 | `add-item <description>` | Add a new work item to the backlog |
 | `prioritize` | Re-rank items based on current context |
-| `plan-release <version>` | Prepare a release checklist and execute deployment |
+| `plan-release <version>` | Prepare a release checklist and hand off to devops-engineer |
 | `update-status <ITEM-NNN> <status>` | Change an item's status |
 
 ## Process
@@ -109,7 +109,7 @@ Read the backlog, find the highest existing `ITEM-NNN` number, increment by 1. S
 2. Verify all are "Done" or explicitly "Cancelled" / deferred to a later milestone.
 3. Check for open P0 items — any P0 blocks the release; surface the blocker and stop.
 4. Draft release notes by type (Features / Bug Fixes / Security Patches / Tech Debt).
-5. Present draft to the calling agent for user approval before invoking deploy.
+5. Present draft to the calling agent for user approval before handing off to `devops-engineer` for deployment.
 6. After approval: move all included items to "Completed Items" section with status "Done" and date.
 
 ### Action: update-status

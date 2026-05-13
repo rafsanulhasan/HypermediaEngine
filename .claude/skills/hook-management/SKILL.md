@@ -3,6 +3,8 @@ name: hook-management
 description: Create, modify, and delete Claude Code hooks and GitHub Copilot hook integrations safely using a discovery-first, non-destructive workflow.
 ---
 
+# Hook Management
+
 Use this skill when a user asks to create, update, migrate, or remove hook behavior for either Claude Code or GitHub Copilot in this repository.
 
 This skill is implementation-agnostic but actionable. It always discovers actual hook files and references first, then applies minimal, reversible changes.

@@ -1,10 +1,9 @@
 ---
 name: spec-driven-development
 description: Manages the full lifecycle of a feature specification — from collaborative drafting to enforcement during implementation and testing.
-invoker: requirement-analyst
-model: claude-sonnet-4-6
-tools: Read, Write, Edit, Glob, Grep, Bash, TodoWrite
 ---
+
+# Spec-Driven Development Skill
 
 Manages the full lifecycle of a feature specification: collaborative drafting with architect and engineer review, finalization to a persistent spec file, and enforcement handoff to software-engineer and sqa-engineer. Only the `requirement-analyst` agent may invoke this skill.
 

@@ -3,6 +3,8 @@ name: hooks-sync
 description: Detects and resolves drift between Claude Code hooks (.claude/hooks/*.ps1 + .claude/settings.json) and GitHub Copilot hooks (.github/hooks/*.ps1 + .github/hooks/*.json). Ensures semantic parity across both hook surfaces. Invoked exclusively by the agent-manager agent.
 ---
 
+# Hooks Sync
+
 Use this skill when hook definitions on Claude Code and GitHub Copilot have drifted apart, when a hook was added to one platform but not the other, or when a full hook inventory audit is needed. Parse the args to determine the operation mode, then execute the corresponding procedure.
 
 ---

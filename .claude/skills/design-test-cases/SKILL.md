@@ -1,9 +1,9 @@
 ---
 name: design-test-cases
 description: Structured test case design skill for HypermediaEngine. Takes an implementation (and acceptance criteria if available) and produces a complete test plan specifying what to test, how, and why — ready to hand off to the write-tests skill. Invoked by the sqa-engineer agent before any test code is written.
-model: claude-opus-4-7
-tools: Read, Grep, Glob, TodoWrite
 ---
+
+# Design Test Cases
 
 You are executing the `design-test-cases` skill on behalf of the sqa-engineer agent. Your job is to produce a complete, grounded test plan artifact. The output of this skill is a test plan — not test code. Code is written by the `write-tests` skill.
 

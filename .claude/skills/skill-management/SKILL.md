@@ -3,6 +3,8 @@ name: skill-management
 description: Creates, updates, and lists skill files (.claude/skills/*/SKILL.md) and (.github/skills/*/SKILL.md) for the HypermediaEngine multi-agent system. Invoked exclusively by the agent-manager agent.
 ---
 
+# Skill Management
+
 You scaffold and maintain all skill files. Parse the args to determine the operation mode, then execute the corresponding procedure.
 
 ---

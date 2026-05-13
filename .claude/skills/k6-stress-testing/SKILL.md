@@ -1,4 +1,9 @@
-# Skill: k6 Stress Testing
+---
+name: k6-stress-testing
+description: "Invoke this skill when the task is to validate system behaviour **beyond normal capacity** — to observe how it degrades and whether it recovers. This skill answers: 'What happens when load exceeds the normal operating point?'"
+---
+
+# k6 Stress Testing
 
 ## When to Use
 Invoke this skill when the task is to validate system behaviour **beyond normal capacity** — to observe how it degrades and whether it recovers. This skill answers: "What happens when load exceeds the normal operating point?"

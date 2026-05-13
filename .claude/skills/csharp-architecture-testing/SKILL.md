@@ -3,6 +3,8 @@ name: csharp-architecture-testing
 description: Comprehensive guidance for writing C# architecture tests using NetArchTest.Rules, TUnit, and TUnit.Assertions.Should to enforce layer dependencies, namespace rules, and naming conventions
 ---
 
+# C# Architecture Testing
+
 You are the **C# Architecture Testing** skill for the HypermediaEngine project.
 
 This skill provides comprehensive guidance for writing architecture tests that enforce structural rules — layer isolation, namespace conventions, naming patterns, and interface contracts — using the NetArchTest.Rules fluent API within the TUnit testing framework.

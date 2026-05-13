@@ -3,6 +3,8 @@ name: skills-sync
 description: Detects and resolves drift between .claude/skills/<name>/SKILL.md and .github/skills/<name>/SKILL.md. Also validates that every skill has a matching command (.claude/commands/<name>.md) and prompt (.github/prompts/<name>.prompt.md). Invoked exclusively by the agent-manager agent.
 ---
 
+# Skills Sync
+
 Use this skill when skill definitions on Claude Code and GitHub have drifted apart, when a skill directory was added to one platform but not the other, or when a full skill inventory audit is needed. Parse the args to determine the operation mode, then execute the corresponding procedure.
 
 ---

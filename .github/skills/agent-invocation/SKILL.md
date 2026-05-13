@@ -3,7 +3,7 @@ name: agent-invocation
 description: "Authoritative skill for spawning or invoking another agent with proper context. Use PROACTIVELY before any agent calls another agent — covers Claude `Agent(...)` / `SendMessage` and Copilot/VS Code `agent` tool invocation forms, routing rules to triage-agent / agent-manager / research-assistant / product-manager, the SDLC chain and per-stage artifacts, how to brief a cold-started spawned agent with a self-contained handoff, foreground vs background and parallel calls, trust-but-verify after the spawned agent returns, and when NOT to invoke another agent at all."
 ---
 
-# agent-invocation
+# Agent Invocation
 
 This skill is the single source of truth for how any agent in the HypermediaEngine multi-agent system spawns or invokes another agent. Every agent (Claude or Copilot/VS Code) must consult this skill before delegating work, handing off across the SDLC, or routing a sub-task to another role. Do not invent invocation conventions — use the forms defined here verbatim.
 
@@ -49,7 +49,21 @@ This skill is the single source of truth for how any agent in the HypermediaEngi
   SendMessage({to: "<agent-name>", message: "<follow-up>"})
   ```
 
-- **Parallel independent agents** — issue multiple `Agent(...)` calls in a single message. Each runs concurrently and returns to the caller, who synthesizes the combined output. Canonical form for orchestration mode 2 (Parallel independent subagents) in `agent-selection`.
+- **Parallel independent agents** — issue multiple `runSubagent` mcp calls in a single message. Each runs concurrently and returns to the caller, who synthesizes the combined output. This is the canonical form for orchestration mode 2 (Parallel independent subagents) in the `agent-selection` skill.
+
+- **Foreground vs background** — default to foreground (you block until the agent returns). Use background only for genuinely independent long-running work where the caller has other useful work to do meanwhile.
+
+### Copilot / VS Code
+
+- **Spawn an agent** — use the platform-native `agent` tool, targeting the desired agent by name and passing a self-contained prompt:
+
+  > Invoke the `agent` tool against `<agent-name>` with prompt "<self-contained brief>".
+
+- **Continue an already-spawned agent** — send a follow-up message to that named agent rather than re-spawning a cold instance.
+
+- **Parallel independent agents** — issue multiple `agent` tool calls in a single message; the caller synthesizes outputs.
+
+- **Foreground vs background** — default to foreground. Background mode is reserved for genuinely independent long-running work.
 
 > Do not invent new invocation syntax on either platform. If a form is not listed here, treat it as unsupported and ask `agent-manager` whether the skill needs updating.
 
@@ -96,7 +110,7 @@ Anti-patterns to avoid:
 
 ## Parallelism and concurrency
 
-- For **independent sub-tasks** (no collaboration needed between them) — fire multiple `agent` tool calls in a single message on Copilot/VS Code, or multiple `Agent(...)` calls on Claude. The orchestrator synthesizes the combined output.
+- For **independent sub-tasks** (no collaboration needed between them) — fire multiple `runSubagent` tool calls in a single message on Copilot/VS Code, or multiple `Agent(...)` calls on Claude. The orchestrator synthesizes the combined output.
 - For **research breadth** (e.g., comparing 3–5 options) — spawn 3–5 `research-assistant` subagents in parallel, each with a distinct angle, then synthesize.
 - For **collaborative SDLC work** — do **not** parallelize within the chain; run it sequentially with explicit handoffs (Mode 3 in `agent-selection`).
 - Background mode is for genuinely long-running independent work only — not a default. Most invocations should be foreground.
@@ -105,9 +119,9 @@ Anti-patterns to avoid:
 
 A spawned agent's summary describes **intent**, not necessarily what landed on disk:
 
-- After the agent returns, **verify changed files** with `read` / `search` (Copilot/VS Code) or `Read` / `Grep` (Claude) before reporting work complete on the agent's behalf.
-- Mark `todo` / `TodoWrite` items Done only after verification, not on the agent's claim alone.
-- If verification fails, send a follow-up message to the same agent rather than respawning a cold instance — the original context is still warm.
+- After the agent returns, **verify changed files** with `read` / `search` (Copilot/VS Code) before reporting work complete on the agent's behalf.
+- Mark `TodoWrite` / `todo` items Done only after verification, not on the agent's claim alone.
+- If verification fails, send a `SendMessage` (or Copilot equivalent) follow-up to the same agent rather than respawning a cold instance — the original context is still warm.
 
 ## Companion skills
 

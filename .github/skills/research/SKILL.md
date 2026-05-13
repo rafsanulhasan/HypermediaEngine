@@ -1,6 +1,6 @@
 ---
 name: research
-description: "Structured external-knowledge and codebase-exploration research skill for HypermediaEngine. Invoked by the research-assistant agent to clarify the question, select authoritative sources (context7 for library docs, web search/fetch for general information, search/read for codebase exploration), triangulate findings, and produce a cited findings report with confidence assessment."
+description: "Structured external-knowledge and codebase-exploration research skill for HypermediaEngine. Invoked by the research-assistant agent to clarify the question, select authoritative sources (context7 for library docs, web search/fetch for general information, Grep/Glob/Read for codebase exploration), triangulate findings, and produce a cited findings report with confidence assessment."
 ---
 
 # research
@@ -29,17 +29,17 @@ Pick sources by the type of question. Use multiple categories when appropriate.
 
 | Question type | Primary tool | Notes |
 |---|---|---|
-| Library / framework / SDK / API / CLI docs | `mcp_plugin_context7_context7/resolve-library-id` then `mcp_plugin_context7_context7/query-docs` | Always prefer context7 over web search — even for well-known libraries. Training data may be stale. |
-| General / current information | `web` search then fetch the most authoritative hit | Use the smallest number of fetches that proves the claim. |
-| Specific known URL | `docker-mcp-gateway/fetch` or `docker-mcp-gateway/fetch_content`, optionally `docker-mcp-gateway/convert_to_markdown` | Use when the caller hands you a URL. |
-| Standards / RFCs / specifications | `web` for the canonical URL, then fetch | Cite the spec URL with the section/anchor when possible. |
-| Codebase exploration | `search`, `read` | Build a list of evidence files. Quote the relevant lines. |
+| Library / framework / SDK / API / CLI docs | `mcp__plugin_context7_context7__resolve-library-id` then `mcp__plugin_context7_context7__query-docs` | Always prefer context7 over web search — even for well-known libraries. Training data may be stale. |
+| General / current information | `WebSearch` then `WebFetch` on the most authoritative hit | Use the smallest number of fetches that proves the claim. |
+| Specific known URL | `mcp__docker-mcp-gateway__fetch` or `mcp__docker-mcp-gateway__fetch_content`, optionally `mcp__docker-mcp-gateway__convert_to_markdown` | Use when the caller hands you a URL. |
+| Standards / RFCs / specifications | `WebSearch` for the canonical URL, then `WebFetch` | Cite the spec URL with the section/anchor when possible. |
+| Codebase exploration | `Glob`, `Grep`, `Read` | Build a list of evidence files. Quote the relevant lines. |
 
 Rules:
 
 - For any library/framework/SDK/API/CLI question, run `resolve-library-id` first to confirm the canonical context7 identifier, then `query-docs` with the specific topic. Do not skip resolve-library-id even if you "know" the ID.
 - Never fabricate URLs. Only cite URLs you have actually fetched or that came from a search result.
-- For codebase exploration, prefer `search` over reading every file. Read in full only when context demands it.
+- For codebase exploration, prefer Grep over reading every file. Read in full only when context demands it.
 
 ### Step 3 — Triangulate
 
@@ -90,11 +90,15 @@ Rules for the report:
 After the report is produced, save high-signal learnings via `manage-memory` under the `research-assistant` namespace. Worth saving:
 
 - A library's canonical context7 ID and a one-line summary of what it covers.
-- A version pin or API quirk discovered for a library the project depends on.
+- A version pin or API quirk you discovered for a library the project depends on.
 - A source that proved authoritative (or one that proved misleading — record as a reference to avoid).
 - A recurring topic so future research can build on this report rather than redo it.
 
 Not worth saving: the verbatim report, ephemeral facts, anything already in CLAUDE.md or the codebase.
+
+```
+Skill("manage-memory", args: "save research-assistant\ntype: reference\nname: <topic>\ndescription: <one-line>\n\n<body>")
+```
 
 ## Output
 

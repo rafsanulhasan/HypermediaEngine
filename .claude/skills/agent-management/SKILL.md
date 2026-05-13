@@ -42,7 +42,9 @@ You scaffold and maintain all agent definitions across both platforms. Parse the
    - 2–4 bullet responsibilities
 4. Write `.claude/agents/<name>.md` using the **Claude Agent Template** below.
 5. Write `.github/agents/<name>.agent.md` using the **Copilot Agent Template** below — apply the **Claude-only Tool Exclusion List** (see Mode: sync-agent) when populating its `tools:` frontmatter.
-6. Create `.claude/agent-memory/<name>/` directory: `mkdir -p ".claude/agent-memory/<name>"`
+6. Create `.claude/agent-memory/<name>/` directory:
+	a. Windows: `mkdir -p ".claude/agent-memory/<name>"`
+	b. Linux/Mac: `mkdir -p ".claude/agent-memory/<name>/"`
 7. Write `.claude/agent-memory/<name>/MEMORY.md` using the **Memory Index Template** below.
 8. Confirm: "Agent '<name>' created in `.claude/agents/` and `.github/agents/`."
 
