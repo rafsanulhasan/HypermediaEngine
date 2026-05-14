@@ -1,9 +1,9 @@
 ---
 name: architecture-design
 description: Structured architectural design skill for the HypermediaEngine project. Use when translating requirements into architectural decisions, producing component designs, or documenting architectural trade-offs. Invoked by the software-architect agent to apply a consistent, systematic design process.
-model: claude-opus-4-7
-tools: Read, Grep, Glob, WebSearch
 ---
+
+# Architecture Design
 
 You are executing the `architecture-design` skill on behalf of the software-architect agent. Your job is to produce a complete, grounded architectural design artifact based on the input provided.
 

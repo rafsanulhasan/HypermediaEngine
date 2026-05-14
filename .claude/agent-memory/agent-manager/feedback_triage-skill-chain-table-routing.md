@@ -9,7 +9,7 @@ The `triage` skill's Step 3 "Assign Agent Chains" table is the canonical routing
 Required rows beyond the basic feature/bug/security/tech-debt/test/design chains:
 
 - Backlog / prioritization question → product-manager
-- Release / milestone planning → product-manager → deploy skill
+- Release / milestone planning → product-manager → devops-engineer (NuGet publish + GitHub Release)
 - Feature/TechDebt needing prioritization → product-manager → (then appropriate build chain)
 - Agent / skill / command lifecycle → agent-manager
 - Rules / instructions / hooks change → agent-manager

@@ -3,7 +3,7 @@ name: playwright-mcp-ui-testing
 description: AI-driven browser UI testing using the Playwright MCP server. Guides the sqa-engineer to perform autonomous browser interactions, assertions, and evidence capture through the Playwright MCP tools. Use ONLY when the change involves UI or frontend components.
 ---
 
-# playwright-mcp-ui-testing
+# Playwright MCP UI Testing Skill
 
 This skill guides the `sqa-engineer` agent to perform AI-driven UI tests using the Playwright MCP server (`@playwright/mcp`). The agent uses MCP browser tools to navigate, interact, observe, and assert UI behavior autonomously — without writing coded test files. This skill is ONLY invoked when the software change involves UI or frontend components.
 

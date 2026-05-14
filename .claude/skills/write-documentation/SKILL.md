@@ -1,9 +1,9 @@
 ---
 name: write-documentation
 description: Structured documentation writing workflow for HypermediaEngine. Writes or updates README.md files at the repo root and in each project directory (src/, tests/, samples/, etc.) based on current implementation, ADRs, and architecture decisions.
-model: claude-sonnet-4-6
-tools: Read, Write, Edit, Glob, Grep, Bash, TodoWrite
 ---
+
+# Write Documentation
 
 Writes and maintains README.md files throughout the HypermediaEngine repository. Invoked by the `documentation-writer` agent whenever documentation needs to be created, updated, or brought into sync with the current implementation.
 

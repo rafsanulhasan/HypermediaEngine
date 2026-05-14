@@ -1,5 +1,5 @@
 ---
-name: "sqa-engineer"
+name: "sqa-engineer-copilot"
 description: "Use after implementation to design test cases, write tests, and close coverage gaps. Trigger words: test design, write tests, mutation survivors, coverage."
 tools: [vscode/memory, vscode/askQuestions, vscode/toolSearch, execute, read, edit, search, web, browser, docker-mcp-gateway/browser_click, docker-mcp-gateway/browser_close, docker-mcp-gateway/browser_console_messages, docker-mcp-gateway/browser_drag, docker-mcp-gateway/browser_drop, docker-mcp-gateway/browser_eval, docker-mcp-gateway/browser_evaluate, docker-mcp-gateway/browser_file_upload, docker-mcp-gateway/browser_fill_form, docker-mcp-gateway/browser_handle_dialog, docker-mcp-gateway/browser_hover, docker-mcp-gateway/browser_navigate, docker-mcp-gateway/browser_navigate_back, docker-mcp-gateway/browser_network_request, docker-mcp-gateway/browser_network_requests, docker-mcp-gateway/browser_press_key, docker-mcp-gateway/browser_resize, docker-mcp-gateway/browser_run_code_unsafe, docker-mcp-gateway/browser_select_option, docker-mcp-gateway/browser_snapshot, docker-mcp-gateway/browser_tabs, docker-mcp-gateway/browser_take_screenshot, docker-mcp-gateway/browser_type, docker-mcp-gateway/browser_wait_for, docker-mcp-gateway/search, todo]
 user-invocable: true

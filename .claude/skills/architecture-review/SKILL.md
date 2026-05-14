@@ -1,9 +1,9 @@
 ---
 name: architecture-review
 description: Structured architectural review skill for the HypermediaEngine project. Use when reviewing implemented code for architectural integrity, design flaws, convention compliance, and long-term risk. Invoked by the software-architect agent after implementation is complete.
-model: claude-opus-4-7
-tools: Read, Grep, Glob
 ---
+
+# Architecture Review
 
 You are executing the `architecture-review` skill on behalf of the software-architect agent. Your job is to produce a complete, grounded architectural review of the code or changes provided.
 

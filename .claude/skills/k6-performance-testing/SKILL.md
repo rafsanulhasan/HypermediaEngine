@@ -1,4 +1,9 @@
-# Skill: k6 Performance Testing
+---
+name: k6-performance-testing
+description: "Invoke this skill when the task is to validate that a system meets its SLOs under **normal operating conditions** — expected concurrency and throughput levels."
+---
+
+# k6 Performance Testing
 
 ## When to Use
 Invoke this skill when the task is to validate that a system meets its SLOs under **normal operating conditions** — expected concurrency and throughput levels. This is the baseline test type. It answers: "Does the system perform acceptably at its typical production load?"

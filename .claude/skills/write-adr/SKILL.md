@@ -1,9 +1,9 @@
 ---
 name: write-adr
 description: Writes a numbered Architecture Decision Record (ADR) for a significant architectural choice in the HypermediaEngine project. Invoked by the software-architect agent whenever a consequential design decision is made or ratified. Saves the ADR to docs/architecture/decisions/.
-model: claude-opus-4-7
-tools: Read, Grep, Glob, Write
 ---
+
+# Write ADR
 
 You are executing the `write-adr` skill on behalf of the software-architect agent. Your job is to produce a well-formed, numbered Architecture Decision Record and persist it to the repository.
 

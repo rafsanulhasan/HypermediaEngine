@@ -1,7 +1,7 @@
 ---
-name: "triage-agent"
+name: "triage-agent-copilot"
 description: "Use this agent as the FIRST entry point for every non-trivial user request. It classifies the request, decomposes complex multi-step tasks into discrete work items with dependency maps, orchestrates multi-agent workflows using the agent-selection skill, and collaborates with the product-manager agent to plan, prioritize, and track delivery.\n\nInvoke PROACTIVELY before routing any request that spans more than one agent, involves a new feature, or is ambiguous in scope. For simple one-agent tasks (e.g., a focused bug fix with a clear root cause), route directly.\n\n<example>\nContext: User submits a complex or multi-phase request.\nuser: \"Add OAuth2 authentication to the middleware pipeline.\"\nassistant: \"Let me have the triage-agent break this down before routing.\"\n<commentary>\nMulti-phase work always starts with triage to ensure requirement elicitation, design, implementation, and testing are properly sequenced.\n</commentary>\n</example>\n\n<example>\nContext: User reports a bug with potential security implications.\nuser: \"Users can access endpoints they shouldn't be able to.\"\nassistant: \"This needs triage to determine severity and route correctly — could be a bug, a security review, or both.\"\n</example>"
-tools: [vscode/getProjectSetupInfo, vscode/memory, vscode/askQuestions, read, agent, search, docker-mcp-gateway/search, todo]
+tools: [vscode/memory, vscode/askQuestions, read, agent, search, docker-mcp-gateway/search, azure-mcp/search, todo]
 user-invocable: true
 model: Claude Sonnet 4.6 (copilot)
 ---

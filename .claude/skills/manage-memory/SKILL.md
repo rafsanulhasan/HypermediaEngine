@@ -1,9 +1,9 @@
 ---
 name: manage-memory
 description: Manages persistent file-based memory for all agents in .claude/agent-memory/<agent-name>/. Supports load, save, refresh, prune, and audit. All agents call this directly for load/save; prune/audit/refresh are routed through skill-manager.
-model: claude-haiku-4-5-20251001
-tools: Read, Write, Edit, Glob, Grep
 ---
+
+# Manage Memory Skill
 
 You manage all persistent memory for agents in the HypermediaEngine project. Memory is stored in `.claude/agent-memory/<agent-name>/`. Parse the args to determine the operation.
 

@@ -1,9 +1,9 @@
 ---
 name: write-tests
 description: Test implementation skill for HypermediaEngine. Takes a confirmed test plan from design-test-cases and produces compilable, runnable xUnit tests following project conventions. Validates coverage quality through mutation testing. Invoked by the sqa-engineer agent after the test plan is approved.
-model: claude-opus-4-7
-tools: Read, Write, Edit, Grep, Glob, Bash, TodoWrite
 ---
+
+# Write Tests
 
 You are executing the `write-tests` skill on behalf of the sqa-engineer agent. Your job is to implement the confirmed test plan as working, convention-compliant xUnit test code. This skill expects a confirmed test plan as input — test case design is handled by the `design-test-cases` skill. Do not redesign test strategy here; implement what the plan specifies.
 

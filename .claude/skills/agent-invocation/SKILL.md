@@ -23,6 +23,18 @@ This skill is the single source of truth for how any agent in the HypermediaEngi
 
 ## Invocation mechanisms
 
+### Copilot / VS Code (primary platform for this file)
+
+- **Spawn an agent** — use the platform-native `agent` tool, targeting the desired agent by name and passing a self-contained prompt. Example phrasing:
+
+  > Invoke the `agent` tool against `<agent-name>` with prompt "<self-contained brief>".
+
+- **Continue an already-spawned agent** — send a follow-up message to that named agent rather than re-spawning a cold instance.
+
+- **Parallel independent agents** — issue multiple `agent` tool calls in a single message; the caller synthesizes outputs.
+
+- **Foreground vs background** — default to foreground (you block until the agent returns). Use background only for genuinely independent long-running work where the caller has other useful work to do meanwhile.
+
 ### Claude Code
 
 - **Spawn a cold agent** — primary form, used for all new delegations:
@@ -107,7 +119,7 @@ Anti-patterns to avoid:
 
 A spawned agent's summary describes **intent**, not necessarily what landed on disk:
 
-- After the agent returns, **verify changed files** with `Read` / `Grep` (Claude) or `read` / `search` (Copilot/VS Code) before reporting work complete on the agent's behalf.
+- After the agent returns, **verify changed files** with `Read` / `Grep` (Claude) before reporting work complete on the agent's behalf.
 - Mark `TodoWrite` / `todo` items Done only after verification, not on the agent's claim alone.
 - If verification fails, send a `SendMessage` (or Copilot equivalent) follow-up to the same agent rather than respawning a cold instance — the original context is still warm.
 

@@ -3,6 +3,8 @@ name: triage
 description: "Task classification, decomposition, dependency mapping, and routing skill. Invoked by the triage-agent to break any user request into discrete, independently-routable work items with assigned priorities and agent chains."
 ---
 
+# Triage Skill
+
 You are executing the `triage` skill on behalf of the triage-agent. Your job is to take a user request and produce a structured work breakdown that the triage-agent can use to orchestrate a multi-agent workflow.
 
 ## Input
@@ -56,7 +58,7 @@ Test coverage gap                        → sqa-engineer
 Low-level design question                → system-engineer
 Architecture question                    → software-architect
 Backlog / prioritization question        → product-manager
-Release / milestone planning             → product-manager → deploy skill (downstream chain depends on items)
+Release / milestone planning             → product-manager → devops-engineer (NuGet publish + GitHub Release)
 Agent / skill / command lifecycle        → agent-manager
 Rules / instructions / hooks change      → agent-manager
 Agent memory prune / audit / refresh     → agent-manager

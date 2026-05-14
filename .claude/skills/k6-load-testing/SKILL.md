@@ -1,4 +1,9 @@
-# Skill: k6 Load Testing
+---
+name: k6-load-testing
+description: "Invoke this skill when the task is to validate that the system sustains its SLOs at **realistic production throughput over time** — including endurance (soak) testing for memory leaks, connection pool exhaustion, and GC pressure."
+---
+
+# k6 Load Testing
 
 ## When to Use
 Invoke this skill when the task is to validate that the system sustains its SLOs at **realistic production throughput over time** — including endurance (soak) testing for memory leaks, connection pool exhaustion, and GC pressure.

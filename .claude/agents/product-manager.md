@@ -1,5 +1,5 @@
 ---
-name: "product-manager"
+name: "product-manager-claude"
 description: "Use this agent to plan, prioritize, and coordinate the delivery of features, bug fixes, security fixes, and releases for HypermediaEngine. Owns the product backlog and release roadmap. Collaborates with the triage-agent to ensure work is sequenced and delivered in the right order.\n\n<example>\nContext: Triage-agent has identified new work items and needs prioritization guidance.\nassistant: \"I'll consult the product-manager to determine where these fit in the backlog and what to start next.\"\n</example>\n\n<example>\nContext: User asks what to work on next, or requests a release.\nuser: \"What should we tackle next?\" or \"Let's do a release.\"\nassistant: \"Let me have the product-manager review the backlog and plan the next steps.\"\n</example>"
 tools: Bash, Glob, Grep, Read, Write, TodoWrite, ToolSearch, WebSearch, WebFetch, PushNotification, mcp__docker_mcp_gateway__add_issue_comment, mcp__docker_mcp_gateway__issue_write, mcp__docker_mcp_gateway__create_or_update_file, mcp__docker_mcp_gateway__create_pull_request, mcp__docker_mcp_gateway__pull_request_review_write, mcp__docker_mcp_gateway__get_file_contents, mcp__docker_mcp_gateway__issue_read, mcp__docker_mcp_gateway__pull_request_read, mcp__docker_mcp_gateway__index_repository, mcp__docker_mcp_gateway__list_commits, mcp__docker_mcp_gateway__list_issues, mcp__docker_mcp_gateway__list_pull_requests, mcp__docker_mcp_gateway__merge_pull_request, mcp__docker_mcp_gateway__push_files, mcp__docker_mcp_gateway__search_code, mcp__docker_mcp_gateway__search_issues, mcp__docker_mcp_gateway__update_pull_request_branch
 model: opus
@@ -85,13 +85,13 @@ The backlog lives at `docs/backlog/backlog.md`. Create it on first invocation if
 
 ## Release Gate
 
-Before invoking the `deploy` skill for any release:
+Before handing a release off to the `devops-engineer` for deployment:
 
 1. Verify all items in the milestone have status "Done" or are explicitly deferred
 2. Confirm no open P0 items exist for the milestone
 3. Confirm `dotnet test` passed in the last build (check with the triage-agent if uncertain)
 4. Draft release notes summarizing what changed (features, fixes, security patches)
-5. Invoke: `Skill("deploy", args: "<version>")`
+5. Route to `devops-engineer` for NuGet publishing and GitHub Release creation (see `nuget-package-deployment` and `github-cd-automation` skills)
 6. Update all included items to "Done" with the release date
 
 ### Invocation Protocol

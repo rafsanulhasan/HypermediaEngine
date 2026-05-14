@@ -1,11 +1,16 @@
 {
+  "chat.agentSkillsLocations": {
+    "~/.agents/skills": false,
+    ".agents/skills": false
+  },
   "chat.hookFilesLocations": {
     ".github/hooks": true,
+    ".claude/hooks": true,
     ".claude/settings.local.json": true,
     ".claude/settings.json": true,
     "~/.copilot/hooks": true,
     "~/.claude/settings.json": true,
-    "~/.agents/hooks": true
+    "~/.github/hooks": true
   },
   "chat.mcp.serverSampling": {
     "HypermediaEngine/.mcp.json: docker_mcp_gateway": {
@@ -21,5 +26,29 @@
         "copilot/grok-code-fast-1"
       ]
     }
+  },
+  "github.copilot.chat.claude47OpusPrompt.enabled": true,
+  "chat.useClaudeHooks": true,
+  "github.copilot.chat.anthropic.tools.websearch.enabled": true,
+  "chat.experimental.useSkillAdherencePrompt": false,
+  "jsts-chat-features.skills.enabled": true,
+  "chat.useNestedAgentsMdFiles": true,
+  "chat.unifiedAgentsBar.enabled": true,
+  "M365AgentsToolkit.enableLaunchAgentForTeamsInCopilot": true,
+  "chat.agent.sandbox.enabled": "off",
+  "chat.agentSessionProjection.enabled": false,
+  "chat.checkpoints.showFileChanges": true,
+  "chat.restoreLastPanelSession": true,
+  "chat.viewProgressBadge.enabled": true,
+  "chat.tools.confirmationCarousel.enabled": true,
+  "chat.tools.riskAssessment.enabled": true,
+  "chat.mcp.discovery.enabled": {
+    "claude-desktop": true
+  },
+  "chat.mcp.gallery.enabled": true,
+  "chat.mcp.assisted.nuget.enabled": true,
+  "chat.includeReferencedInstructions": false,
+  "chat.promptFilesLocations": {
+    ".claude/commands": true
   }
 }

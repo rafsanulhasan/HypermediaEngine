@@ -1,4 +1,9 @@
-# Skill: k6 Docker Execution
+---
+name: k6-docker
+description: "Invoke this skill when the question is **how to run k6 tests via Docker** — for either local development or CI automation. This skill is the execution-infrastructure complement to the k6 scripting skills"
+---
+
+# k6 Docker Execution
 
 ## When to Use
 Invoke this skill when the question is **how to run k6 tests via Docker** — for either local development or CI automation. This skill is the execution-infrastructure complement to the k6 scripting skills:

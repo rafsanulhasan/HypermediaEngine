@@ -56,7 +56,7 @@ Test coverage gap                        → sqa-engineer
 Low-level design question                → system-engineer
 Architecture question                    → software-architect
 Backlog / prioritization question        → product-manager
-Release / milestone planning             → product-manager → deploy skill (downstream chain depends on items)
+Release / milestone planning             → product-manager → devops-engineer (NuGet publish + GitHub Release)
 Agent / skill / command lifecycle        → agent-manager
 Rules / instructions / hooks change      → agent-manager
 Agent memory prune / audit / refresh     → agent-manager
