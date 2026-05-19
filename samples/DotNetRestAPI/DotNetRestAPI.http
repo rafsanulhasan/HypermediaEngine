@@ -1,6 +1,9 @@
-@DotNetRestAPI_HostAddress = http://localhost:5050
+@DotNetRestAPI_HostAddress = https://localhost:7120
 
 GET {{DotNetRestAPI_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+POST {{DotNetRestAPI_HostAddress}}/api/endpoints/weather/array
+Accept: application/hal+json
