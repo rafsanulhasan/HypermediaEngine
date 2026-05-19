@@ -19,9 +19,8 @@ internal sealed class QueryableResponseHandler<T>(
     IEnumerable<AbstractCollectionMetadataHandler<T>> metadataHandlers,
     IEnumerable<AbstractCollectionLinkHandler<T>> linkHandlers,
     IHypermediaCollectionBuilder<T> builder,
-    ICollectionResponseHandler<T> nextHandler,
-    ILogger<CollectionApiVersionMetadataHandler<T>> logger
-) : AbstractCollectionResponseHandler<T, IQueryable<T>>(httpContextAccessor, metadataHandlers, linkHandlers, builder, nextHandler)
+    ILogger<QueryableResponseHandler<T>> logger
+) : AbstractCollectionResponseHandler<T, IQueryable<T>>(httpContextAccessor, metadataHandlers, linkHandlers, builder, null)
     where T : notnull
 {
     public override async ValueTask<object?> HandleCollectionResponseAsync(IQueryable<T> response)

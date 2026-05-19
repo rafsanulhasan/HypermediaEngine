@@ -1,6 +1,4 @@
-﻿using Ardalis.GuardClauses;
-
-using Asp.Versioning;
+﻿using Asp.Versioning;
 
 using EntityTagCaching.Models;
 

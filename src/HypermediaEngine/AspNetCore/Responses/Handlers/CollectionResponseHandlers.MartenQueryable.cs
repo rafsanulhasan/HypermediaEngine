@@ -21,9 +21,8 @@ internal sealed class MartenQueryableResponseHandler<T>(
     IEnumerable<AbstractCollectionMetadataHandler<T>> metadataHandlers,
     IEnumerable<AbstractCollectionLinkHandler<T>> linkHandlers,
     IHypermediaCollectionBuilder<T> builder,
-    ICollectionResponseHandler<T> nextHandler,
     ILogger<MartenQueryableResponseHandler<T>> logger
-) : AbstractCollectionResponseHandler<T, IMartenQueryable<T>>(httpContextAccessor, metadataHandlers, linkHandlers, builder, nextHandler)
+) : AbstractCollectionResponseHandler<T, IMartenQueryable<T>>(httpContextAccessor, metadataHandlers, linkHandlers, builder, null)
     where T : notnull
 {
     public override async ValueTask<object?> HandleCollectionResponseAsync(IMartenQueryable<T> response)

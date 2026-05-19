@@ -1,9 +1,14 @@
 using HypermediaEngine.Abstractions;
+using HypermediaEngine.Responses.Rules.EnumerableRules;
+using HypermediaEngine.Responses.Rules.MartenQueryableRules;
+using HypermediaEngine.Responses.Rules.QueryableRules;
 
 using Marten.Linq;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace HypermediaEngine.Responses.Handlers;
 
@@ -11,9 +16,8 @@ internal sealed class ResponseHandlerResolver<T>(
     IHypermediaObjectBuilder<T> objectBuilder,
     IHypermediaCollectionBuilder<T> collectionBuilder,
     AbstractObjectResponseHandler<T> objectHandler,
-    MartenQueryableResponseHandler<T> martenHandler,
-    QueryableResponseHandler<T> queryableHandler,
-    EnumerableCollectionResponseHandler<T> enumerableHandler,
+    IEnumerable<AbstractCollectionMetadataHandler<T>> collectionMetadataHandlers,
+    IEnumerable<AbstractCollectionLinkHandler<T>> collectionLinkHandlers,
     IHttpContextAccessor httpContextAccessor,
     IServiceProvider serviceProvider
 ) : IResponseHandlersResolver<T>
@@ -23,27 +27,60 @@ internal sealed class ResponseHandlerResolver<T>(
 
     public ValueTask<IResponseHandler> ResolveHandler(object response)
     {
+        ICollectionResponsePipeline<T> martenQueryableResponsePipeline = new MartenQueryableFilteringRule<T>(
+            new MartenQueryablePagingRule<T>(
+                new MartenQueryableSortingRule<T>(
+                    new MartenQueryableFinalPagingRule<T>()
+                )
+            )
+        );
+        ICollectionResponsePipeline<T> queryableResponsePipeline = new QueryableFilteringRule<T>(
+            new QueryablePagingRule<T>(
+                new QueryableSortingRule<T>(
+                    new QueryableFinalPagingRule<T>()
+                )
+            )
+        );
+        ICollectionResponsePipeline<T> enumerableResponsePipeline = new EnumerableQueryParamsProcessingRule<T>(
+            new EnumerableFilteringRule<T>(
+                new EnumerablePagingRule<T>(
+                    new EnumerableSortingRule<T>(
+                        new EnumerableFinalPagingRule<T>()
+                    )
+                )
+            )
+        );
+        ICollectionResponseHandler<T> enumerableResponseHandler = new EnumerableCollectionResponseHandler<T>(
+                    httpContextAccessor,
+                    enumerableResponsePipeline,
+                    collectionMetadataHandlers,
+                    collectionLinkHandlers,
+                    collectionBuilder,
+                    serviceProvider.GetRequiredService<ILogger<EnumerableCollectionResponseHandler<T>>>());
         IResponseHandler handler = response switch
         {
             IMartenQueryable<T> or Ok<IMartenQueryable<T>> or JsonHttpResult<IMartenQueryable<T>>
-                => martenHandler
-                        .WithResponseBuilder(collectionBuilder)
-                        .WithEndpointInvocationFilterContext(DefaultEndpointFilterInvocationContext),
+                => new MartenQueryableResponseHandler<T>(
+                    httpContextAccessor,
+                    martenQueryableResponsePipeline,
+                    collectionMetadataHandlers,
+                    collectionLinkHandlers,
+                    collectionBuilder,
+                    serviceProvider.GetRequiredService<ILogger<MartenQueryableResponseHandler<T>>>()),
 
             IQueryable<T> or Ok<IQueryable<T>> or JsonHttpResult<IQueryable<T>>
-                => queryableHandler
-                        .WithResponseBuilder(collectionBuilder)
-                        .WithEndpointInvocationFilterContext(DefaultEndpointFilterInvocationContext),
+                => new QueryableResponseHandler<T>(
+                    httpContextAccessor,
+                    queryableResponsePipeline,
+                    collectionMetadataHandlers,
+                    collectionLinkHandlers,
+                    collectionBuilder,
+                    serviceProvider.GetRequiredService<ILogger<QueryableResponseHandler<T>>>()),
 
-            T[] or Ok<T[]> or JsonHttpResult<T[]>
-                => enumerableHandler
-                        .WithResponseBuilder(collectionBuilder)
-                        .WithEndpointInvocationFilterContext(DefaultEndpointFilterInvocationContext),
+            T[] or Ok<T[]> or JsonHttpResult<T[]> => enumerableResponseHandler,
 
             IEnumerable<T> or Ok<IEnumerable<T>> or JsonHttpResult<IEnumerable<T>>
-                => enumerableHandler
-                        .WithResponseBuilder(collectionBuilder)
-                        .WithEndpointInvocationFilterContext(DefaultEndpointFilterInvocationContext),
+                => enumerableResponseHandler,
 
             T or Ok<T> or JsonHttpResult<T>
                 when typeof(T).BaseType == typeof(Array)
