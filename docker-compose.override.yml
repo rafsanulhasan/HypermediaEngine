@@ -1,0 +1,47 @@
+    services:
+      #rafsandb:
+        #image: mcr.microsoft.com/mssql/server:2017-latest 
+      postgres:
+        restart: always
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: RestAPI
+        ports:
+          - "4432:5432"  # Maps internal port 5432 to your host machine's port 4432
+        volumes:
+          - ./.volumes/pg/data:/var/lib/postgresql/data
+        # 🔥 Speed-up Arguments: Disables safety disk flushing for fast test/dev execution
+        command: ["postgres", "-c", "fsync=off", "-c", "synchronous_commit=off", "-c", "full_page_writes=off"]
+
+      sample:
+        environment:
+          - ASPNETCORE_ENVIRONMENT=Development
+          #- ASPNETCORE_Kestrel__Certificates__Default__Password="Dragon404"
+          #- ASPNETCORE_Kestrel__Certificates__Default__Path=/app/DevSkill.Services.Membership.pfx
+          - ASPNETCORE_URLS=http://+:80;https://+:443;
+          - ASPNETCORE_HTTPS_PORT=443
+          - ConnectionStrings__DB=${DefaultConnection:-Host=postgres;Port=5432;Database=RestAPI;User Id=postgres;Password=postgres; Persist Security Info=true; }
+          # - NUGET_FALLBACK_PACKAGES=/root/.nuget/fallbackpackages;/root/.nuget/fallbackpackages2
+          # - ASPNETCORE_HTTPServer__EndPoints__Http__Host=localhost
+          # - ASPNETCORE_HTTPServer__EndPoints__Http__Port=80
+          # - ASPNETCORE_HTTPServer__EndPoints__Http__Scheme=http
+          # - ASPNETCORE_HTTPServer__EndPoints__Https__Host=localhost
+          # - ASPNETCORE_HTTPServer__EndPoints__Https__Port=443
+          # - ASPNETCORE_HTTPServer__EndPoints__Https__Scheme=http
+          # - ASPNETCORE_HTTPServer__EndPoints__Https__FilePath=/root/.aspnet/https/RH.Apps.Web.SPA.Lite.pfx
+          # - SSLPassword=rafsanssl2020
+        build:
+          context: .
+          dockerfile: samples/DotNetRestAPI/Dockerfile
+        ports:
+          - "5401:80"
+          - "5501:443"
+        volumes:
+          - ${APPDATA}/Roaming/Microsoft/UserSecrets/:/root/.microsoft/usersecrets:ro
+          - ${APPDATA}/Roamin4g/ASP.NET/Https:/root/.aspnet/https/:ro
+          #- ${APPDATA}/Roaming/mkcert:/root/.local/share/mkcert/:rw
+          # - ${USERPROFILE}/.nuget/packages:/root/.nuget/packages:ro
+          # - ${ProgramFiles}/dotnet/sdk/NuGetFallbackFolder:/root/.nuget/fallbackpackages2:ro
+        depends_on:
+          - postgres
