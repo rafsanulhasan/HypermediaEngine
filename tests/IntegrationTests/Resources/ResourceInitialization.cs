@@ -1,6 +1,6 @@
 ﻿namespace HypermediaEngine.IntegrationTests.Resources;
 
-internal static class Resources
+internal static class ResourceInitialization
 {
     [Before(Assembly)]
     public static void InitializeAssembly(AssemblyHookContext _)
