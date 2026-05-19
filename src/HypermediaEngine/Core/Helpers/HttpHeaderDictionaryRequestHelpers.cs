@@ -14,7 +14,7 @@ public static class HttpHeaderDictionaryRequestHelpers
                 return defaultValue;
             }
 
-            if (header.TryGetValue(key, out var value))
+            if (header.TryGetValue(key, out StringValues value))
             {
                 return value;
             }

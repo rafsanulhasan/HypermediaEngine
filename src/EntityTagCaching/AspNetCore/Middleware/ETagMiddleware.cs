@@ -51,7 +51,7 @@ public sealed class ETagMiddleware(RequestDelegate next)
                 using StreamReader reader = new(buffer, Encoding.UTF8);
                 string responseBody = await reader.ReadToEndAsync();
 
-                var etagService = context.RequestServices.GetService<IETagService>();
+                IETagService? etagService = context.RequestServices.GetService<IETagService>();
                 if (etagService is not null 
                  && !string.IsNullOrEmpty(responseBody))
                 {

@@ -1,6 +1,7 @@
 ﻿using HypermediaEngine.Abstractions;
 using HypermediaEngine.Requests;
 using HypermediaEngine.Requests.Paging;
+using HypermediaEngine.Requests.Sorting;
 using HypermediaEngine.Responses.Metadata;
 
 using LanguageExt;
@@ -27,7 +28,7 @@ internal sealed class EnumerableSortingRule<T>(ICollectionResponsePipeline<T> ne
                 }
 
                 IEnumerable<T> sorted = pagedItems;
-                foreach (var sort in queryParams.Body.Sorting)
+                foreach (SortField sort in queryParams.Body.Sorting)
                 {
                     sorted = sorted.OrderByDynamic(
                         "{Field} {Direction}",

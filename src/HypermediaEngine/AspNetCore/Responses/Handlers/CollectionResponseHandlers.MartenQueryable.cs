@@ -27,7 +27,7 @@ internal sealed class MartenQueryableResponseHandler<T>(
 {
     public override async ValueTask<object?> HandleCollectionResponseAsync(IMartenQueryable<T> response)
     {
-        using var handler = await WithPopulatedQueryParamsAsync().ConfigureAwait(false);
+        using AbstractCollectionResponseHandler<T, IMartenQueryable<T>> handler = await WithPopulatedQueryParamsAsync().ConfigureAwait(false);
 
         QueryParams ??= handler.QueryParams
                      ?? new QueryParams(paging: OffsetPaging.Default);

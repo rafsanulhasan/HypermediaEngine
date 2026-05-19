@@ -129,11 +129,11 @@ file static class ObjectHelper
             return element.ValueKind switch
             {
                 // Extracts text as a string, Guid, or DateTime Offset
-                JsonValueKind.String => element.TryGetDateTimeOffset(out var dto)
+                JsonValueKind.String => element.TryGetDateTimeOffset(out DateTimeOffset dto)
                                       ? dto
-                                      : element.TryGetDateTime(out var dt)
+                                      : element.TryGetDateTime(out global::System.DateTime dt)
                                       ? dt
-                                      : element.TryGetGuid(out var guid)
+                                      : element.TryGetGuid(out global::System.Guid guid)
                                       ? guid
                                       : element.GetString(),
 

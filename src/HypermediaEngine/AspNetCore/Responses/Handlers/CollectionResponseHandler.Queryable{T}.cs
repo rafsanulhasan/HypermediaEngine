@@ -25,7 +25,7 @@ internal sealed class QueryableResponseHandler<T>(
 {
     public override async ValueTask<object?> HandleCollectionResponseAsync(IQueryable<T> response)
     {
-        using var handler = await WithPopulatedQueryParamsAsync().ConfigureAwait(false);
+        using AbstractCollectionResponseHandler<T, IQueryable<T>> handler = await WithPopulatedQueryParamsAsync().ConfigureAwait(false);
 
         QueryParams ??= handler.QueryParams
                      ?? new QueryParams(paging: OffsetPaging.Default);
