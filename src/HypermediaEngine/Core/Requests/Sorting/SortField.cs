@@ -12,9 +12,16 @@ public sealed record class SortField
         Direction = direction;
     }
 
+    [JsonConstructor]
     internal SortField() { }
 
     public string Field { get; set; }
     [JsonConverter(typeof(SmartEnumNameConverter<SortDirection, int>))]
     public SortDirection Direction { get; set; }
+
+    /// <inheritdoc />
+    public override string ToString()
+    {
+        return $"{Field} {Direction}";
+    }
 }
