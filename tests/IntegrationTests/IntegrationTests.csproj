@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<IsPackable>false</IsPackable>
+		<AssemblyName>$(AssemblyName).IntegrationTests</AssemblyName>
+		<RootNamespace>HypermediaEngine.IntegrationTests</RootNamespace>
+		<IsTestProject>true</IsTestProject>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Aspire.Hosting.AppHost" />
+		<PackageReference Include="Microsoft.AspNetCore.TestHost" />
+		<PackageReference Include="Testcontainers.PostgreSql" />
+		<PackageReference Include="TUnit.Aspire" />
+		<PackageReference Include="TUnit.AspNetCore" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\samples\DotNetRestAPI\DotNetRestAPI.csproj" />
+	</ItemGroup>
+
+</Project>
