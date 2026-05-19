@@ -11,10 +11,15 @@ internal sealed class EnumerableFilteringRule<T>(ICollectionResponsePipeline<T> 
 {
     public async ValueTask<CollectionResponseContext<T>> Process(CollectionResponseContext<T> context)
     {
-        IEnumerable<T> filteredItems = context.Filter
-                                            .Match(
-                                                filter => context.Items.WhereDynamic(filter.ToString()),
-                                                () => context.Items);
+        IEnumerable<T> filteredItems = context.Filter.Match(
+                                        filter =>
+                                        {
+                                            string filterString = filter.ToString();
+                                            return string.IsNullOrWhiteSpace(filterString)
+                                                    ? context.Items
+                                                    : context.Items.WhereDynamic($"x => x.{filter}");
+                                        },
+                                        () => context.Items);
         int filteredItemCount = filteredItems.Count();
         PagingMetadata pagingMetadata = context.PagingMetadata.Match(
             Some: paging => paging with

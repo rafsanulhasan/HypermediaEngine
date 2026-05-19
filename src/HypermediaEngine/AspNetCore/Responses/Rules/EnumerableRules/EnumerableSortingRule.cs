@@ -15,8 +15,7 @@ internal sealed class EnumerableSortingRule<T>(ICollectionResponsePipeline<T> ne
     {
         IEnumerable<T> pagedItems = context.PagedItems.Match(
             Some: items => items,
-            None: () => context.PagedItems
-                .Match(Some: items => items, None: () => context.Items)
+            None: () => context.Items
         );
 
         (IEnumerable<T> sortedItems, QueryParams queryParams) = context.QueryParams.Match(
