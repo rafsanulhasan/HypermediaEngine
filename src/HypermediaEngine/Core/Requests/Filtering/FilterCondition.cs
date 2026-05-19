@@ -27,6 +27,46 @@ public sealed record class FilterCondition(
                 $"{Field} in ({string.Join(", ", list)})",
             (IEnumerable<int> list, FilterOperator.NotInKey) =>
                 $"{Field} not in ({string.Join(", ", list)})",
+            (IEnumerable<uint> list, FilterOperator.InKey) =>
+                $"{Field} in ({string.Join(", ", list)})",
+            (IEnumerable<uint> list, FilterOperator.NotInKey) =>
+                $"{Field} not in ({string.Join(", ", list)})",
+            (IEnumerable<short> list, FilterOperator.InKey) =>
+                $"{Field} in ({string.Join(", ", list)})",
+            (IEnumerable<short> list, FilterOperator.NotInKey) =>
+                $"{Field} not in ({string.Join(", ", list)})",
+            (IEnumerable<ushort> list, FilterOperator.InKey) =>
+                $"{Field} in ({string.Join(", ", list)})",
+            (IEnumerable<ushort> list, FilterOperator.NotInKey) =>
+                $"{Field} not in ({string.Join(", ", list)})",
+            (IEnumerable<long> list, FilterOperator.InKey) =>
+                $"{Field} in ({string.Join(", ", list)})",
+            (IEnumerable<long> list, FilterOperator.NotInKey) =>
+                $"{Field} not in ({string.Join(", ", list)})",
+            (IEnumerable<ulong> list, FilterOperator.InKey) =>
+                $"{Field} in ({string.Join(", ", list)})",
+            (IEnumerable<ulong> list, FilterOperator.NotInKey) =>
+                $"{Field} not in ({string.Join(", ", list)})",
+            (IEnumerable<float> list, FilterOperator.InKey) =>
+                $"{Field} in ({string.Join(", ", list)})",
+            (IEnumerable<float> list, FilterOperator.NotInKey) =>
+                $"{Field} not in ({string.Join(", ", list)})",
+            (IEnumerable<double> list, FilterOperator.InKey) =>
+                $"{Field} in ({string.Join(", ", list)})",
+            (IEnumerable<double> list, FilterOperator.NotInKey) =>
+                $"{Field} not in ({string.Join(", ", list)})",
+            (IEnumerable<decimal> list, FilterOperator.InKey) =>
+                $"{Field} in ({string.Join(", ", list)})",
+            (IEnumerable<decimal> list, FilterOperator.NotInKey) =>
+                $"{Field} not in ({string.Join(", ", list)})",
+            (IEnumerable<DateTimeOffset> list, FilterOperator.InKey) =>
+                $"{Field} in ({string.Join(", ", list.Select(i => $"\"{i}\""))})",
+            (IEnumerable<DateTimeOffset> list, FilterOperator.NotInKey) =>
+                $"{Field} not in ({string.Join(", ", list.Select(i => $"\"{i}\""))})",
+            (IEnumerable<DateTime> list, FilterOperator.InKey) =>
+                $"{Field} in ({string.Join(", ", list.Select(i => $"\"{i}\""))})",
+            (IEnumerable<DateTime> list, FilterOperator.NotInKey) =>
+                $"{Field} not in ({string.Join(", ", list.Select(i => $"\"{i}\""))})",
             (Guid value, FilterOperator.EqKey) =>
                 $"{Field} == \"{value}\"",
             (Guid value, FilterOperator.NeKey) =>
