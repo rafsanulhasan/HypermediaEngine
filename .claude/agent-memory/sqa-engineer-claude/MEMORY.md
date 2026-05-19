@@ -1,4 +1,4 @@
 # Memory Index
 
-- [Project Test Framework](project_test_framework.md) — HypermediaEngine uses NUnit 4 + NSubstitute + Shouldly + Bogus (not TUnit); Shouldly has SortDirection enum that clashes with HypermediaEngine's
-- [Marten Test Breakage](project_marten_breakage.md) — MartenQueryableRules test files have compilation errors blocking the whole test project build
+- [Unit Testing How-To](unit_testing_howto.md) — TUnit unit tests: attributes, Should assertions, Assert.Multiple, Bogus, TUnit.Mocks, two-project structure, InternalsVisibleTo
+- [Integration Testing How-To](integration_testing_howto.md) — TUnit integration tests: TestBase/WebApplicationTest, ApiFactory, Testcontainers Postgres, no-mocks rule, disabled Aspire fixture
