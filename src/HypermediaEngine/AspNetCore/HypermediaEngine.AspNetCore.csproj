@@ -65,7 +65,7 @@
 	<ItemGroup>
 		<Compile Update="Responses\Handlers\CollectionResponseHandler.Queryable{T}.cs">
 			<DependentUpon>Responses\Handlers\CollectionResponseHandler.cs</DependentUpon>
-		</Compile>		
+		</Compile>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -93,10 +93,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Update="Meziantou.Analyzer">
-	    <PrivateAssets>all</PrivateAssets>
-	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	  </PackageReference>
+		<InternalsVisibleTo Include="UnitTests" />
+		<InternalsVisibleTo Include="IntegrationTests" />
 	</ItemGroup>
 
 </Project>

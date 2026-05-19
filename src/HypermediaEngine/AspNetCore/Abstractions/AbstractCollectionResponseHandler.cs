@@ -43,8 +43,8 @@ internal abstract class AbstractCollectionResponseHandler<T, TCollection>(
                 => await HandleCollectionResponseAsync(ok.Value).ConfigureAwait(false),
             JsonHttpResult<TCollection> json when json.Value is not null
                 => await HandleCollectionResponseAsync(json.Value).ConfigureAwait(false),
-             _ when _nextHandler is not null => await _nextHandler.HandleResponseAsync(response).ConfigureAwait(false),
-             _ => response,
+            _ when _nextHandler is not null => await _nextHandler.HandleResponseAsync(response).ConfigureAwait(false),
+            _ => response,
         };
     }
 
@@ -87,19 +87,19 @@ internal abstract class AbstractCollectionResponseHandler<T, TCollection>(
         {
             return this;
         }
+        _ = OffsetOrCursorPaging.TryParse(
+            HttpContext.Request.QueryString.ToString(),
+            out OffsetOrCursorPaging offsetOrCursorPaging);
         try
         {
             QueryBody? body = await HttpContext.Request
-                .ReadFromJsonAsync<QueryBody>(HttpContext.RequestAborted)
+                .ReadFromJsonAsync(QueryParamsSerializerContext.Default.QueryBody, HttpContext.RequestAborted)
                 .ConfigureAwait(false);
-            _ = OffsetOrCursorPaging.TryParse(
-                HttpContext.Request.QueryString.ToString(),
-                out OffsetOrCursorPaging offsetOrCursorPaging);
             QueryParams = new QueryParams(body: body, paging: offsetOrCursorPaging);
         }
-        catch (Exception)
+        catch(Exception ex) 
         {
-            QueryParams = new(paging: OffsetOrCursorPaging.Default);
+            QueryParams = new(paging: offsetOrCursorPaging);
         }
         return this;
     }

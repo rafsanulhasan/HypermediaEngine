@@ -1,7 +1,6 @@
 using EntityTagCaching.Models;
 
 using HypermediaEngine.Abstractions;
-using HypermediaEngine.Requests.Paging;
 using HypermediaEngine.Responses;
 
 namespace HypermediaEngine.Builders;

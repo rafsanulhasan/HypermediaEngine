@@ -1,10 +1,6 @@
 ﻿using HypermediaEngine.Abstractions;
 using HypermediaEngine.Responses.Handlers;
-using HypermediaEngine.Responses.Rules;
-using HypermediaEngine.Responses.Rules.EnumerableRules;
 using HypermediaEngine.Services;
-
-using Marten.Linq;
 
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -114,7 +110,6 @@ public sealed class HypermediaEngineRegistrationBuilder(IServiceCollection servi
     internal HypermediaEngineRegistrationBuilder WithCollectionResponseDependencies()
     {
         return WithCollectionResponseHandlers()
-                .WithCollectionResponsePipelines()
                 .WithCollectionMetadataHandlers()
                 .WithCollectionLinkHandlers();
     }
@@ -155,22 +150,18 @@ public sealed class HypermediaEngineRegistrationBuilder(IServiceCollection servi
     private HypermediaEngineRegistrationBuilder WithCollectionResponseHandlers()
     {
         services
-            .AddScoped(typeof(ICollectionResponseHandler<>), typeof(EnumerableCollectionResponseHandler<>))
-            .Decorate(typeof(ICollectionResponseHandler<>), typeof(QueryableResponseHandler<>))
-            .Decorate(typeof(ICollectionResponseHandler<>), typeof(MartenQueryableResponseHandler<>));
-        return this;
-    }
-
-    private HypermediaEngineRegistrationBuilder WithCollectionResponsePipelines()
-    {
-        services
             .AddKeyedScoped(
-                typeof(ICollectionResponsePipeline<>),
-                CollectonPipelineRules.CollectionRuleName,
-                typeof(EnumerableFinalPagingRule<>))
-            .Decorate(typeof(ICollectionResponsePipeline<>), typeof(EnumerableSortingRule<>))
-            .Decorate(typeof(ICollectionResponsePipeline<>), typeof(EnumerablePagingRule<>))
-            .Decorate(typeof(ICollectionResponsePipeline<>), typeof(EnumerableFilteringRule<>));
+                typeof(ICollectionResponseHandler<>),
+                CollectionResponseHandlers.EnumerableKey,
+                typeof(EnumerableCollectionResponseHandler<>))
+            .AddKeyedScoped(
+                typeof(ICollectionResponseHandler<>),
+                CollectionResponseHandlers.QueryableKey,
+                typeof(QueryableResponseHandler<>))
+            .AddKeyedScoped(
+                typeof(ICollectionResponseHandler<>),
+                CollectionResponseHandlers.MartenQueryableKey,
+                typeof(MartenQueryableResponseHandler<>));
         return this;
     }
 
