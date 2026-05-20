@@ -36,7 +36,7 @@ public sealed class FilterConditionFloatTests
         string condStr = condition.ToString();
 
         // Assert
-        condStr.ShouldBe($"{field} {expectedOp} {fieldValue}");
+        condStr.ShouldBe($"x.{field} {expectedOp} {fieldValue}");
     }
 
     [Test]

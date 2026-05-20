@@ -17,10 +17,26 @@ internal sealed class EnumerableFilteringRule<T>(ICollectionResponsePipeline<T> 
                                             string filterString = filter.ToString();
                                             return string.IsNullOrWhiteSpace(filterString)
                                                     ? context.Items
-                                                    : context.Items.WhereDynamic($"x => x.{filter}");
+                                                    : context.Items.WhereDynamic($"x => {filter}");
                                         },
                                         () => context.Items);
         int filteredItemCount = filteredItems.Count();
+        if (filteredItemCount == 0)
+        {
+            return context with
+            {
+                FilteredItems = Option<IEnumerable<T>>.Some([]),
+                PagingMetadata = context.PagingMetadata.Match(
+                    Some: paging => paging with
+                    {
+                        TotalCount = 0,
+                    },
+                    None: () => new PagingMetadata()
+                    {
+                        TotalCount = 0,
+                    }),
+            };
+        }
         PagingMetadata pagingMetadata = context.PagingMetadata.Match(
             Some: paging => paging with
             {

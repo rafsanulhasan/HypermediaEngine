@@ -32,7 +32,7 @@ public sealed class FilterConditionBoolTests
         string condStr = condition.ToString();
 
         // Assert
-        condStr.ShouldBe($"{field} {expectedOp} {fieldValue}");
+        condStr.ShouldBe($"x.{field} {expectedOp} {fieldValue}");
     }
 
     [Test]

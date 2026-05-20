@@ -24,68 +24,148 @@ internal sealed class WeatherEndpointTests : TestBase
     {
         _cancellationTokenSource = new();
         _httpClient = Factory.CreateClient();
+        AddHalJsonAcceptHeader();
     }
 
     [Test]
     public async Task RequestWeatherForecastWithHalJson_WithNoBody_ReturnsHalCollectionResponse()
     {
         // Arrange
-        _httpClient.DefaultRequestHeaders.Add(
-            HeaderNames.Accept,
-            HalMediaTypeNames.Application.HalJson);
 
         // Act
         HttpResponseMessage response = await _httpClient.PostAsJsonAsync<QueryBody?>(
             "/api/endpoints/weather/array",
-            null,
+            value: null,
             _cancellationTokenSource.Token);
 
         // Assert
-        response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        HypermediaCollectionResponse<WeatherForecast>? halResponse = await response.Content
-            .ReadFromJsonAsync<HypermediaCollectionResponse<WeatherForecast>>(
-                _cancellationTokenSource.Token);
-        halResponse.ShouldNotBeNull();
-        halResponse!.Items.Count().ShouldBe(10);
-        halResponse.Meta.ShouldNotBeNull();
-        halResponse.Meta!.Paging.ShouldNotBeNull();
-        halResponse.Meta.Paging!.PageSize.ShouldBe(10);
-        halResponse.Meta.Paging!.HasNext.ShouldBe(true);
-        halResponse.Meta.Paging!.Style.ShouldBe(PagingStyles.Offset);
+        using (Assert.EnterMultipleScope())
+        {
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            HypermediaCollectionResponse<WeatherForecast>? halResponse = await response.Content
+                .ReadFromJsonAsync<HypermediaCollectionResponse<WeatherForecast>>(
+                    _cancellationTokenSource.Token);
+            halResponse.ShouldNotBeNull();
+            halResponse!.Items.Count().ShouldBe(10);
+            halResponse.Meta.ShouldNotBeNull();
+            halResponse.Meta!.Paging.ShouldNotBeNull();
+            halResponse.Meta.Paging!.PageSize.ShouldBe(10);
+            halResponse.Meta.Paging!.HasNext.ShouldBe(true);
+            halResponse.Meta.Paging!.Style.ShouldBe(PagingStyles.Offset);
+        }
     }
 
     [Test]
     public async Task RequestWeatherForecastWithHalJson_WithFilter_ReturnsHalCollectionResponse()
     {
         // Arrange
-        _httpClient.DefaultRequestHeaders.Add(
-            HeaderNames.Accept,
-            HalMediaTypeNames.Application.HalJson);
         QueryBody queryBody = new()
         {
-            Filtering = new([new("TemperatureC", FilterOperator.Gte, 60)])
+            Filtering = new([new("TemperatureC", FilterOperator.Gte, 60)]),
         };
 
         // Act
-        HttpResponseMessage response = await _httpClient.PostAsJsonAsync(
-            "/api/endpoints/weather/array",
-            queryBody,
-            QueryParamsSerializerContext.Default.QueryBody,
-            _cancellationTokenSource.Token);
+        HypermediaCollectionResponse<WeatherForecast> halResponse =
+            await PostAndReadHalResponseAsync(queryBody);
 
         // Assert
-        response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        HypermediaCollectionResponse<WeatherForecast>? halResponse = await response.Content
-            .ReadFromJsonAsync<HypermediaCollectionResponse<WeatherForecast>>(
-                _cancellationTokenSource.Token);
-        halResponse.ShouldNotBeNull();
-        halResponse!.Items.Count().ShouldBe(10);
-        halResponse.Meta.ShouldNotBeNull();
-        halResponse.Meta!.Paging.ShouldNotBeNull();
-        halResponse.Meta.Paging!.TotalCount.ShouldBe(20);
-        halResponse.Meta.Paging!.PageSize.ShouldBe(10);
-        halResponse.Meta.Paging!.HasNext.ShouldBe(true);
-        halResponse.Meta.Paging!.Style.ShouldBe(PagingStyles.Offset);
+        using (Assert.EnterMultipleScope())
+        {
+            halResponse.Items.Count().ShouldBe(10);
+            AssertStandardOffsetPaging(halResponse, 20);
+        }
+    }
+
+    [Test]
+    public async Task RequestWeatherForecastWithHalJson_WithAndRangeFilter_ReturnsOnlyMatchingTemperatures()
+    {
+        // Arrange
+        QueryBody queryBody = new()
+        {
+            Filtering = new(
+                FilterLogic.And,
+                [
+                    new("TemperatureC", FilterOperator.Gte, 21), 
+                    new("TemperatureC", FilterOperator.Lte, 40),
+                ],
+                children: null),
+        };
+
+        // Act
+        HypermediaCollectionResponse<WeatherForecast> halResponse = await PostAndReadHalResponseAsync(queryBody);
+
+        // Assert
+        using (Assert.EnterMultipleScope())
+        {
+            halResponse.Items.Count().ShouldBe(10);
+            AssertStandardOffsetPaging(halResponse, 20);
+            foreach (WeatherForecast item in halResponse.Items)
+            {
+                (item.TemperatureC >= 21 && item.TemperatureC <= 40)
+                    .ShouldBe(expected: true);
+            }
+        }
+    }
+
+    [Test]
+    public async Task RequestWeatherForecastWithHalJson_WithChildrenOnlyOrFilter_ReturnsUnionOfChildNodes()
+    {
+        // Arrange
+        FilterNode child2 = new(
+            FilterLogic.And,
+            [new("TemperatureC", FilterOperator.Gte, 21), new("TemperatureC", FilterOperator.Lte, 40)],
+            children: null);
+        QueryBody queryBody = new()
+        {
+            Filtering = new FilterNode(FilterLogic.Or, [new("TemperatureC", FilterOperator.Gte, 60)], [child2]),
+        };
+
+        // Act
+        HypermediaCollectionResponse<WeatherForecast> halResponse =
+            await PostAndReadHalResponseAsync(queryBody);
+
+        // Assert
+        using (Assert.EnterMultipleScope())
+        {
+            halResponse.Items.Count().ShouldBe(10);
+            AssertStandardOffsetPaging(halResponse, 40);
+            foreach (WeatherForecast item in halResponse.Items)
+            {
+                (item.TemperatureC >= 60 || (item.TemperatureC >= 21 && item.TemperatureC <= 40)).ShouldBe(true);
+            }
+        }
+    }
+
+    [Test]
+    public async Task RequestWeatherForecastWithHalJson_WithNestedAndOrFilter_PreservesChildGrouping()
+    {
+        // Arrange
+        FilterNode child = new(
+            FilterLogic.Or,
+            [new("TemperatureC", FilterOperator.Gte, 21), new("TemperatureC", FilterOperator.Gte, 60)],
+            children: null);
+        QueryBody queryBody = new()
+        {
+            Filtering = new(
+                FilterLogic.And,
+                [new("TemperatureC", FilterOperator.Lte, 40)],
+                [child]),
+        };
+
+        // Act
+        HypermediaCollectionResponse<WeatherForecast> halResponse =
+            await PostAndReadHalResponseAsync(queryBody);
+
+        // Assert
+        using (Assert.EnterMultipleScope())
+        {
+            halResponse.Items.Count().ShouldBe(10);
+            AssertStandardOffsetPaging(halResponse, 20);
+            foreach (WeatherForecast item in halResponse.Items)
+            {
+                (item.TemperatureC >= 21 && item.TemperatureC <= 40).ShouldBe(true);
+            }
+        }
     }
 
     [TearDown]
@@ -93,5 +173,43 @@ internal sealed class WeatherEndpointTests : TestBase
     {
         _httpClient.Dispose();
         _cancellationTokenSource.Dispose();
+    }
+
+    private void AddHalJsonAcceptHeader()
+    {
+        _httpClient.DefaultRequestHeaders.Add(
+            HeaderNames.Accept,
+            HalMediaTypeNames.Application.HalJson);
+    }
+
+    private async Task<HypermediaCollectionResponse<WeatherForecast>> PostAndReadHalResponseAsync(QueryBody queryBody)
+    {
+        HttpResponseMessage response = await _httpClient
+            .PostAsJsonAsync(
+                "/api/endpoints/weather/array",
+                queryBody,
+                QueryParamsSerializerContext.Default.QueryBody,
+                _cancellationTokenSource.Token)
+            .ConfigureAwait(false);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        HypermediaCollectionResponse<WeatherForecast>? halResponse = await response.Content
+            .ReadFromJsonAsync<HypermediaCollectionResponse<WeatherForecast>>(
+                _cancellationTokenSource.Token)
+            .ConfigureAwait(false);
+        halResponse.ShouldNotBeNull();
+        return halResponse!;
+    }
+
+    private static void AssertStandardOffsetPaging(
+        HypermediaCollectionResponse<WeatherForecast> response,
+        int expectedTotalCount)
+    {
+        response.Meta.ShouldNotBeNull();
+        response.Meta!.Paging.ShouldNotBeNull();
+        response.Meta.Paging!.TotalCount.ShouldBe(expectedTotalCount);
+        response.Meta.Paging!.PageSize.ShouldBe(10);
+        response.Meta.Paging!.HasNext.ShouldBe(true);
+        response.Meta.Paging!.Style.ShouldBe(PagingStyles.Offset);
     }
 }

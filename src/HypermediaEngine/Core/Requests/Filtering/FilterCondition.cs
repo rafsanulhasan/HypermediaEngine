@@ -68,59 +68,59 @@ public sealed record class FilterCondition(
             (IEnumerable<DateTime> list, FilterOperator.NotInKey) =>
                 $"{Field} not in ({string.Join(", ", list.Select(i => $"\"{i}\""))})",
             (Guid value, FilterOperator.EqKey) =>
-                $"{Field} == \"{value}\"",
+                $"x.{Field} == \"{value}\"",
             (Guid value, FilterOperator.NeKey) =>
-                $"{Field} != \"{value}\"",
+                $"x.{Field} != \"{value}\"",
             (DateTimeOffset value, FilterOperator.EqKey) =>
-                $"{Field} == \"{value}\"",
+                $"x.{Field} == \"{value}\"",
             (DateTimeOffset value, FilterOperator.NeKey) =>
-                $"{Field} != \"{value}\"",
+                $"x.{Field} != \"{value}\"",
             (DateTimeOffset value, FilterOperator.GtKey) =>
-                $"{Field} > \"{value}\"",
+                $"x.{Field} > \"{value}\"",
             (DateTimeOffset value, FilterOperator.GteKey) =>
-                $"{Field} >= \"{value}\"",
+                $"x.{Field} >= \"{value}\"",
             (DateTimeOffset value, FilterOperator.LtKey) =>
-                $"{Field} < \"{value}\"",
+                $"x.{Field} < \"{value}\"",
             (DateTimeOffset value, FilterOperator.LteKey) =>
-                $"{Field} <= \"{value}\"",
+                $"x.{Field} <= \"{value}\"",
             (DateTime value, FilterOperator.EqKey) =>
-                $"{Field} == \"{value}\"",
+                $"x.{Field} == \"{value}\"",
             (DateTime value, FilterOperator.NeKey) =>
-                $"{Field} != \"{value}\"",
+                $"x.{Field} != \"{value}\"",
             (DateTime value, FilterOperator.GtKey) =>
-                $"{Field} > \"{value}\"",
+                $"x.{Field} > \"{value}\"",
             (DateTime value, FilterOperator.GteKey) =>
-                $"{Field} >= \"{value}\"",
+                $"x.{Field} >= \"{value}\"",
             (DateTime value, FilterOperator.LtKey) =>
-                $"{Field} < \"{value}\"",
+                $"x.{Field} < \"{value}\"",
             (DateTime value, FilterOperator.LteKey) =>
-                $"{Field} <= \"{value}\"",
+                $"x.{Field} <= \"{value}\"",
             (string value, FilterOperator.EqKey) =>
-                $"{Field} == \"{value}\"",
+                $"x.{Field} == \"{value}\"",
             (string value, FilterOperator.NeKey) =>
-                $"{Field} != \"{value}\"",
+                $"x.{Field} != \"{value}\"",
             (string value, FilterOperator.ContainsKey) =>
-                $"{Field} like \"%{value}%\"",
+                $"x.{Field} like \"%{value}%\"",
             (string value, FilterOperator.StartsWithKey) =>
-                $"{Field} like \"{value}%\"",
+                $"x.{Field} like \"{value}%\"",
             (string value, FilterOperator.EndsWithKey) =>
-                $"{Field} like \"%{value}\"",
+                $"x.{Field} like \"%{value}\"",
             (bool value, FilterOperator.EqKey) =>
-                $"{Field} == {value}",
+                $"x.{Field} == {value}",
             (bool value, FilterOperator.NeKey) =>
-                $"{Field} != {value}",
+                $"x.{Field} != {value}",
             (int or uint or long or ulong or short or ushort or float or double or decimal, FilterOperator.EqKey) =>
-                $"{Field} == {val}",
+                $"x.{Field} == {val}",
             (int or uint or long or ulong or short or ushort or float or double or decimal, FilterOperator.NeKey) =>
-                $"{Field} != {val}",
+                $"x.{Field} != {val}",
             (int or uint or long or ulong or short or ushort or float or double or decimal, FilterOperator.GtKey) =>
-                $"{Field} > {val}",
+                $"x.{Field} > {val}",
             (int or uint or long or ulong or short or ushort or float or double or decimal, FilterOperator.GteKey) =>
-                $"{Field} >= {val}",
+                $"x.{Field} >= {val}",
             (int or uint or long or ulong or short or ushort or float or double or decimal, FilterOperator.LtKey) =>
-                $"{Field} < {val}",
+                $"x.{Field} < {val}",
             (int or uint or long or ulong or short or ushort or float or double or decimal, FilterOperator.LteKey) =>
-                $"{Field} <= {val}",
+                $"x.{Field} <= {val}",
             _ => throw new NotSupportedException($"Unsupported combination: The type of the value with '{Operator}' operator"),
         };
 

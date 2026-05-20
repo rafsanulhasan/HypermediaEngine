@@ -127,23 +127,23 @@ app
     .MapPost("/api/endpoints/weather/array", (TimeProvider timeProvider, [FromQuery] int count = 100) =>
     {
         Faker<WeatherForecast> faker = new();
-        faker.RuleFor(w => w.Date, f => timeProvider.GetUtcNow().AddDays(f.Random.Int(1, 30)))
+        faker.RuleFor(w => w.Date, f => timeProvider.GetUtcNow())
              .RuleFor(w => w.TemperatureC, f => f.Random.Int(-20, 1))
              .RuleFor(w => w.Summary, f => f.Lorem.Sentence(3));
         Faker<WeatherForecast> faker2 = new();
-        faker.RuleFor(w => w.Date, f => timeProvider.GetUtcNow().AddDays(f.Random.Int(1, 30)))
+        faker2.RuleFor(w => w.Date, f => timeProvider.GetUtcNow())
              .RuleFor(w => w.TemperatureC, f => f.Random.Int(1, 20))
              .RuleFor(w => w.Summary, f => f.Lorem.Sentence(3));
         Faker<WeatherForecast> faker3 = new();
-        faker.RuleFor(w => w.Date, f => timeProvider.GetUtcNow().AddDays(f.Random.Int(1, 30)))
+        faker3.RuleFor(w => w.Date, f => timeProvider.GetUtcNow())
              .RuleFor(w => w.TemperatureC, f => f.Random.Int(21, 40))
              .RuleFor(w => w.Summary, f => f.Lorem.Sentence(3));
         Faker<WeatherForecast> faker4 = new();
-        faker.RuleFor(w => w.Date, f => timeProvider.GetUtcNow().AddDays(f.Random.Int(1, 30)))
+        faker4.RuleFor(w => w.Date, f => timeProvider.GetUtcNow())
              .RuleFor(w => w.TemperatureC, f => f.Random.Int(41, 55))
              .RuleFor(w => w.Summary, f => f.Lorem.Sentence(3));
         Faker<WeatherForecast> faker5 = new();
-        faker.RuleFor(w => w.Date, f => timeProvider.GetUtcNow().AddDays(f.Random.Int(1, 30)))
+        faker5.RuleFor(w => w.Date, f => timeProvider.GetUtcNow())
              .RuleFor(w => w.TemperatureC, f => f.Random.Int(60, 75))
              .RuleFor(w => w.Summary, f => f.Lorem.Sentence(3));
 

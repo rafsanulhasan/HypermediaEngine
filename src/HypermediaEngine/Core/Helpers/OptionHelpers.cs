@@ -37,7 +37,9 @@ public static class OptionCollectionHelper
         /// </summary>
         /// <returns>The wrapped value if present; otherwise, <see langword="null"/>.</returns>
         public TCollection? Flatten()
-            => option.Match(
+            => option.IsNone
+             ? null
+             : option.Match(
                 Some: value => (TCollection?)value,
                 None: () => null);
     }

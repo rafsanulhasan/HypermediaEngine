@@ -45,7 +45,7 @@ public sealed class FilterConditionStringTests
         string condStr = condition.ToString();
 
         // Assert
-        condStr.ShouldBe($"{field} {expectedOpStr} \"{expectedFieldValue}\"");
+        condStr.ShouldBe($"x.{field} {expectedOpStr} \"{expectedFieldValue}\"");
     }
 
     [Test]

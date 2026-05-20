@@ -1,6 +1,6 @@
 namespace DotNetRestAPI;
 
-public class WeatherForecast
+public sealed record class WeatherForecast
 {
     public DateTimeOffset Date { get; set; }
 
