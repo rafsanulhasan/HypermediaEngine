@@ -1,8 +1,8 @@
-﻿global using Aspire.Hosting.Testing;
-global using TUnit.Assertions.Should;
-global using TUnit.Assertions.Should.Extensions;
-global using TUnit.Aspire;
-global using TUnit.AspNetCore;
+global using Microsoft.AspNetCore.Mvc.Testing;
+
+global using NUnit.Framework;
+
+global using Shouldly;
 
 using System.Diagnostics.CodeAnalysis;
 

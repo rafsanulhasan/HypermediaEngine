@@ -1,4 +1,4 @@
-﻿using DotNetRestAPI;
+using DotNetRestAPI;
 
 using HypermediaEngine.Http;
 using HypermediaEngine.IntegrationTests.Abstractions;
@@ -11,25 +11,18 @@ using Microsoft.Net.Http.Headers;
 
 using System.Net;
 using System.Net.Http.Json;
-using System.Net.Mime;
 
 namespace HypermediaEngine.IntegrationTests.HypermediaEngine.Endpoints;
 
-//[ClassDataSource<AspireFixture>(Shared = SharedType.PerClass)]
-//internal sealed class WeatherEndpointTests(AspireFixture fixture)
 internal sealed class WeatherEndpointTests : TestBase
 {
-    private HttpClient _httpClient;
-    private CancellationTokenSource _cancellationTokenSource;
+    private HttpClient _httpClient = null!;
+    private CancellationTokenSource _cancellationTokenSource = null!;
 
-    [Before(Test)]
-    public async Task InitializeTest()
+    [SetUp]
+    public void InitializeTest()
     {
         _cancellationTokenSource = new();
-        //await fixture.App.ResourceNotifications
-        //    .WaitForResourceAsync("dotnetrestapi")
-        //    .WaitAsync(_cancellationTokenSource.Token);
-        //_httpClient = fixture.CreateHttpClient("dotnetrestapi");
         _httpClient = Factory.CreateClient();
     }
 
@@ -48,27 +41,17 @@ internal sealed class WeatherEndpointTests : TestBase
             _cancellationTokenSource.Token);
 
         // Assert
-        using (Assert.Multiple())
-        {
-            await response.StatusCode.Should().BeEqualTo(HttpStatusCode.OK);
-            await Assert.That(async () =>
-            {
-                HypermediaCollectionResponse<WeatherForecast>? halResponse = await response.Content
-                    .ReadFromJsonAsync<HypermediaCollectionResponse<WeatherForecast>>(
-                        _cancellationTokenSource.Token);
-                await halResponse.Should().NotBeNull();
-                await halResponse!.Items.Should().HaveCount(10);
-                await halResponse.Meta.Should().NotBeNull();
-                await halResponse.Meta!.Paging.Should().NotBeNull();
-                await halResponse.Meta.Paging!.PageSize
-                    .Should().BeEqualTo(10);
-                await halResponse.Meta.Paging!.HasNext
-                    .Should().BeTrue();
-                await halResponse.Meta.Paging!.Style
-                    .Should().BeEqualTo(PagingStyles.Offset);
-
-            }).ThrowsNothing();
-        }
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        HypermediaCollectionResponse<WeatherForecast>? halResponse = await response.Content
+            .ReadFromJsonAsync<HypermediaCollectionResponse<WeatherForecast>>(
+                _cancellationTokenSource.Token);
+        halResponse.ShouldNotBeNull();
+        halResponse!.Items.Count().ShouldBe(10);
+        halResponse.Meta.ShouldNotBeNull();
+        halResponse.Meta!.Paging.ShouldNotBeNull();
+        halResponse.Meta.Paging!.PageSize.ShouldBe(10);
+        halResponse.Meta.Paging!.HasNext.ShouldBe(true);
+        halResponse.Meta.Paging!.Style.ShouldBe(PagingStyles.Offset);
     }
 
     [Test]
@@ -91,32 +74,21 @@ internal sealed class WeatherEndpointTests : TestBase
             _cancellationTokenSource.Token);
 
         // Assert
-        using (Assert.Multiple())
-        {
-            await response.StatusCode.Should().BeEqualTo(HttpStatusCode.OK);
-            await Assert.That(async () =>
-            {
-                HypermediaCollectionResponse<WeatherForecast>? halResponse = await response.Content
-                    .ReadFromJsonAsync<HypermediaCollectionResponse<WeatherForecast>>(
-                        _cancellationTokenSource.Token);
-                await halResponse.Should().NotBeNull();
-                await halResponse!.Items.Should().HaveCount(10);
-                await halResponse.Meta.Should().NotBeNull();
-                await halResponse.Meta!.Paging.Should().NotBeNull();
-                await halResponse.Meta.Paging!.TotalCount
-                    .Should().BeEqualTo(20);
-                await halResponse.Meta.Paging!.PageSize
-                    .Should().BeEqualTo(10);
-                await halResponse.Meta.Paging!.HasNext
-                    .Should().BeTrue();
-                await halResponse.Meta.Paging!.Style
-                    .Should().BeEqualTo(PagingStyles.Offset);
-
-            }).ThrowsNothing();
-        }
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        HypermediaCollectionResponse<WeatherForecast>? halResponse = await response.Content
+            .ReadFromJsonAsync<HypermediaCollectionResponse<WeatherForecast>>(
+                _cancellationTokenSource.Token);
+        halResponse.ShouldNotBeNull();
+        halResponse!.Items.Count().ShouldBe(10);
+        halResponse.Meta.ShouldNotBeNull();
+        halResponse.Meta!.Paging.ShouldNotBeNull();
+        halResponse.Meta.Paging!.TotalCount.ShouldBe(20);
+        halResponse.Meta.Paging!.PageSize.ShouldBe(10);
+        halResponse.Meta.Paging!.HasNext.ShouldBe(true);
+        halResponse.Meta.Paging!.Style.ShouldBe(PagingStyles.Offset);
     }
 
-    [After(Test)]
+    [TearDown]
     public void EndTest()
     {
         _httpClient.Dispose();

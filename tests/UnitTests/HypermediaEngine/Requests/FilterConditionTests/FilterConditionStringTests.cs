@@ -1,4 +1,4 @@
-﻿using HypermediaEngine.Requests.Filtering;
+using HypermediaEngine.Requests.Filtering;
 
 using System.Text;
 
@@ -6,21 +6,21 @@ namespace HypermediaEngine.UnitTests.HypermediaEngine.Requests.FilterConditionTe
 
 public sealed class FilterConditionStringTests
 {
-    private Faker _faker;
+    private Faker _faker = null!;
 
-    [Before(Test)]
+    [SetUp]
     public void SetupTest()
     {
         _faker = new();
     }
 
     [Test]
-    [Arguments(values: [FilterOperator.EqKey, "==" ])]
-    [Arguments(values: [FilterOperator.NeKey, "!=" ])]
-    [Arguments(values: [FilterOperator.ContainsKey, "like", true, true ])]
-    [Arguments(values: [FilterOperator.StartsWithKey, "like", false, true ])]
-    [Arguments(values: [FilterOperator.EndsWithKey, "like", true, false ])]
-    public async Task ToString_StringValueWithCompatibleOp_ReturnsConditionString(
+    [TestCase(FilterOperator.EqKey, "==")]
+    [TestCase(FilterOperator.NeKey, "!=")]
+    [TestCase(FilterOperator.ContainsKey, "like", true, true)]
+    [TestCase(FilterOperator.StartsWithKey, "like", false, true)]
+    [TestCase(FilterOperator.EndsWithKey, "like", true, false)]
+    public void ToString_StringValueWithCompatibleOp_ReturnsConditionString(
         string opStr,
         string expectedOpStr,
         bool withStarting = false,
@@ -41,25 +41,21 @@ public sealed class FilterConditionStringTests
             op,
             JsonElement.Parse($"\"{fieldValue}\""));
 
-        // Act and Assert
-        using (Assert.Multiple())
-        {
-            await Assert.That(async () =>
-            {
-                string condStr = condition.ToString();
-                await condStr.Should().BeEqualTo($"{field} {expectedOpStr} \"{expectedFieldValue}\"");
-            }).ThrowsNothing();
-        }
+        // Act
+        string condStr = condition.ToString();
+
+        // Assert
+        condStr.ShouldBe($"{field} {expectedOpStr} \"{expectedFieldValue}\"");
     }
 
     [Test]
-    [Arguments(FilterOperator.GtKey)]
-    [Arguments(FilterOperator.GteKey)]
-    [Arguments(FilterOperator.LtKey)]
-    [Arguments(FilterOperator.LteKey)]
-    [Arguments(FilterOperator.InKey)]
-    [Arguments(FilterOperator.NotInKey)]
-    public async Task ToString_StringValueAndNonCompatipleOps_ThrowsNotSupportedException(string opStr)
+    [TestCase(FilterOperator.GtKey)]
+    [TestCase(FilterOperator.GteKey)]
+    [TestCase(FilterOperator.LtKey)]
+    [TestCase(FilterOperator.LteKey)]
+    [TestCase(FilterOperator.InKey)]
+    [TestCase(FilterOperator.NotInKey)]
+    public void ToString_StringValueAndNonCompatipleOps_ThrowsNotSupportedException(string opStr)
     {
         // Arrange
         string field = _faker.Random.AlphaNumeric(10);
@@ -70,11 +66,10 @@ public sealed class FilterConditionStringTests
             op,
             JsonElement.Parse($"\"{fieldValue}\""));
 
-        // Act and Assert
-        using (Assert.Multiple())
-        {
-            NotSupportedException ex = Assert.ThrowsExactly<NotSupportedException>(() => condition.ToString());
-            await ex.Message.Should().BeEqualTo($"Unsupported combination: The type of the value with '{op}' operator");
-        }
+        // Act
+        NotSupportedException ex = Should.Throw<NotSupportedException>(() => condition.ToString());
+
+        // Assert
+        ex!.Message.ShouldBe($"Unsupported combination: The type of the value with '{op}' operator");
     }
 }

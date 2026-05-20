@@ -4,18 +4,18 @@ namespace HypermediaEngine.UnitTests.HypermediaEngine.Requests.FilterConditionTe
 
 public sealed class FilterConditionUInt64ListTests
 {
-    private Faker _faker;
+    private Faker _faker = null!;
 
-    [Before(Test)]
+    [SetUp]
     public void SetupTest()
     {
         _faker = new();
     }
 
     [Test]
-    [Arguments(values: [FilterOperator.InKey, "in"])]
-    [Arguments(values: [FilterOperator.NotInKey, "not in"])]
-    public async Task ToString_UInt64ListValueWithCompatibleOperators_ReturnsConditionString(
+    [TestCase(FilterOperator.InKey, "in")]
+    [TestCase(FilterOperator.NotInKey, "not in")]
+    public void ToString_UInt64ListValueWithCompatibleOperators_ReturnsConditionString(
         string opStr,
         string expectedOp)
     {
@@ -28,28 +28,24 @@ public sealed class FilterConditionUInt64ListTests
             op,
             fieldValues);
 
-        // Act and Assert
-        using (Assert.Multiple())
-        {
-            await Assert.That(async () =>
-            {
-                string condStr = condition.ToString();
-                await condStr.Should().BeEqualTo($"{field} {expectedOp} ({string.Join(", ", fieldValues)})");
-            }).ThrowsNothing();
-        }
+        // Act
+        string condStr = condition.ToString();
+
+        // Assert
+        condStr.ShouldBe($"{field} {expectedOp} ({string.Join(", ", fieldValues)})");
     }
 
     [Test]
-    [Arguments(FilterOperator.ContainsKey)]
-    [Arguments(FilterOperator.StartsWithKey)]
-    [Arguments(FilterOperator.EndsWithKey)]
-    [Arguments(FilterOperator.EqKey)]
-    [Arguments(FilterOperator.NeKey)]
-    [Arguments(FilterOperator.GteKey)]
-    [Arguments(FilterOperator.GtKey)]
-    [Arguments(FilterOperator.LteKey)]
-    [Arguments(FilterOperator.LtKey)]
-    public async Task ToString_UInt64ListValueAndUnsupportedOp_ThrowsNotSupportedException(string opStr)
+    [TestCase(FilterOperator.ContainsKey)]
+    [TestCase(FilterOperator.StartsWithKey)]
+    [TestCase(FilterOperator.EndsWithKey)]
+    [TestCase(FilterOperator.EqKey)]
+    [TestCase(FilterOperator.NeKey)]
+    [TestCase(FilterOperator.GteKey)]
+    [TestCase(FilterOperator.GtKey)]
+    [TestCase(FilterOperator.LteKey)]
+    [TestCase(FilterOperator.LtKey)]
+    public void ToString_UInt64ListValueAndUnsupportedOp_ThrowsNotSupportedException(string opStr)
     {
         // Arrange
         string field = _faker.Random.AlphaNumeric(10);
@@ -60,11 +56,10 @@ public sealed class FilterConditionUInt64ListTests
             op,
             fieldValue);
 
-        // Act and Assert
-        using (Assert.Multiple())
-        {
-            NotSupportedException ex = Assert.ThrowsExactly<NotSupportedException>(() => condition.ToString());
-            await ex.Message.Should().BeEqualTo($"Unsupported combination: The type of the value with '{op}' operator");
-        }
+        // Act
+        NotSupportedException ex = Should.Throw<NotSupportedException>(() => condition.ToString());
+
+        // Assert
+        ex!.Message.ShouldBe($"Unsupported combination: The type of the value with '{op}' operator");
     }
 }

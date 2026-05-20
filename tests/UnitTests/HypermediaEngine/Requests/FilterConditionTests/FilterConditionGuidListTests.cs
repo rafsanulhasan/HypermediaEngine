@@ -1,21 +1,21 @@
-﻿using HypermediaEngine.Requests.Filtering;
+using HypermediaEngine.Requests.Filtering;
 
 namespace HypermediaEngine.UnitTests.HypermediaEngine.Requests.FilterConditionTests;
 
 public sealed class FilterConditionGuidListTests
 {
-    private Faker _faker;
+    private Faker _faker = null!;
 
-    [Before(Test)]
+    [SetUp]
     public void SetupTest()
     {
         _faker = new();
     }
 
     [Test]
-    [Arguments(values: [FilterOperator.InKey, "in"])]
-    [Arguments(values: [FilterOperator.NotInKey, "not in"])]
-    public async Task ToString_GuidListValueWithCompatibleOperators_ReturnsConditionString(
+    [TestCase(FilterOperator.InKey, "in")]
+    [TestCase(FilterOperator.NotInKey, "not in")]
+    public void ToString_GuidListValueWithCompatibleOperators_ReturnsConditionString(
         string opStr,
         string expectedOp)
     {
@@ -29,28 +29,24 @@ public sealed class FilterConditionGuidListTests
             fieldValues);
         string fieldValueStr = string.Join(", ", fieldValues.Select(v => $"\"{v}\""));
 
-        // Act and Assert
-        using (Assert.Multiple())
-        {
-            await Assert.That(async () =>
-            {
-                string condStr = condition.ToString();
-                await condStr.Should().BeEqualTo($"{field} {expectedOp} ({fieldValueStr})");
-            }).ThrowsNothing();
-        }
+        // Act
+        string condStr = condition.ToString();
+
+        // Assert
+        condStr.ShouldBe($"{field} {expectedOp} ({fieldValueStr})");
     }
 
     [Test]
-    [Arguments(FilterOperator.ContainsKey)]
-    [Arguments(FilterOperator.StartsWithKey)]
-    [Arguments(FilterOperator.EndsWithKey)]
-    [Arguments(FilterOperator.EqKey)]
-    [Arguments(FilterOperator.NeKey)]
-    [Arguments(FilterOperator.GteKey)]
-    [Arguments(FilterOperator.GtKey)]
-    [Arguments(FilterOperator.LteKey)]
-    [Arguments(FilterOperator.LtKey)]
-    public async Task ToString_GuidListValueAndUnsupportedOp_ThrowsNotSupportedException(string opStr)
+    [TestCase(FilterOperator.ContainsKey)]
+    [TestCase(FilterOperator.StartsWithKey)]
+    [TestCase(FilterOperator.EndsWithKey)]
+    [TestCase(FilterOperator.EqKey)]
+    [TestCase(FilterOperator.NeKey)]
+    [TestCase(FilterOperator.GteKey)]
+    [TestCase(FilterOperator.GtKey)]
+    [TestCase(FilterOperator.LteKey)]
+    [TestCase(FilterOperator.LtKey)]
+    public void ToString_GuidListValueAndUnsupportedOp_ThrowsNotSupportedException(string opStr)
     {
         // Arrange
         string field = _faker.Random.AlphaNumeric(10);
@@ -61,11 +57,10 @@ public sealed class FilterConditionGuidListTests
             op,
             fieldValue);
 
-        // Act and Assert
-        using (Assert.Multiple())
-        {
-            NotSupportedException ex = Assert.ThrowsExactly<NotSupportedException>(() => condition.ToString());
-            await ex.Message.Should().BeEqualTo($"Unsupported combination: The type of the value with '{op}' operator");
-        }
+        // Act
+        NotSupportedException ex = Should.Throw<NotSupportedException>(() => condition.ToString());
+
+        // Assert
+        ex!.Message.ShouldBe($"Unsupported combination: The type of the value with '{op}' operator");
     }
 }

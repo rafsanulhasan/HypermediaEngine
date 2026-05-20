@@ -1,25 +1,25 @@
-﻿using HypermediaEngine.Requests.Filtering;
+using HypermediaEngine.Requests.Filtering;
 
 namespace HypermediaEngine.UnitTests.HypermediaEngine.Requests.FilterConditionTests;
 
 public sealed class FilterConditionFloatTests
 {
-    private Faker _faker;
+    private Faker _faker = null!;
 
-    [Before(Test)]
+    [SetUp]
     public void SetupTest()
     {
         _faker = new();
     }
 
     [Test]
-    [Arguments(values: [FilterOperator.EqKey, "=="])]
-    [Arguments(values: [FilterOperator.NeKey, "!="])]
-    [Arguments(values: [FilterOperator.GteKey, ">="])]
-    [Arguments(values: [FilterOperator.GtKey, ">"])]
-    [Arguments(values: [FilterOperator.LteKey, "<="])]
-    [Arguments(values: [FilterOperator.LtKey, "<"])]
-    public async Task ToString_SingleValueWithCompatibleOperators_ReturnsConditionString(
+    [TestCase(FilterOperator.EqKey, "==")]
+    [TestCase(FilterOperator.NeKey, "!=")]
+    [TestCase(FilterOperator.GteKey, ">=")]
+    [TestCase(FilterOperator.GtKey, ">")]
+    [TestCase(FilterOperator.LteKey, "<=")]
+    [TestCase(FilterOperator.LtKey, "<")]
+    public void ToString_SingleValueWithCompatibleOperators_ReturnsConditionString(
         string opStr,
         string expectedOp)
     {
@@ -32,24 +32,20 @@ public sealed class FilterConditionFloatTests
             op,
             JsonSerializer.SerializeToElement(fieldValue));
 
-        // Act and Assert
-        using (Assert.Multiple())
-        {
-            await Assert.That(async () =>
-            {
-                string condStr = condition.ToString();
-                await condStr.Should().BeEqualTo($"{field} {expectedOp} {fieldValue}");
-            }).ThrowsNothing();
-        }
+        // Act
+        string condStr = condition.ToString();
+
+        // Assert
+        condStr.ShouldBe($"{field} {expectedOp} {fieldValue}");
     }
 
     [Test]
-    [Arguments(FilterOperator.ContainsKey)]
-    [Arguments(FilterOperator.StartsWithKey)]
-    [Arguments(FilterOperator.EndsWithKey)]
-    [Arguments(FilterOperator.InKey)]
-    [Arguments(FilterOperator.NotInKey)]
-    public async Task ToString_SingleValueAndUnsupportedOp_ThrowsNotSupportedException(string opStr)
+    [TestCase(FilterOperator.ContainsKey)]
+    [TestCase(FilterOperator.StartsWithKey)]
+    [TestCase(FilterOperator.EndsWithKey)]
+    [TestCase(FilterOperator.InKey)]
+    [TestCase(FilterOperator.NotInKey)]
+    public void ToString_SingleValueAndUnsupportedOp_ThrowsNotSupportedException(string opStr)
     {
         // Arrange
         string field = _faker.Random.AlphaNumeric(10);
@@ -60,11 +56,10 @@ public sealed class FilterConditionFloatTests
             op,
             JsonSerializer.SerializeToElement(fieldValue));
 
-        // Act and Assert
-        using (Assert.Multiple())
-        {
-            NotSupportedException ex = Assert.ThrowsExactly<NotSupportedException>(() => condition.ToString());
-            await ex.Message.Should().BeEqualTo($"Unsupported combination: The type of the value with '{op}' operator");
-        }
+        // Act
+        NotSupportedException ex = Should.Throw<NotSupportedException>(() => condition.ToString());
+
+        // Assert
+        ex!.Message.ShouldBe($"Unsupported combination: The type of the value with '{op}' operator");
     }
 }

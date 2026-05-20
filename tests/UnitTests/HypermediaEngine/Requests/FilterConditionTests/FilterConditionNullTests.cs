@@ -1,19 +1,19 @@
-﻿using HypermediaEngine.Requests.Filtering;
+using HypermediaEngine.Requests.Filtering;
 
 namespace HypermediaEngine.UnitTests.HypermediaEngine.Requests.FilterConditionTests;
 
 public sealed class FilterConditionOtherTests
 {
-    private Faker _faker;
+    private Faker _faker = null!;
 
-    [Before(Test)]
+    [SetUp]
     public void SetupTest()
     {
         _faker = new();
     }
 
     [Test]
-    public async Task ToString_NullValueAndEqOp_ReturnsConditionString()
+    public void ToString_NullValueAndEqOp_ReturnsConditionString()
     {
         // Arrange
         string field = _faker.Random.AlphaNumeric(10);
@@ -26,24 +26,23 @@ public sealed class FilterConditionOtherTests
         string condStr = condition.ToString();
 
         // Assert
-        await condStr.Should().BeEqualTo(string.Empty);
+        condStr.ShouldBe(string.Empty);
     }
 
     [Test]
-    public async Task ToString_ObjectValueAndEqOp_ReturnsConditionString()
+    public void ToString_ObjectValueAndEqOp_ReturnsConditionString()
     {
         // Arrange
         string field = _faker.Random.AlphaNumeric(10);
         FilterCondition condition = new(
             field,
             FilterOperator.Eq,
-            JsonSerializer.SerializeToElement( new { name = _faker.Name.FullName() }));
+            JsonSerializer.SerializeToElement(new { name = _faker.Name.FullName() }));
 
-        // Act and Assert
-        using (Assert.Multiple())
-        {
-            NotSupportedException ex = Assert.Throws<NotSupportedException>(() => condition.ToString());
-            await ex.Message.Should().StartWith("Unknown JSON type node");
-        }
+        // Act
+        NotSupportedException ex = Should.Throw<NotSupportedException>(() => condition.ToString());
+
+        // Assert
+        ex!.Message.ShouldStartWith("Unknown JSON type node");
     }
 }

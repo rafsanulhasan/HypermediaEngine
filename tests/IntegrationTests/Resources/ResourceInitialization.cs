@@ -1,10 +1,22 @@
-﻿namespace HypermediaEngine.IntegrationTests.Resources;
+using HypermediaEngine.IntegrationTests.Resources;
 
-internal static class ResourceInitialization
+namespace HypermediaEngine.IntegrationTests;
+
+[SetUpFixture]
+public sealed class ResourceInitialization
 {
-    [Before(Assembly)]
-    public static void InitializeAssembly(AssemblyHookContext _)
+    public static PostgresDatabase Database { get; private set; } = null!;
+
+    [OneTimeSetUp]
+    public async Task InitializeAssembly()
     {
-        AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2Support", false);
+        Database = new PostgresDatabase();
+        await Database.StartAsync();
+    }
+
+    [OneTimeTearDown]
+    public async Task DisposeAssembly()
+    {
+        await Database.DisposeAsync();
     }
 }

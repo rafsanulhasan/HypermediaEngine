@@ -12,10 +12,9 @@
 
 	<ItemGroup>
 		<PackageReference Include="Aspire.Hosting.AppHost" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
 		<PackageReference Include="Microsoft.AspNetCore.TestHost" />
 		<PackageReference Include="Testcontainers.PostgreSql" />
-		<PackageReference Include="TUnit.Aspire" />
-		<PackageReference Include="TUnit.AspNetCore" />
 	</ItemGroup>
 
 	<ItemGroup>
