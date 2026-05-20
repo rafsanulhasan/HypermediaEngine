@@ -15,6 +15,10 @@ public sealed class FilterConditionDateTimeOffsetTests
     [Test]
     [TestCase(FilterOperator.EqKey, "==")]
     [TestCase(FilterOperator.NeKey, "!=")]
+    [TestCase(FilterOperator.GtKey, ">")]
+    [TestCase(FilterOperator.GteKey, ">=")]
+    [TestCase(FilterOperator.LtKey, "<")]
+    [TestCase(FilterOperator.LteKey, "<=")]
     public void ToString_DateTimeOffsetValueWithCompatibleOperators_ReturnsConditionString(
         string opStr,
         string expectedOp)
@@ -41,10 +45,6 @@ public sealed class FilterConditionDateTimeOffsetTests
     [TestCase(FilterOperator.EndsWithKey)]
     [TestCase(FilterOperator.InKey)]
     [TestCase(FilterOperator.NotInKey)]
-    [TestCase(FilterOperator.GteKey)]
-    [TestCase(FilterOperator.GtKey)]
-    [TestCase(FilterOperator.LteKey)]
-    [TestCase(FilterOperator.LtKey)]
     public void ToString_DateTimeOffsetValueAndUnsupportedOp_ThrowsNotSupportedException(string opStr)
     {
         // Arrange

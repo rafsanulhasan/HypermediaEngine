@@ -75,10 +75,26 @@ public sealed record class FilterCondition(
                 $"{Field} == \"{value}\"",
             (DateTimeOffset value, FilterOperator.NeKey) =>
                 $"{Field} != \"{value}\"",
+            (DateTimeOffset value, FilterOperator.GtKey) =>
+                $"{Field} > \"{value}\"",
+            (DateTimeOffset value, FilterOperator.GteKey) =>
+                $"{Field} >= \"{value}\"",
+            (DateTimeOffset value, FilterOperator.LtKey) =>
+                $"{Field} < \"{value}\"",
+            (DateTimeOffset value, FilterOperator.LteKey) =>
+                $"{Field} <= \"{value}\"",
             (DateTime value, FilterOperator.EqKey) =>
                 $"{Field} == \"{value}\"",
             (DateTime value, FilterOperator.NeKey) =>
                 $"{Field} != \"{value}\"",
+            (DateTime value, FilterOperator.GtKey) =>
+                $"{Field} > \"{value}\"",
+            (DateTime value, FilterOperator.GteKey) =>
+                $"{Field} >= \"{value}\"",
+            (DateTime value, FilterOperator.LtKey) =>
+                $"{Field} < \"{value}\"",
+            (DateTime value, FilterOperator.LteKey) =>
+                $"{Field} <= \"{value}\"",
             (string value, FilterOperator.EqKey) =>
                 $"{Field} == \"{value}\"",
             (string value, FilterOperator.NeKey) =>
