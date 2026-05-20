@@ -10,7 +10,7 @@ public sealed class PostgresDatabase : IAsyncDisposable
         .WithEnvironment("POSTGRES_USER", "postgres")
         .WithEnvironment("POSTGRES_PASSWORD", "postgres")
         .WithEnvironment("POSTGRES_DB", new Faker().Company.CompanyName())
-        .WithPortBinding(5432)
+        .WithPortBinding(5432, assignRandomHostPort: true)
         .Build();
 
     public Task StartAsync() => Container.StartAsync();
