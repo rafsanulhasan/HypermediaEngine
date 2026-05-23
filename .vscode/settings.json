@@ -44,11 +44,16 @@
   "chat.tools.riskAssessment.enabled": true,
   "chat.mcp.discovery.enabled": {
     "claude-desktop": true
-},
+  },
   "chat.mcp.gallery.enabled": true,
   "chat.mcp.assisted.nuget.enabled": true,
   "chat.includeReferencedInstructions": false,
   "chat.promptFilesLocations": {
     ".claude/commands": true
+  },
+  "chat.tools.terminal.autoApprove": {
+    "git --no-pager worktree": true,
+    "git worktree": true,
+    "git -C \"e:\\Projects\\personal\\HypermediaEngine.worktrees\\copilot-remove-all-worktree\"": true
   }
 }
