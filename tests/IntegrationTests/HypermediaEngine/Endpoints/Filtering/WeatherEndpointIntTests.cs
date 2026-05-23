@@ -12,9 +12,9 @@ using Microsoft.Net.Http.Headers;
 using System.Net;
 using System.Net.Http.Json;
 
-namespace HypermediaEngine.IntegrationTests.HypermediaEngine.Endpoints;
+namespace HypermediaEngine.IntegrationTests.HypermediaEngine.Endpoints.Filtering;
 
-internal sealed class WeatherEndpointTests : TestBase
+internal sealed class WeatherEndpointIntTests : TestBase
 {
     private HttpClient _httpClient = null!;
     private CancellationTokenSource _cancellationTokenSource = null!;
