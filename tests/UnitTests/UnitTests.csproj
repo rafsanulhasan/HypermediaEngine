@@ -1,23 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <IsPackable>false</IsPackable>
-    <AssemblyName>$(AssemblyName).UnitTests</AssemblyName>
-    <RootNamespace>HypermediaEngine.UnitTests</RootNamespace>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<IsPackable>false</IsPackable>
+		<AssemblyName>$(AssemblyName).UnitTests</AssemblyName>
+		<RootNamespace>HypermediaEngine.UnitTests</RootNamespace>
+		<ExcludeFromCodeCoverage>true</ExcludeFromCodeCoverage>
+	</PropertyGroup>
 
-  <ItemGroup>
-	  <PackageReference Include="Microsoft.AspNetCore.TestHost" />
-	  <PackageReference Include="NSubstitute" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.TestHost" />
+		<PackageReference Include="NSubstitute" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\EntityTagCaching\AspNetCore\EntityTagCaching.AspNetCore.csproj" />
-    <ProjectReference Include="..\..\src\HypermediaEngine\AspNetCore\HypermediaEngine.AspNetCore.csproj" />
-    <ProjectReference Include="..\..\src\HypermediaEngine\Core\HypermediaEngine.Core.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\EntityTagCaching\AspNetCore\EntityTagCaching.AspNetCore.csproj" />
+		<ProjectReference Include="..\..\src\HypermediaEngine\AspNetCore\HypermediaEngine.AspNetCore.csproj" />
+		<ProjectReference Include="..\..\src\HypermediaEngine\Core\HypermediaEngine.Core.csproj" />
+	</ItemGroup>
 
 </Project>
