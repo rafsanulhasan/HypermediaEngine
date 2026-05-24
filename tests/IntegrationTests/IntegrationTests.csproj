@@ -8,6 +8,7 @@
 		<AssemblyName>$(AssemblyName).IntegrationTests</AssemblyName>
 		<RootNamespace>HypermediaEngine.IntegrationTests</RootNamespace>
 		<IsTestProject>true</IsTestProject>
+		<ExcludeFromCodeCoverage>true</ExcludeFromCodeCoverage>
 	</PropertyGroup>
 
 	<ItemGroup>
