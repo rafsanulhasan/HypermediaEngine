@@ -1,9 +1,9 @@
-using HypermediaEngine.Abstractions;
-using HypermediaEngine.Responses.Metadata;
-
 using LanguageExt;
 
-namespace HypermediaEngine.Responses.Rules.QueryableRules;
+using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Responses.Metadata;
+
+namespace SynergyFx.HypermediaEngine.Responses.Rules.QueryableRules;
 
 internal sealed class QueryableFilteringRule<T>(ICollectionResponsePipeline<T> next)
     : ICollectionResponsePipeline<T>

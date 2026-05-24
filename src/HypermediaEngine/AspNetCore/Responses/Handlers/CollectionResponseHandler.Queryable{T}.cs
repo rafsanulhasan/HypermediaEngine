@@ -1,17 +1,17 @@
-﻿using EntityTagCaching.Models;
-
-using HypermediaEngine.Abstractions;
-using HypermediaEngine.Requests;
-using HypermediaEngine.Requests.Filtering;
-using HypermediaEngine.Requests.Paging;
-using HypermediaEngine.Responses.Metadata;
-using HypermediaEngine.Responses.Rules;
+﻿using HypermediaEngine.Requests;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace HypermediaEngine.Responses.Handlers;
+using SynergyFx.EntityTagCaching.Models;
+using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Requests.Filtering;
+using SynergyFx.HypermediaEngine.Requests.Paging;
+using SynergyFx.HypermediaEngine.Responses.Metadata;
+using SynergyFx.HypermediaEngine.Responses.Rules;
+
+namespace SynergyFx.HypermediaEngine.Responses.Handlers;
 
 internal sealed class QueryableResponseHandler<T>(
     IHttpContextAccessor httpContextAccessor,

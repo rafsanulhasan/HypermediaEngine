@@ -1,14 +1,14 @@
-using HypermediaEngine.Http;
-
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
+using SynergyFx.HypermediaEngine.Http;
+
 using System.Net.Mime;
 
-namespace HypermediaEngine.Attributes;
+namespace SynergyFx.HypermediaEngine.Attributes;
 
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
 public abstract class AbstractProducesHypermediaAttribute<T>

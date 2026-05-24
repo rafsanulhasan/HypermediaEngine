@@ -6,8 +6,8 @@
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<DocumentationFile>$(MSBuildProjectPath)\bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
 		
-		<AssemblyName>EntityTagCaching</AssemblyName>
-		<RootNamespace>EntityTagCaching</RootNamespace>
+		<AssemblyName>SynergyFx.EntityTagCaching</AssemblyName>
+		<RootNamespace>SynergyFx.EntityTagCaching</RootNamespace>
 		<Version>1.0.0</Version>
 	</PropertyGroup>
 	<PropertyGroup>

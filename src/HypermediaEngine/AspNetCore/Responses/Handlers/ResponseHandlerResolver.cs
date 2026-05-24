@@ -1,8 +1,3 @@
-using HypermediaEngine.Abstractions;
-using HypermediaEngine.Responses.Rules.EnumerableRules;
-using HypermediaEngine.Responses.Rules.MartenQueryableRules;
-using HypermediaEngine.Responses.Rules.QueryableRules;
-
 using Marten.Linq;
 
 using Microsoft.AspNetCore.Http;
@@ -10,7 +5,10 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace HypermediaEngine.Responses.Handlers;
+using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Requests.Filtering;
+
+namespace SynergyFx.HypermediaEngine.Responses.Handlers;
 
 internal sealed class ResponseHandlerResolver<T>(
     IHypermediaObjectBuilder<T> objectBuilder,
@@ -19,6 +17,7 @@ internal sealed class ResponseHandlerResolver<T>(
     IEnumerable<AbstractCollectionMetadataHandler<T>> collectionMetadataHandlers,
     IEnumerable<AbstractCollectionLinkHandler<T>> collectionLinkHandlers,
     IHttpContextAccessor httpContextAccessor,
+    IFilterNodeHandler filterNodeHandler,
     IServiceProvider serviceProvider
 ) : IResponseHandlersResolver<T>
     where T : notnull
@@ -47,7 +46,8 @@ internal sealed class ResponseHandlerResolver<T>(
                     new EnumerableSortingRule<T>(
                         new EnumerableFinalPagingRule<T>()
                     )
-                )
+                ),
+                filterNodeHandler
             )
         );
         ICollectionResponseHandler<T> enumerableResponseHandler = new EnumerableCollectionResponseHandler<T>(

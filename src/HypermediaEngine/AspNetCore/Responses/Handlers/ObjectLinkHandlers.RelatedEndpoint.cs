@@ -1,11 +1,13 @@
-﻿using HypermediaEngine.Abstractions;
-using HypermediaEngine.Attributes;
+﻿using HypermediaEngine.Responses;
 
 using LanguageExt.Common;
 
 using Microsoft.AspNetCore.Http;
 
-namespace HypermediaEngine.Responses.Handlers;
+using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Attributes;
+
+namespace SynergyFx.HypermediaEngine.Responses.Handlers;
 
 internal sealed class ObjectRelatedEndpointLinkHandler<T>(
     ILinkGenerationService linkGenerationService,

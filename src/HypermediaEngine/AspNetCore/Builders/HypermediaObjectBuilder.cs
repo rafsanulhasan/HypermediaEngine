@@ -1,8 +1,4 @@
-
-using HypermediaEngine.Abstractions;
 using HypermediaEngine.Responses;
-
-using EntityTagCaching.Models;
 
 using Asp.Versioning;
 
@@ -10,7 +6,11 @@ using System.Globalization;
 
 using Ardalis.GuardClauses;
 
-namespace HypermediaEngine.Builders;
+using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Responses;
+using SynergyFx.EntityTagCaching.Models;
+
+namespace SynergyFx.HypermediaEngine.Builders;
 
 /// <summary>
 /// Provides a builder for constructing hypermedia responses by configuring data, links, and metadata for a specified

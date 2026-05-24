@@ -2,7 +2,7 @@ using Microsoft.OpenApi;
 
 using System.Text.Json.Nodes;
 
-namespace HypermediaEngine.Helpers;
+namespace SynergyFx.HypermediaEngine.Helpers;
 
 public static class OpenApiResponseHelpers
 {

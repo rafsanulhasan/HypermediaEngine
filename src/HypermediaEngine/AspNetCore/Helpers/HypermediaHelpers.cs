@@ -1,8 +1,7 @@
-using HypermediaEngine.Abstractions;
-using HypermediaEngine.Builders;
-using HypermediaEngine.Responses;
+using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Responses;
 
-namespace HypermediaEngine.Helpers;
+namespace SynergyFx.HypermediaEngine.Helpers;
 
 /// <summary>
 /// Provides extension methods for creating hypermedia responses from individual data items or collections.

@@ -1,25 +1,27 @@
-﻿using HypermediaEngine.Abstractions;
-using HypermediaEngine.Responses.Metadata;
+﻿using LanguageExt;
 
-using LanguageExt;
+using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Requests.Filtering;
+using SynergyFx.HypermediaEngine.Responses.Metadata;
 
-namespace HypermediaEngine.Responses.Rules.EnumerableRules;
+namespace SynergyFx.HypermediaEngine.Responses.Rules.EnumerableRules;
 
-internal sealed class EnumerableFilteringRule<T>(ICollectionResponsePipeline<T> next)
-    : ICollectionResponsePipeline<T>
+internal sealed class EnumerableFilteringRule<T>(
+    ICollectionResponsePipeline<T> next,
+    IFilterNodeHandler filterNodeHandler
+) : ICollectionResponsePipeline<T>
     where T : notnull
 {
     public async ValueTask<CollectionResponseContext<T>> Process(CollectionResponseContext<T> context)
     {
-        IEnumerable<T> filteredItems = context.Filter.Match(
-                                        filter =>
-                                        {
-                                            string filterString = filter.ToString();
-                                            return string.IsNullOrWhiteSpace(filterString)
-                                                    ? context.Items
-                                                    : context.Items.WhereDynamic($"x => {filter}");
-                                        },
-                                        () => context.Items);
+        IEnumerable<T> filteredItems = context.Filter.Match(filter =>
+                                       {
+                                           string filterString = filterNodeHandler.Handle(filter);
+                                           return string.IsNullOrWhiteSpace(filterString)
+                                                ? context.Items
+                                                : context.Items.WhereDynamic($"x => {filterString}");
+                                       },
+                                       () => context.Items);
         int filteredItemCount = filteredItems.Count();
         if (filteredItemCount == 0)
         {

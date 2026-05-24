@@ -1,13 +1,13 @@
-using HypermediaEngine.Abstractions;
-using HypermediaEngine.Helpers;
 using HypermediaEngine.Requests;
-using HypermediaEngine.Requests.Paging;
-using HypermediaEngine.Requests.Sorting;
-using HypermediaEngine.Responses.Metadata;
 
 using LanguageExt;
 
-namespace HypermediaEngine.Responses.Rules.MartenQueryableRules;
+using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Requests.Paging;
+using SynergyFx.HypermediaEngine.Requests.Sorting;
+using SynergyFx.HypermediaEngine.Responses.Metadata;
+
+namespace SynergyFx.HypermediaEngine.Responses.Rules.MartenQueryableRules;
 
 internal sealed class MartenQueryableSortingRule<T>(ICollectionResponsePipeline<T> next)
     : ICollectionResponsePipeline<T>

@@ -1,14 +1,16 @@
-﻿using HypermediaEngine.Attributes;
-using HypermediaEngine.Requests;
-using HypermediaEngine.Requests.Paging;
-using HypermediaEngine.Responses;
-using HypermediaEngine.Responses.Handlers;
-using HypermediaEngine.Responses.Metadata;
+﻿using HypermediaEngine.Requests;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Attributes;
+using SynergyFx.HypermediaEngine.Requests;
+using SynergyFx.HypermediaEngine.Requests.Paging;
+using SynergyFx.HypermediaEngine.Responses;
+using SynergyFx.HypermediaEngine.Responses.Handlers;
+using SynergyFx.HypermediaEngine.Responses.Metadata;
+
+namespace SynergyFx.HypermediaEngine.Abstractions;
 
 internal abstract class AbstractCollectionResponseHandler<T, TCollection>(
     IHttpContextAccessor httpContextAccessor,

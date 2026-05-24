@@ -1,11 +1,5 @@
 ﻿using Asp.Versioning;
 
-using EntityTagCaching.Models;
-
-using HypermediaEngine.Abstractions;
-using HypermediaEngine.Attributes;
-using HypermediaEngine.Http;
-
 using LanguageExt;
 
 using Microsoft.AspNetCore.Http;
@@ -13,9 +7,14 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
+using SynergyFx.EntityTagCaching.Models;
+using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Attributes;
+using SynergyFx.HypermediaEngine.Http;
+
 using System.Collections.Immutable;
 
-namespace HypermediaEngine.Responses.Handlers;
+namespace SynergyFx.HypermediaEngine.Responses.Handlers;
 
 #pragma warning disable MA0048 // File name must match type name
 internal sealed class TResponseHandler<T>(

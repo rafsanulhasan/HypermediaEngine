@@ -1,8 +1,8 @@
-using EntityTagCaching.Middleware;
-
 using Microsoft.AspNetCore.Builder;
 
-namespace EntityTagCaching;
+using SynergyFx.EntityTagCaching.Middleware;
+
+namespace SynergyFx.EntityTagCaching;
 
 /// <summary>
 /// Provides extension methods for configuring the application request pipeline in ASP.NET Core.

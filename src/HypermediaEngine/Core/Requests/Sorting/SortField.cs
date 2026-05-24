@@ -2,7 +2,7 @@ using Ardalis.SmartEnum.SystemTextJson;
 
 using System.Text.Json.Serialization;
 
-namespace HypermediaEngine.Requests.Sorting;
+namespace SynergyFx.HypermediaEngine.Requests.Sorting;
 
 public sealed record class SortField
 {

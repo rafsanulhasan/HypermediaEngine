@@ -1,4 +1,4 @@
-﻿namespace HypermediaEngine.OpenApi.OperationTransformers;
+﻿namespace SynergyFx.HypermediaEngine.OpenApi.OperationTransformers;
 
 internal class JsonHalOperationTransformer<T>(bool isList, bool withExample)
         : JsonHalOperationTransformer(typeof(T), isList, withExample)

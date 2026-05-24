@@ -1,4 +1,4 @@
-﻿namespace HypermediaEngine.Abstractions;
+﻿namespace SynergyFx.HypermediaEngine.Abstractions;
 
 public interface ILinkHandler<T, TBuilder>
     where T : notnull

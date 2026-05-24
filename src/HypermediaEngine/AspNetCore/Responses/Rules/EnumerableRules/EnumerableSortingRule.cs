@@ -1,12 +1,13 @@
-﻿using HypermediaEngine.Abstractions;
-using HypermediaEngine.Requests;
-using HypermediaEngine.Requests.Paging;
-using HypermediaEngine.Requests.Sorting;
-using HypermediaEngine.Responses.Metadata;
+﻿using HypermediaEngine.Requests;
 
 using LanguageExt;
 
-namespace HypermediaEngine.Responses.Rules.EnumerableRules;
+using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Requests.Paging;
+using SynergyFx.HypermediaEngine.Requests.Sorting;
+using SynergyFx.HypermediaEngine.Responses.Metadata;
+
+namespace SynergyFx.HypermediaEngine.Responses.Rules.EnumerableRules;
 
 internal sealed class EnumerableSortingRule<T>(ICollectionResponsePipeline<T> next)
     : ICollectionResponsePipeline<T>

@@ -25,10 +25,10 @@
 	<ItemGroup>
 		<InternalsVisibleTo Include="EntityTagCaching.AspNetCore" />
 		<InternalsVisibleTo Include="Microsoft.AspNetCore.Http" />
-		<InternalsVisibleTo Include="HypermediaEngine.AspNetCore" />
-		<InternalsVisibleTo Include="HypermediaEngine.AspNetCore.Mvc" />
-		<InternalsVisibleTo Include="HypermediaEngine.UnitTests" />
-		<InternalsVisibleTo Include="HypermediaEngine.IntegrationTests" />
+		<InternalsVisibleTo Include="SynergyFx.HypermediaEngine.AspNetCore" />
+		<InternalsVisibleTo Include="SynergyFx.HypermediaEngine.AspNetCore.Mvc" />
+		<InternalsVisibleTo Include="SynergyFx.Tests.UnitTests" />
+		<InternalsVisibleTo Include="SynergyFx.Tests.IntegrationTests" />
 		<InternalsVisibleTo Include="System.Net.Http.Json" />
 		<InternalsVisibleTo Include="System.Text.Json" />
 	</ItemGroup>

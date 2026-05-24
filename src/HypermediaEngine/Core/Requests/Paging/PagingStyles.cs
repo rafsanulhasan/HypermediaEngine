@@ -1,6 +1,6 @@
 ﻿using Ardalis.SmartEnum;
 
-namespace HypermediaEngine.Requests.Paging;
+namespace SynergyFx.HypermediaEngine.Requests.Paging;
 
 public sealed class PagingStyles : SmartEnum<PagingStyles, int>
 {

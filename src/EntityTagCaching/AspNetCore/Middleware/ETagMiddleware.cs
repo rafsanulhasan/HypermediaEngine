@@ -1,12 +1,12 @@
-using EntityTagCaching.Abstractions;
-
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
 
+using SynergyFx.EntityTagCaching.Abstractions;
+
 using System.Text;
 
-namespace EntityTagCaching.Middleware;
+namespace SynergyFx.EntityTagCaching.Middleware;
 
 /// <summary>
 /// Middleware that adds ETag headers to HTTP GET responses to enable efficient client-side caching and support

@@ -1,6 +1,8 @@
-using HypermediaEngine.Abstractions;
+using HypermediaEngine.Responses;
 
-namespace HypermediaEngine.Responses;
+using SynergyFx.HypermediaEngine.Abstractions;
+
+namespace SynergyFx.HypermediaEngine.Responses;
 
 public sealed partial record class ObjectLinkCollection
     : IObjectLinkCollection

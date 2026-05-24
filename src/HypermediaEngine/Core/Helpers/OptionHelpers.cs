@@ -1,6 +1,6 @@
 ﻿using LanguageExt;
 
-namespace HypermediaEngine.Helpers;
+namespace SynergyFx.HypermediaEngine.Helpers;
 
 /// <summary>
 /// Provides extension methods for working with <see cref="Option{T}"/> types.

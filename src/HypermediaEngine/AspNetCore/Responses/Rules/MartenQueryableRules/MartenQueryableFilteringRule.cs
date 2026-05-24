@@ -1,14 +1,13 @@
-using HypermediaEngine.Abstractions;
-using HypermediaEngine.Helpers;
-using HypermediaEngine.Requests.Filtering;
-using HypermediaEngine.Responses.Metadata;
-
 using LanguageExt;
 
 using Marten;
 using Marten.Linq;
 
-namespace HypermediaEngine.Responses.Rules.MartenQueryableRules;
+using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Requests.Filtering;
+using SynergyFx.HypermediaEngine.Responses.Metadata;
+
+namespace SynergyFx.HypermediaEngine.Responses.Rules.MartenQueryableRules;
 
 internal sealed class MartenQueryableFilteringRule<T>(ICollectionResponsePipeline<T> next)
     : ICollectionResponsePipeline<T>

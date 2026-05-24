@@ -1,6 +1,8 @@
 using HypermediaEngine.Responses;
 
-namespace HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Responses;
+
+namespace SynergyFx.HypermediaEngine.Abstractions;
 
 public interface IObjectLinkCollection
 {

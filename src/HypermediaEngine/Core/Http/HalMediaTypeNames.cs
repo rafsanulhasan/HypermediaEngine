@@ -11,7 +11,7 @@ using System.Net.Mime;
 using System.Text;
 using System.Text.Json.Nodes;
 
-namespace HypermediaEngine.Http;
+namespace SynergyFx.HypermediaEngine.Http;
 
 [SmartEnumStringComparer(StringComparison.Ordinal)]
 public sealed class HalMediaTypeNames : SmartEnum<HalMediaTypeNames, int>

@@ -1,12 +1,12 @@
-using EntityTagCaching.Abstractions;
-
 using Microsoft.Extensions.DependencyInjection;
+
+using SynergyFx.EntityTagCaching.Abstractions;
 
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 
-namespace EntityTagCaching.Services;
+namespace SynergyFx.EntityTagCaching.Services;
 
 /// <summary>
 /// Represents a method that computes a hash value for the specified byte array, typically used for generating ETag

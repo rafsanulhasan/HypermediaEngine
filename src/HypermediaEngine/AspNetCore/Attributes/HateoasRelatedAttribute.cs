@@ -1,6 +1,6 @@
-using HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Abstractions;
 
-namespace HypermediaEngine.Attributes;
+namespace SynergyFx.HypermediaEngine.Attributes;
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
 public sealed class HateoasRelatedAttribute(

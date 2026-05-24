@@ -3,7 +3,7 @@ using Ardalis.SmartEnum.SystemTextJson;
 
 using System.Text.Json.Serialization;
 
-namespace HypermediaEngine.Requests.Filtering;
+namespace SynergyFx.HypermediaEngine.Requests.Filtering;
 
 [JsonConverter(typeof(SmartEnumNameConverter<FilterLogic, int>))]
 public sealed class FilterLogic : SmartEnum<FilterLogic, int>

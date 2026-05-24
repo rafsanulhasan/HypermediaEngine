@@ -1,6 +1,6 @@
 ﻿using Ardalis.SmartEnum;
 
-namespace HypermediaEngine.Responses.Handlers;
+namespace SynergyFx.HypermediaEngine.Responses.Handlers;
 
 public sealed class ObjectMetadataHandlers : SmartEnum<ObjectMetadataHandlers, int>
 {

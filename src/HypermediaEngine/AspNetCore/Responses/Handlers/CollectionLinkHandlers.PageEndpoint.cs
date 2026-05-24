@@ -1,17 +1,19 @@
 ﻿using Ardalis.GuardClauses;
 
-using HypermediaEngine.Abstractions;
-using HypermediaEngine.Helpers;
-using HypermediaEngine.Requests.Paging;
-using HypermediaEngine.Responses.Metadata;
+using HypermediaEngine.Responses;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 
+using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Helpers;
+using SynergyFx.HypermediaEngine.Requests.Paging;
+using SynergyFx.HypermediaEngine.Responses.Metadata;
+
 using System.Globalization;
 using System.Text;
 
-namespace HypermediaEngine.Responses.Handlers;
+namespace SynergyFx.HypermediaEngine.Responses.Handlers;
 
 internal sealed class CollectionPageEndpointLinkHandler<T>(
     ILinkGenerationService linkGenerationService,

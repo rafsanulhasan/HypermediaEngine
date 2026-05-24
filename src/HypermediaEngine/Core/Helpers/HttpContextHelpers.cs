@@ -1,14 +1,14 @@
-﻿using HypermediaEngine.Requests.Paging;
-
-using LanguageExt;
+﻿using LanguageExt;
 using LanguageExt.Common;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 
+using SynergyFx.HypermediaEngine.Requests.Paging;
+
 using System.Globalization;
 
-namespace HypermediaEngine.Helpers;
+namespace SynergyFx.HypermediaEngine.Helpers;
 
 public static class HttpContextHelpers
 {

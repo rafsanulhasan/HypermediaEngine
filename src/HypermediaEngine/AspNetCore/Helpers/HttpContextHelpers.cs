@@ -5,7 +5,7 @@ using LanguageExt.Common;
 
 using Microsoft.AspNetCore.Http;
 
-namespace HypermediaEngine.Helpers;
+namespace SynergyFx.HypermediaEngine.Helpers;
 
 public static class HttpContextHelpers
 {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
 
-namespace HypermediaEngine.OpenApi;
+namespace SynergyFx.HypermediaEngine.OpenApi;
 
 internal static class OpenApiSchemaTransformerContextHelpers
 {

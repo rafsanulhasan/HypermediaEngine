@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
 
-namespace HypermediaEngine.OpenApi.OperationTransformers;
+namespace SynergyFx.HypermediaEngine.OpenApi.OperationTransformers;
 
 internal abstract class CompositeOperationTransformer(
     IEnumerable<IOpenApiOperationTransformer> transformers, 

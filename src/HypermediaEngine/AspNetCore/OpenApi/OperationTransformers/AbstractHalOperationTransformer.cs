@@ -1,11 +1,11 @@
-﻿using HypermediaEngine.Helpers;
-using HypermediaEngine.Http;
-using HypermediaEngine.Responses;
-
-using Microsoft.AspNetCore.OpenApi;
+﻿using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
 
-namespace HypermediaEngine.OpenApi.OperationTransformers;
+using SynergyFx.HypermediaEngine.Helpers;
+using SynergyFx.HypermediaEngine.Http;
+using SynergyFx.HypermediaEngine.Responses;
+
+namespace SynergyFx.HypermediaEngine.OpenApi.OperationTransformers;
 
 internal abstract class AbstractHalOperationTransformer
     : IOpenApiOperationTransformer

@@ -1,11 +1,5 @@
 using Asp.Versioning;
 
-using HypermediaEngine.Abstractions;
-using HypermediaEngine.AspNetCore.Responses.Handlers;
-using HypermediaEngine.Helpers;
-using HypermediaEngine.Http;
-using HypermediaEngine.Responses.Handlers;
-
 using LanguageExt;
 
 using Microsoft.AspNetCore.Http;
@@ -16,9 +10,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 
+using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Helpers;
+using SynergyFx.HypermediaEngine.Http;
+using SynergyFx.HypermediaEngine.Responses.Handlers;
+
 using System.Net.Mime;
 
-namespace HypermediaEngine.Attributes;
+namespace SynergyFx.HypermediaEngine.Attributes;
 
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 public sealed class ProducesHalResponseAttribute<T, TResponse>

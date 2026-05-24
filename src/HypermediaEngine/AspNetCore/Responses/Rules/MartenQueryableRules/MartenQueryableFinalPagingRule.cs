@@ -1,12 +1,12 @@
-using HypermediaEngine.Abstractions;
-using HypermediaEngine.Requests.Paging;
-using HypermediaEngine.Responses.Metadata;
-
 using LanguageExt;
 
 using Marten;
 
-namespace HypermediaEngine.Responses.Rules.MartenQueryableRules;
+using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Requests.Paging;
+using SynergyFx.HypermediaEngine.Responses.Metadata;
+
+namespace SynergyFx.HypermediaEngine.Responses.Rules.MartenQueryableRules;
 
 internal sealed class MartenQueryableFinalPagingRule<T>
     : ICollectionResponsePipeline<T>

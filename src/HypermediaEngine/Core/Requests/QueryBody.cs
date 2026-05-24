@@ -1,9 +1,9 @@
-using HypermediaEngine.Requests.Filtering;
-using HypermediaEngine.Requests.Sorting;
+using SynergyFx.HypermediaEngine.Requests.Filtering;
+using SynergyFx.HypermediaEngine.Requests.Sorting;
 
 using System.Text.Json.Serialization;
 
-namespace HypermediaEngine.Requests;
+namespace SynergyFx.HypermediaEngine.Requests;
 
 public sealed record class QueryBody
 {

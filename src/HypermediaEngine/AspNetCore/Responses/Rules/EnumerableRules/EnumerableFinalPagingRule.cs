@@ -1,10 +1,10 @@
-﻿using HypermediaEngine.Abstractions;
-using HypermediaEngine.Requests.Paging;
-using HypermediaEngine.Responses.Metadata;
+﻿using LanguageExt;
 
-using LanguageExt;
+using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Requests.Paging;
+using SynergyFx.HypermediaEngine.Responses.Metadata;
 
-namespace HypermediaEngine.Responses.Rules.EnumerableRules;
+namespace SynergyFx.HypermediaEngine.Responses.Rules.EnumerableRules;
 
 internal sealed class EnumerableFinalPagingRule<T>
     : ICollectionResponsePipeline<T>

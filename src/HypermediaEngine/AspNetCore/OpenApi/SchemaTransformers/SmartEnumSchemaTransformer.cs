@@ -5,7 +5,7 @@ using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
-namespace HypermediaEngine.OpenApi.SchemaTransformers;
+namespace SynergyFx.HypermediaEngine.OpenApi.SchemaTransformers;
 
 internal sealed class SmartEnumSchemaTransformer
     : IOpenApiSchemaTransformer

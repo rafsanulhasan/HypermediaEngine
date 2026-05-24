@@ -1,7 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 
-using HypermediaEngine.Abstractions;
-using HypermediaEngine.Helpers;
+using HypermediaEngine.Responses;
 
 using LanguageExt.Common;
 
@@ -9,7 +8,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 
-namespace HypermediaEngine.Responses.Handlers;
+using SynergyFx.HypermediaEngine.Abstractions;
+
+namespace SynergyFx.HypermediaEngine.Responses.Handlers;
 
 internal sealed class ObjectSelfEndpointLinkHandler<T>(
     ILinkGenerationService linkGenerationService,

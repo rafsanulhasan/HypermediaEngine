@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace HypermediaEngine.Responses;
+namespace SynergyFx.HypermediaEngine.Responses;
 
 /// <summary>
 /// Represents a hypermedia collection response, containing a list of items and related metadata.

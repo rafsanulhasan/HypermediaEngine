@@ -1,8 +1,8 @@
-﻿using HypermediaEngine.OpenApi.SchemaTransformers;
+﻿using Microsoft.AspNetCore.OpenApi;
 
-using Microsoft.AspNetCore.OpenApi;
+using SynergyFx.HypermediaEngine.OpenApi.SchemaTransformers;
 
-namespace HypermediaEngine.OpenApi;
+namespace SynergyFx.HypermediaEngine.OpenApi;
 
 public static class OpenApiOptionHelpers
 {

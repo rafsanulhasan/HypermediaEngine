@@ -1,3 +1,5 @@
+using SynergyFx.HypermediaEngine.Responses;
+
 using System.Text.Json.Serialization;
 
 namespace HypermediaEngine.Responses;

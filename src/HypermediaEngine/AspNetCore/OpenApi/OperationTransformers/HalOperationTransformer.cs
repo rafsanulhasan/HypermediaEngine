@@ -1,19 +1,18 @@
-﻿using EntityTagCaching.Models;
-
-using HypermediaEngine.Helpers;
-using HypermediaEngine.Http;
-using HypermediaEngine.Responses;
-
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
+
+using SynergyFx.EntityTagCaching.Models;
+using SynergyFx.HypermediaEngine.Helpers;
+using SynergyFx.HypermediaEngine.Http;
+using SynergyFx.HypermediaEngine.Responses;
 
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
-namespace HypermediaEngine.OpenApi.OperationTransformers;
+namespace SynergyFx.HypermediaEngine.OpenApi.OperationTransformers;
 
 internal sealed class HalOperationTransformer<T>(bool isList, bool withExample)
         : HalOperationTransformer(typeof(T), isList, withExample)

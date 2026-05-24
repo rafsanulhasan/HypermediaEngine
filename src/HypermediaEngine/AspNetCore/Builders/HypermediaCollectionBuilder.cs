@@ -1,9 +1,10 @@
-using EntityTagCaching.Models;
-
-using HypermediaEngine.Abstractions;
 using HypermediaEngine.Responses;
 
-namespace HypermediaEngine.Builders;
+using SynergyFx.EntityTagCaching.Models;
+using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Responses;
+
+namespace SynergyFx.HypermediaEngine.Builders;
 
 /// <summary>
 /// Provides a builder for constructing hypermedia collection responses that include a list of items, associated links,

@@ -1,8 +1,10 @@
-using HypermediaEngine.Abstractions;
+using HypermediaEngine.Responses;
+
+using SynergyFx.HypermediaEngine.Abstractions;
 
 using System.Text.Json.Serialization;
 
-namespace HypermediaEngine.Responses;
+namespace SynergyFx.HypermediaEngine.Responses;
 
 public sealed class ListLinkCollection
     : IListLinkCollection

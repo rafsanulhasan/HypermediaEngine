@@ -3,7 +3,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace EntityTagCaching.Models;
+namespace SynergyFx.EntityTagCaching.Models;
 
 internal sealed class EntityTagJsonConverter : JsonConverter<EntityTag>
 {

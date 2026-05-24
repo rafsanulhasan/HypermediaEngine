@@ -1,13 +1,12 @@
 ﻿using Asp.Versioning;
 
-using EntityTagCaching.Models;
-
-using HypermediaEngine.Abstractions;
-
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace HypermediaEngine.Responses.Handlers;
+using SynergyFx.EntityTagCaching.Models;
+using SynergyFx.HypermediaEngine.Abstractions;
+
+namespace SynergyFx.HypermediaEngine.Responses.Handlers;
 
 internal class ObjectApiVersionMetadataHandler<T>(
     IHttpContextAccessor contextAccessor

@@ -1,5 +1,4 @@
-﻿using HypermediaEngine.Abstractions;
-using HypermediaEngine.Responses;
+﻿using HypermediaEngine.Responses;
 
 using LanguageExt;
 using LanguageExt.Common;
@@ -7,7 +6,10 @@ using LanguageExt.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace HypermediaEngine.Helpers;
+using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Responses;
+
+namespace SynergyFx.HypermediaEngine.Helpers;
 
 /// <summary>
 /// Provides extension methods for generating hypermedia 'self' links using an ILinkGenerationService instance.

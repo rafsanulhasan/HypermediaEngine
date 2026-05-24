@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace HypermediaEngine.Abstractions;
+namespace SynergyFx.HypermediaEngine.Abstractions;
 
 public abstract class AbstractLinkHandler<T, TBuilder>(IHttpContextAccessor httpContextAccessor)
     : ILinkHandler<T, TBuilder> where T : notnull

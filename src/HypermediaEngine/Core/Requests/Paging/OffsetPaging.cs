@@ -1,4 +1,4 @@
-namespace HypermediaEngine.Requests.Paging;
+namespace SynergyFx.HypermediaEngine.Requests.Paging;
 
 public sealed record class OffsetPaging
 {
