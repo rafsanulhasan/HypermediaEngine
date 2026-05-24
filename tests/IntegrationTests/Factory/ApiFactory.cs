@@ -10,10 +10,4 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
         Environment.SetEnvironmentVariable("ConnectionStrings__DB", connectionString);
         builder.UseEnvironment("Test");
     }
-
-    public override async ValueTask DisposeAsync()
-    {
-        await ResourceInitialization.Database.DisposeAsync().ConfigureAwait(false);
-        await base.DisposeAsync().ConfigureAwait(false);
-    }
 }
