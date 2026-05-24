@@ -15,5 +15,9 @@ public sealed class PostgresDatabase : IAsyncDisposable
 
     public Task StartAsync() => Container.StartAsync();
 
-    public ValueTask DisposeAsync() => Container.DisposeAsync();
+    public async ValueTask DisposeAsync()
+    {
+        await Container.StopAsync().ConfigureAwait(false);
+        await Container.DisposeAsync().ConfigureAwait(false);
+    }
 }
