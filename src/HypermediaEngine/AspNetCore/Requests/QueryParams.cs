@@ -1,13 +1,14 @@
 ﻿using Ardalis.SmartEnum.SystemTextJson;
 
-using HypermediaEngine.Requests.Filtering;
-using HypermediaEngine.Requests.Paging;
-
 using Microsoft.AspNetCore.Mvc;
+
+using SynergyFx.HypermediaEngine.Requests;
+using SynergyFx.HypermediaEngine.Requests.Filtering;
+using SynergyFx.HypermediaEngine.Requests.Paging;
 
 using System.Text.Json.Serialization;
 
-namespace HypermediaEngine.Requests;
+namespace SynergyFx.HypermediaEngine.Requests;
 
 public sealed record class QueryParams
 {

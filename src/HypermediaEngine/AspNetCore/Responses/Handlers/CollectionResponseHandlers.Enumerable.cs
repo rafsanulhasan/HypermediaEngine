@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 
 using SynergyFx.EntityTagCaching.Models;
 using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Helpers;
 using SynergyFx.HypermediaEngine.Responses.Metadata;
 using SynergyFx.HypermediaEngine.Responses.Rules;
 

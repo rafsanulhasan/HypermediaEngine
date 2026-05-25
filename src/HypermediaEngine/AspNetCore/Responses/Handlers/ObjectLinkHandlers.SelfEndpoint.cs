@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 
 using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Helpers;
 
 namespace SynergyFx.HypermediaEngine.Responses.Handlers;
 

@@ -1,6 +1,7 @@
 using LanguageExt;
 
 using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Helpers;
 using SynergyFx.HypermediaEngine.Requests.Paging;
 
 namespace SynergyFx.HypermediaEngine.Responses.Rules.MartenQueryableRules;

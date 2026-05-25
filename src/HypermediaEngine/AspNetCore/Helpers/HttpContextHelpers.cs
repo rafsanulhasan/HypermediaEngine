@@ -1,9 +1,9 @@
-﻿using HypermediaEngine.Requests;
-
-using LanguageExt;
+﻿using LanguageExt;
 using LanguageExt.Common;
 
 using Microsoft.AspNetCore.Http;
+
+using SynergyFx.HypermediaEngine.Requests;
 
 namespace SynergyFx.HypermediaEngine.Helpers;
 

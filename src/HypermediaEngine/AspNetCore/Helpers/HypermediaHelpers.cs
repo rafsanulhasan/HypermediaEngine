@@ -1,4 +1,5 @@
 using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Builders;
 using SynergyFx.HypermediaEngine.Responses;
 
 namespace SynergyFx.HypermediaEngine.Helpers;

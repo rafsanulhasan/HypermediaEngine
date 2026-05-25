@@ -1,11 +1,10 @@
-﻿using HypermediaEngine.Requests;
-
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using SynergyFx.EntityTagCaching.Models;
 using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Requests;
 using SynergyFx.HypermediaEngine.Requests.Filtering;
 using SynergyFx.HypermediaEngine.Requests.Paging;
 using SynergyFx.HypermediaEngine.Responses.Metadata;

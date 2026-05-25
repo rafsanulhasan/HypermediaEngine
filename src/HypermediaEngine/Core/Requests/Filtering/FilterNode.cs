@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace HypermediaEngine.Requests.Filtering;
+namespace SynergyFx.HypermediaEngine.Requests.Filtering;
 
 public sealed record FilterNode
 {

@@ -1,7 +1,6 @@
-﻿using HypermediaEngine.Requests;
+﻿using LanguageExt;
 
-using LanguageExt;
-
+using SynergyFx.HypermediaEngine.Requests;
 using SynergyFx.HypermediaEngine.Requests.Filtering;
 using SynergyFx.HypermediaEngine.Responses.Metadata;
 

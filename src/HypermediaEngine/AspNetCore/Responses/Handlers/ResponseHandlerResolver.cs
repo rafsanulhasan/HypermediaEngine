@@ -7,6 +7,9 @@ using Microsoft.Extensions.Logging;
 
 using SynergyFx.HypermediaEngine.Abstractions;
 using SynergyFx.HypermediaEngine.Requests.Filtering;
+using SynergyFx.HypermediaEngine.Responses.Rules.EnumerableRules;
+using SynergyFx.HypermediaEngine.Responses.Rules.MartenQueryableRules;
+using SynergyFx.HypermediaEngine.Responses.Rules.QueryableRules;
 
 namespace SynergyFx.HypermediaEngine.Responses.Handlers;
 

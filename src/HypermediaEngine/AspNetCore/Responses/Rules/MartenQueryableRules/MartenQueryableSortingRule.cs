@@ -1,8 +1,8 @@
-using HypermediaEngine.Requests;
-
 using LanguageExt;
 
 using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Helpers;
+using SynergyFx.HypermediaEngine.Requests;
 using SynergyFx.HypermediaEngine.Requests.Paging;
 using SynergyFx.HypermediaEngine.Requests.Sorting;
 using SynergyFx.HypermediaEngine.Responses.Metadata;

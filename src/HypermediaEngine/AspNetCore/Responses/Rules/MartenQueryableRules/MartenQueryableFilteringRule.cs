@@ -4,6 +4,7 @@ using Marten;
 using Marten.Linq;
 
 using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Helpers;
 using SynergyFx.HypermediaEngine.Requests.Filtering;
 using SynergyFx.HypermediaEngine.Responses.Metadata;
 

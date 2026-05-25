@@ -1,6 +1,4 @@
-﻿using HypermediaEngine.Requests;
-
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 using SynergyFx.HypermediaEngine.Attributes;
