@@ -15,4 +15,8 @@
 		<PackageReference Include="Microsoft.Extensions.Primitives" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<InternalsVisibleTo Include="SynergyFx.Tests.UnitTests" />
+	</ItemGroup>
+
 </Project>

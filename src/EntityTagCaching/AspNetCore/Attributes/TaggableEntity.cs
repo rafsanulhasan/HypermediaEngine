@@ -11,6 +11,7 @@ using Microsoft.Net.Http.Headers;
 using SynergyFx.EntityTagCaching.Models;
 using SynergyFx.HypermediaEngine.Helpers;
 using SynergyFx.HypermediaEngine.Http;
+using SynergyFx.HypermediaEngine.Responses;
 
 using System.Text.Json;
 
