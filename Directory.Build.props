@@ -6,6 +6,7 @@
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<DocumentationFile>$(MSBuildProjectPath)\bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
 		<Version>1.0.0</Version>
+		<AssemblyName>SynergyFx</AssemblyName>
 	</PropertyGroup>
 	<PropertyGroup>
 		<Authors>HypermediaEngine Contributors</Authors>

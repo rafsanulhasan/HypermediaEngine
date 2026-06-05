@@ -2,7 +2,7 @@ using Bogus;
 
 using Testcontainers.PostgreSql;
 
-namespace HypermediaEngine.IntegrationTests.Resources;
+namespace SynergyFx.Tests.IntegrationTests.Resources;
 
 public sealed class PostgresDatabase : IAsyncDisposable
 {

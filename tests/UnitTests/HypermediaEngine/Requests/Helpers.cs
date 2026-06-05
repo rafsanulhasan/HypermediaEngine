@@ -1,6 +1,6 @@
 ﻿using System.Buffers;
 
-namespace HypermediaEngine.UnitTests.HypermediaEngine.Requests;
+namespace SynergyFx.Tests.UnitTests.HypermediaEngine.Requests;
 
 internal static class Helpers
 {

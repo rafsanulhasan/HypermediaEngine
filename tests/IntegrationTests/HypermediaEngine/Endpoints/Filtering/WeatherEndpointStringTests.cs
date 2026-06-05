@@ -15,7 +15,7 @@ using System.Net.Http.Json;
 namespace SynergyFx.Tests.IntegrationTests.HypermediaEngine.Endpoints.Filtering;
 
 [Category("HypermediaEngine")]
-internal sealed class WeatherEndpointIntTests : TestBase
+internal sealed class WeatherEndpointStringTests : TestBase
 {
     private HttpClient _httpClient = null!;
     private CancellationTokenSource _cancellationTokenSource = null!;
@@ -29,7 +29,7 @@ internal sealed class WeatherEndpointIntTests : TestBase
     }
 
     [Test]
-    public async Task RequestWeatherForecastWithHalJson_WithAndRangeFilter_ReturnsOnlyMatchingTemperatures()
+    public async Task RequestWeatherForecastWithHalJson_WithAndLogic_ReturnsOnlyMatchingTemperatures()
     {
         // Arrange
         QueryBody queryBody = new()
@@ -37,37 +37,43 @@ internal sealed class WeatherEndpointIntTests : TestBase
             Filtering = new(
                 FilterLogic.And,
                 [
-                    new("TemperatureC", FilterOperator.Gte, 21), 
-                    new("TemperatureC", FilterOperator.Lte, 40),
+                    new("Summary", FilterOperator.StartsWith, "Lorem"), 
+                    new("Summary", FilterOperator.EndsWith, "ispum"),
                 ],
                 children: null),
         };
 
         // Act
-        HypermediaCollectionResponse<WeatherForecast>? halResponse = 
-            await PostAndReadHalResponseAsync(queryBody).ConfigureAwait(false);
+        HypermediaCollectionResponse<WeatherForecast>? halResponse = await PostAndReadHalResponseAsync(queryBody);
 
         // Assert
         using (Assert.EnterMultipleScope())
         {
             halResponse.ShouldNotBeNull();
             halResponse.Items.Count().ShouldBe(10);
-            AssertStandardOffsetPaging(halResponse, 20);
+            AssertStandardOffsetPaging(halResponse, 40);
             foreach (WeatherForecast item in halResponse.Items)
             {
-                (item.TemperatureC >= 21 && item.TemperatureC <= 40)
-                    .ShouldBe(expected: true);
+                item.Summary.ShouldStartWith("Lorem");
+                item.Summary.ShouldEndWith("ispum");
             }
         }
     }
 
     [Test]
-    public async Task RequestWeatherForecastWithHalJson_WithFilter_ReturnsHalCollectionResponse()
+    public async Task RequestWeatherForecastWithHalJson_WithChildrenOnlyOrFilter_ReturnsUnionOfChildNodes()
     {
         // Arrange
+        FilterNode child2 = new(
+            FilterLogic.And,
+            [new("Summary", FilterOperator.StartsWith, "Lorem"), new("Summary", FilterOperator.EndsWith, "ispum")],
+            children: null);
         QueryBody queryBody = new()
         {
-            Filtering = new([new("TemperatureC", FilterOperator.Eq, 60)]),
+            Filtering = new FilterNode(
+                FilterLogic.Or, 
+                [new("Summary", FilterOperator.NotContains, "abc")], 
+                [child2]),
         };
 
         // Act
@@ -78,8 +84,36 @@ internal sealed class WeatherEndpointIntTests : TestBase
         using (Assert.EnterMultipleScope())
         {
             halResponse.ShouldNotBeNull();
-            halResponse.Items.Count().ShouldBe(1);
-            AssertStandardOffsetPaging(halResponse, 1, 1, false);
+            halResponse.Items.Count().ShouldBe(10);
+            AssertStandardOffsetPaging(halResponse, 80);
+            foreach (WeatherForecast item in halResponse.Items)
+            {
+                item.Summary.ShouldNotBeNull();
+                (item.Summary == "Lorem" || (item.Summary.StartsWith("Lorem") && item.Summary.EndsWith("ispum")))
+                    .ShouldBe(true);
+            }
+        }
+    }
+
+    [Test]
+    public async Task RequestWeatherForecastWithHalJson_WithFilter_ReturnsHalCollectionResponse()
+    {
+        // Arrange
+        QueryBody queryBody = new()
+        {
+            Filtering = new([new("Summary", FilterOperator.Eq, "Lorem")]),
+        };
+
+        // Act
+        HypermediaCollectionResponse<WeatherForecast>? halResponse =
+            await PostAndReadHalResponseAsync(queryBody).ConfigureAwait(false);
+
+        // Assert
+        using (Assert.EnterMultipleScope())
+        {
+            halResponse.ShouldNotBeNull();
+            halResponse.Items.Count().ShouldBe(10);
+            AssertStandardOffsetPaging(halResponse, 20);
         }
     }
 
@@ -89,13 +123,13 @@ internal sealed class WeatherEndpointIntTests : TestBase
         // Arrange
         FilterNode child = new(
             FilterLogic.Or,
-            [new("TemperatureC", FilterOperator.Eq, 60), new("TemperatureC", FilterOperator.Gte, 61)],
+            [new("Summary", FilterOperator.NotStartsWith, "ispum"), new("Summary", FilterOperator.NotEndsWith, "Lorem")],
             children: null);
         QueryBody queryBody = new()
         {
             Filtering = new(
                 FilterLogic.And,
-                [new("TemperatureC", FilterOperator.Gte, 59)],
+                [new("Summary", FilterOperator.Contains, "last")],
                 [child]),
         };
 
@@ -111,37 +145,9 @@ internal sealed class WeatherEndpointIntTests : TestBase
             AssertStandardOffsetPaging(halResponse, 20);
             foreach (WeatherForecast item in halResponse.Items)
             {
-                (item.TemperatureC > 60).ShouldBe(true);
-            }
-        }
-    }
-
-    [Test]
-    public async Task RequestWeatherForecastWithHalJson_WithNestedOrAndFilter_ReturnsUnionOfChildNodes()
-    {
-        // Arrange
-        FilterNode child2 = new(
-            FilterLogic.And,
-            [new("TemperatureC", FilterOperator.Gt, 20), new("TemperatureC", FilterOperator.Lt, 41)],
-            children: null);
-        QueryBody queryBody = new()
-        {
-            Filtering = new FilterNode(FilterLogic.Or, [new("TemperatureC", FilterOperator.Gt, 59)], [child2]),
-        };
-
-        // Act
-        HypermediaCollectionResponse<WeatherForecast>? halResponse =
-            await PostAndReadHalResponseAsync(queryBody).ConfigureAwait(false);
-
-        // Assert
-        using (Assert.EnterMultipleScope())
-        {
-            halResponse.ShouldNotBeNull();
-            halResponse.Items.Count().ShouldBe(10);
-            AssertStandardOffsetPaging(halResponse, 40);
-            foreach (WeatherForecast item in halResponse.Items)
-            {
-                (item.TemperatureC > 60 || (item.TemperatureC > 20 && item.TemperatureC < 41)).ShouldBe(true);
+                item.Summary.ShouldNotBeNull();
+                (item.Summary.Contains("last") && (!item.Summary.StartsWith("ispum") || !item.Summary.EndsWith("Lorem")))
+                    .ShouldBe(true);
             }
         }
     }
@@ -208,15 +214,13 @@ internal sealed class WeatherEndpointIntTests : TestBase
 
     private static void AssertStandardOffsetPaging(
         HypermediaCollectionResponse<WeatherForecast> response,
-        int expectedTotalCount,
-        int expectedPageSize = 10,
-        bool expectedHasNext = true)
+        int expectedTotalCount)
     {
         response.Meta.ShouldNotBeNull();
-        response.Meta.Paging.ShouldNotBeNull();
-        response.Meta.Paging.TotalCount.ShouldBe(expectedTotalCount);
-        response.Meta.Paging.PageSize.ShouldBe(expectedPageSize);
-        response.Meta.Paging.HasNext.ShouldBe(expectedHasNext);
-        response.Meta.Paging.Style.ShouldBe(PagingStyles.Offset);
+        response.Meta!.Paging.ShouldNotBeNull();
+        response.Meta.Paging!.TotalCount.ShouldBe(expectedTotalCount);
+        response.Meta.Paging!.PageSize.ShouldBe(10);
+        response.Meta.Paging!.HasNext.ShouldBe(true);
+        response.Meta.Paging!.Style.ShouldBe(PagingStyles.Offset);
     }
 }

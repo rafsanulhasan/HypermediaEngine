@@ -1,6 +1,6 @@
-using HypermediaEngine.IntegrationTests.Resources;
+using SynergyFx.Tests.IntegrationTests.Resources;
 
-namespace HypermediaEngine.IntegrationTests;
+namespace SynergyFx.Tests.IntegrationTests;
 
 [SetUpFixture]
 public sealed class ResourceInitialization

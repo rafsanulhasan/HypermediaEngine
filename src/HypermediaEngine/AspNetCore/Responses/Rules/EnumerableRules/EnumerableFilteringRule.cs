@@ -28,26 +28,16 @@ internal sealed class EnumerableFilteringRule<T>(
             return context with
             {
                 FilteredItems = Option<IEnumerable<T>>.Some([]),
-                PagingMetadata = context.PagingMetadata.Match(
-                    Some: paging => paging with
-                    {
-                        TotalCount = 0,
-                    },
-                    None: () => new PagingMetadata()
-                    {
-                        TotalCount = 0,
-                    }),
+                PagingMetadata = new PagingMetadata()
+                {
+                    TotalCount = 0,
+                }
             };
         }
-        PagingMetadata pagingMetadata = context.PagingMetadata.Match(
-            Some: paging => paging with
-            {
-                TotalCount = filteredItemCount,
-            },
-            None: () => new PagingMetadata()
-            {
-                TotalCount = filteredItemCount,
-            });
+        PagingMetadata pagingMetadata = new PagingMetadata()
+        {
+            TotalCount = filteredItemCount,
+        };
 
         context = context with
         {

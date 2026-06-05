@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
 
-namespace HypermediaEngine.IntegrationTests.Factory;
+namespace SynergyFx.Tests.IntegrationTests.Factory;
 
 public sealed class ApiFactory : WebApplicationFactory<Program>
 {

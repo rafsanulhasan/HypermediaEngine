@@ -93,6 +93,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+		<InternalsVisibleTo Include="Microsoft.Extensions.Logging.Abstractions" />
 		<InternalsVisibleTo Include="SynergyFx.Tests.UnitTests" />
 		<InternalsVisibleTo Include="SynergyFx.Tests.IntegrationTests" />
 	</ItemGroup>

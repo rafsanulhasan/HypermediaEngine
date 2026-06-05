@@ -5,8 +5,8 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<IsPackable>false</IsPackable>
-		<AssemblyName>$(AssemblyName).UnitTests</AssemblyName>
-		<RootNamespace>HypermediaEngine.UnitTests</RootNamespace>
+		<AssemblyName>SynergyFx.Tests.UnitTests</AssemblyName>
+		<RootNamespace>SynergyFx.Tests.UnitTests</RootNamespace>
 		<ExcludeFromCodeCoverage>true</ExcludeFromCodeCoverage>
 	</PropertyGroup>
 
@@ -17,6 +17,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\EntityTagCaching\AspNetCore\EntityTagCaching.AspNetCore.csproj" />
+		<ProjectReference Include="..\..\src\EntityTagCaching\Core\EntityTagCaching.Core.csproj" />
 		<ProjectReference Include="..\..\src\HypermediaEngine\AspNetCore\HypermediaEngine.AspNetCore.csproj" />
 		<ProjectReference Include="..\..\src\HypermediaEngine\Core\HypermediaEngine.Core.csproj" />
 	</ItemGroup>

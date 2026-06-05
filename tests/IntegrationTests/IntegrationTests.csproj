@@ -5,8 +5,8 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<IsPackable>false</IsPackable>
-		<AssemblyName>$(AssemblyName).IntegrationTests</AssemblyName>
-		<RootNamespace>HypermediaEngine.IntegrationTests</RootNamespace>
+		<AssemblyName>SynergyFx.Tests.IntegrationTests</AssemblyName>
+		<RootNamespace>SynergyFx.Tests.IntegrationTests</RootNamespace>
 		<IsTestProject>true</IsTestProject>
 		<ExcludeFromCodeCoverage>true</ExcludeFromCodeCoverage>
 	</PropertyGroup>

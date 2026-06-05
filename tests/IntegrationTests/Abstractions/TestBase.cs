@@ -1,6 +1,6 @@
-using HypermediaEngine.IntegrationTests.Factory;
+using SynergyFx.Tests.IntegrationTests.Factory;
 
-namespace HypermediaEngine.IntegrationTests.Abstractions;
+namespace SynergyFx.Tests.IntegrationTests.Abstractions;
 
 public abstract class TestBase
 {

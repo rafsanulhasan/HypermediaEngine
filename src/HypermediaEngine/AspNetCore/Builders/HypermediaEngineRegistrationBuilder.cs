@@ -1,11 +1,12 @@
-﻿using HypermediaEngine.Abstractions;
-using HypermediaEngine.Responses.Handlers;
-using HypermediaEngine.Services;
-
-using Microsoft.AspNetCore.Routing;
+﻿using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace HypermediaEngine.Builders;
+using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Requests.Filtering;
+using SynergyFx.HypermediaEngine.Responses.Handlers;
+using SynergyFx.HypermediaEngine.Services;
+
+namespace SynergyFx.HypermediaEngine.Builders;
 
 /// <summary>
 /// Provides a builder for configuring and registering services required for hypermedia support in an ASP.NET Core
@@ -111,7 +112,8 @@ public sealed class HypermediaEngineRegistrationBuilder(IServiceCollection servi
     {
         return WithCollectionResponseHandlers()
                 .WithCollectionMetadataHandlers()
-                .WithCollectionLinkHandlers();
+                .WithCollectionLinkHandlers()
+                .WithCollectionFilterHandlers();
     }
 
     internal HypermediaEngineRegistrationBuilder WithResponseHandlersResolver()
@@ -134,19 +136,6 @@ public sealed class HypermediaEngineRegistrationBuilder(IServiceCollection servi
         return Services.AddScoped(_ => this);
     }
 
-    private HypermediaEngineRegistrationBuilder WithObjectResponseHandlers()
-    {
-        services
-            .AddScoped(
-                typeof(IResponseHandler),
-                typeof(SimpleObjectResponseHandler))
-            .AddScoped(
-                typeof(AbstractObjectResponseHandler<>),
-                typeof(TResponseHandler<>));
-
-        return this;
-    }
-
     private HypermediaEngineRegistrationBuilder WithCollectionResponseHandlers()
     {
         services
@@ -162,6 +151,59 @@ public sealed class HypermediaEngineRegistrationBuilder(IServiceCollection servi
                 typeof(ICollectionResponseHandler<>),
                 CollectionResponseHandlers.MartenQueryableKey,
                 typeof(MartenQueryableResponseHandler<>));
+        return this;
+    }
+
+    private HypermediaEngineRegistrationBuilder WithCollectionMetadataHandlers()
+    {
+        services
+            .AddScoped(
+                typeof(AbstractCollectionMetadataHandler<>),
+                typeof(CollectionApiVersionMetadataHandler<>))
+            .AddScoped(
+                typeof(AbstractCollectionMetadataHandler<>),
+                typeof(CollectionETagMetadataHandler<>));
+        return this;
+    }
+
+    private HypermediaEngineRegistrationBuilder WithCollectionLinkHandlers()
+    {
+        services
+            .AddScoped(
+                typeof(AbstractCollectionLinkHandler<>),
+                typeof(CollectionRelatedEndpointLinkHandler<>))
+            .AddScoped(
+                typeof(AbstractCollectionLinkHandler<>),
+                typeof(CollectionStateTransitionEndpointLinkHandler<>))
+            .AddScoped(
+                typeof(AbstractCollectionLinkHandler<>),
+                typeof(CollectionPageEndpointLinkHandler<>));
+        return this;
+    }
+
+    private HypermediaEngineRegistrationBuilder WithCollectionFilterHandlers()
+    {
+        services
+            .AddSingleton<IFilterConditionHandler, InvalidFilterConditionHandler>()
+            .Decorate<IFilterConditionHandler, StringFilterConditionHandler>()
+            .Decorate<IFilterConditionHandler, DateTimeFilterConditionHandler>()
+            .Decorate<IFilterConditionHandler, GuidFilterConditionHandler>()
+            .Decorate<IFilterConditionHandler, NumericFilterConditionHandler>()
+            .Decorate<IFilterConditionHandler, BoolFilterConditionHandler>();
+        services.AddSingleton<IFilterNodeHandler, FilterNodeHandler>();
+        return this;
+    }
+
+    private HypermediaEngineRegistrationBuilder WithObjectResponseHandlers()
+    {
+        services
+            .AddScoped(
+                typeof(IResponseHandler),
+                typeof(SimpleObjectResponseHandler))
+            .AddScoped(
+                typeof(AbstractObjectResponseHandler<>),
+                typeof(TResponseHandler<>));
+
         return this;
     }
 
@@ -192,33 +234,6 @@ public sealed class HypermediaEngineRegistrationBuilder(IServiceCollection servi
             .AddScoped(
                 typeof(AbstractObjectLinkHandler<>),
                 typeof(ObjectStateTransitionEndpointLinkHandler<>));
-        return this;
-    }
-
-    private HypermediaEngineRegistrationBuilder WithCollectionMetadataHandlers()
-    {
-        services
-            .AddScoped(
-                typeof(AbstractCollectionMetadataHandler<>),
-                typeof(CollectionApiVersionMetadataHandler<>))
-            .AddScoped(
-                typeof(AbstractCollectionMetadataHandler<>),
-                typeof(CollectionETagMetadataHandler<>));
-        return this;
-    }
-
-    private HypermediaEngineRegistrationBuilder WithCollectionLinkHandlers()
-    {
-        services
-            .AddScoped(
-                typeof(AbstractCollectionLinkHandler<>),
-                typeof(CollectionRelatedEndpointLinkHandler<>))
-            .AddScoped(
-                typeof(AbstractCollectionLinkHandler<>),
-                typeof(CollectionStateTransitionEndpointLinkHandler<>))
-            .AddScoped(
-                typeof(AbstractCollectionLinkHandler<>),
-                typeof(CollectionPageEndpointLinkHandler<>));
         return this;
     }
 }
