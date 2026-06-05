@@ -1,13 +1,13 @@
-using EntityTagCaching.Models;
-
-using HypermediaEngine.Abstractions;
-using HypermediaEngine.Builders;
-using HypermediaEngine.Responses;
-
 using Microsoft.AspNetCore.Http;
 
-namespace HypermediaEngine.UnitTests.HypermediaEngine.Builders;
+using SynergyFx.EntityTagCaching.Models;
+using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Builders;
+using SynergyFx.HypermediaEngine.Responses;
 
+namespace SynergyFx.Tests.UnitTests.HypermediaEngine.Builders;
+
+[Category("HypermediaEngine")]
 public sealed class HypermediaBuilderTests
 {
     private record Product(int Id, string Name, decimal Price);

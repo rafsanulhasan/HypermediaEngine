@@ -1,9 +1,10 @@
-using HypermediaEngine.Abstractions;
-using HypermediaEngine.Builders;
-using HypermediaEngine.Responses;
+using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Builders;
+using SynergyFx.HypermediaEngine.Responses;
 
-namespace HypermediaEngine.UnitTests.HypermediaEngine.Builders;
+namespace SynergyFx.Tests.UnitTests.HypermediaEngine.Builders;
 
+[Category("HypermediaEngine")]
 public sealed class HypermediaCollectionBuilderTests
 {
     private record Product(int Id, string Name, decimal Price);
