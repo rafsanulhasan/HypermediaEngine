@@ -13,6 +13,7 @@ public sealed class FilterLogic : SmartEnum<FilterLogic, int>
 
     public static readonly FilterLogic And = new(AndKey, 1 << 1, "&&");
     public static readonly FilterLogic Or = new(OrKey, 1 << 2, "||");
+    internal static new IReadOnlyCollection<FilterLogic> List => [And, Or];
 
     private FilterLogic(string name, int value, string @operator)
         : base(name, value)

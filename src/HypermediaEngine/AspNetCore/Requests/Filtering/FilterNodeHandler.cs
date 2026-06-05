@@ -42,7 +42,7 @@ internal sealed class FilterNodeHandler(
             }
         }
 
-        if (node.Children is { Count: > 0 })
+        if (node.Children is not null)
         {
             foreach (FilterNode child in node.Children)
             {

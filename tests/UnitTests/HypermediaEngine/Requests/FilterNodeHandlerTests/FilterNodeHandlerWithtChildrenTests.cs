@@ -41,12 +41,10 @@ internal sealed class FilterNodeHandlerWithtChildrenTests : TestBase
         ILogger<FilterNodeHandler> logger = Substitute.For<ILogger<FilterNodeHandler>>();
         FilterNodeHandler handler = new(conditionHandler, logger);
 
-        // Act
-        string result = handler.Handle(filterNode);
-
-        // Assert
+        // Act and Assert
         using (Assert.EnterMultipleScope())
         {
+            string result = Should.NotThrow(() => handler.Handle(filterNode));
             result.ShouldNotBeNullOrWhiteSpace();
             conditionHandler.Received(2).Handle(Arg.Is<FilterCondition>(c
                 => c.Field == fieldName
@@ -59,7 +57,7 @@ internal sealed class FilterNodeHandlerWithtChildrenTests : TestBase
     [Test]
     [TestCase("Name", FilterOperator.EqKey, "==", "John", FilterLogic.AndKey)]
     [TestCase("Name", FilterOperator.EqKey, "==", "John", FilterLogic.OrKey)]
-    public void HandleWithOneCondition_WithChildAndGrandChild_ReturnsExpectedResultWithoutParanthesis(
+    public void HandleWithMultiplleConditions_WithChildAndGrandChild_ReturnsExpectedResultWithoutParanthesis(
         string fieldName,
         string filterOperatorStr,
         string expectedOperatiorStr,
@@ -69,9 +67,14 @@ internal sealed class FilterNodeHandlerWithtChildrenTests : TestBase
     {
         // Arrange
         FilterOperator filterOperator = filterOperatorStr!;
-        FilterNode grandChildNode = new(
-        [new(fieldName, filterOperator, value)]);
         FilterLogic filterLogic = filterLogicStr!;
+        FilterLogic otherLogic = FilterLogic.List.First(l => l != filterLogic);
+
+        FilterNode grandGrandChildNode = new([new(fieldName, filterOperator, value)]);
+        FilterNode grandChildNode = new(
+            otherLogic,
+            [new(fieldName, filterOperator, value)],
+            [grandGrandChildNode]);
         FilterNode childFilterNode = new(
             filterLogic,
             [],
@@ -95,18 +98,16 @@ internal sealed class FilterNodeHandlerWithtChildrenTests : TestBase
         ILogger<FilterNodeHandler> logger = Substitute.For<ILogger<FilterNodeHandler>>();
         FilterNodeHandler handler = new(conditionHandler, logger);
 
-        // Act
-        string result = handler.Handle(filterNode);
-
-        // Assert
+        // Act and Assert
         using (Assert.EnterMultipleScope())
         {
+            string result = Should.NotThrow(() => handler.Handle(filterNode));
             result.ShouldNotBeNullOrWhiteSpace();
-            conditionHandler.Received(3).Handle(Arg.Is<FilterCondition>(c
+            conditionHandler.Received(4).Handle(Arg.Is<FilterCondition>(c
                 => c.Field == fieldName
                 && c.Operator == filterOperator
                 && c.Value!.Equals(value)));
-            result.ShouldBe($"{expectedConditionString} {filterLogic.Operator} {expectedConditionString} {filterLogic.Operator} {expectedConditionString}");
+            result.ShouldBe($"{expectedConditionString} {filterLogic.Operator} {expectedConditionString} {filterLogic.Operator} ({expectedConditionString} {otherLogic.Operator} {expectedConditionString})");
         }
     }
 
@@ -162,12 +163,10 @@ internal sealed class FilterNodeHandlerWithtChildrenTests : TestBase
         ILogger<FilterNodeHandler> logger = Substitute.For<ILogger<FilterNodeHandler>>();
         FilterNodeHandler handler = new(conditionHandler, logger);
 
-        // Act
-        string result = handler.Handle(filterNode);
-
         // Assert
         using (Assert.EnterMultipleScope())
         {
+            string result = Should.NotThrow(() => handler.Handle(filterNode));
             result.ShouldNotBeNullOrWhiteSpace();
             conditionHandler.Received(2).Handle(Arg.Is<FilterCondition>(c
                 => c.Field == fieldName
@@ -184,7 +183,7 @@ internal sealed class FilterNodeHandlerWithtChildrenTests : TestBase
     [Test]
     [TestCase("Name", FilterOperator.EqKey, "==", "John", FilterLogic.AndKey, "Age", FilterOperator.GtKey, ">", 30, FilterLogic.OrKey)]
     [TestCase("Name", FilterOperator.EqKey, "==", "John", FilterLogic.OrKey, "Age", FilterOperator.GtKey, ">", 30, FilterLogic.AndKey)]
-    public void HandleWithMultipleCondition_WithOneChildrenHavingMultipleConditions_ReturnsExpectedResultWithParanthesis(
+    public void HandleWithMultipleConditions_WithOneChildHavingMultipleConditions_ReturnsExpectedResultWithParanthesis(
         string fieldName,
         string filterOperatorStr,
         string expectedOperatiorStr,
@@ -237,12 +236,10 @@ internal sealed class FilterNodeHandlerWithtChildrenTests : TestBase
         ILogger<FilterNodeHandler> logger = Substitute.For<ILogger<FilterNodeHandler>>();
         FilterNodeHandler handler = new(conditionHandler, logger);
 
-        // Act
-        string result = handler.Handle(filterNode);
-
         // Assert
         using (Assert.EnterMultipleScope())
         {
+            string result = Should.NotThrow(() => handler.Handle(filterNode));
             result.ShouldNotBeNullOrWhiteSpace();
             conditionHandler.Received(2).Handle(Arg.Is<FilterCondition>(c
                 => c.Field == fieldName

@@ -36,8 +36,6 @@ internal sealed class FilterNodeHandlerWithoutChildrenTests : TestBase
         FilterNodeHandler handler = new(conditionHandler, logger);
 
         // Act and Assert
-
-        // Act and Assert
         using (Assert.EnterMultipleScope())
         {
             string result = Should.NotThrow(() => handler.Handle(filterNode));
@@ -58,7 +56,7 @@ internal sealed class FilterNodeHandlerWithoutChildrenTests : TestBase
         FilterOperator filterOperator = filterOperatorStr!;
         FilterNode filterNode = new(
         [
-            new FilterCondition(fieldName, filterOperator, value)
+            new(fieldName, filterOperator, value)
         ]);
         IFilterConditionHandler conditionHandler = Substitute.For<IFilterConditionHandler>();
 
@@ -109,8 +107,8 @@ internal sealed class FilterNodeHandlerWithoutChildrenTests : TestBase
         FilterNode filterNode = new(
             filterLogic,
             [
-                new FilterCondition(fieldName, filterOperator, value),
-                new FilterCondition(fieldName2, filterOperator2, value2),
+                new(fieldName, filterOperator, value),
+                new(fieldName2, filterOperator2, value2),
             ]);
         IFilterConditionHandler conditionHandler = Substitute.For<IFilterConditionHandler>();
 
