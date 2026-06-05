@@ -1,4 +1,4 @@
-namespace EntityTagCaching.Abstractions;
+namespace SynergyFx.EntityTagCaching.Abstractions;
 
 public interface ITaggableEntity
 {

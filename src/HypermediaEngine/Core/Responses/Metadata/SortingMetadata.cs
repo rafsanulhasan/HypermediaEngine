@@ -1,6 +1,6 @@
-using HypermediaEngine.Requests.Sorting;
+using SynergyFx.HypermediaEngine.Requests.Sorting;
 
-namespace HypermediaEngine.Responses.Metadata;
+namespace SynergyFx.HypermediaEngine.Responses.Metadata;
 
 public sealed record class SortingMetadata(
     string Field,

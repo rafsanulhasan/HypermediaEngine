@@ -1,11 +1,11 @@
-﻿using HypermediaEngine.Requests;
-
-using LanguageExt;
+﻿using LanguageExt;
 using LanguageExt.Common;
 
 using Microsoft.AspNetCore.Http;
 
-namespace HypermediaEngine.Helpers;
+using SynergyFx.HypermediaEngine.Requests;
+
+namespace SynergyFx.HypermediaEngine.Helpers;
 
 public static class HttpContextHelpers
 {

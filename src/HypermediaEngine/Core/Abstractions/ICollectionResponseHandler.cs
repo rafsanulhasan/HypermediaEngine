@@ -1,4 +1,4 @@
-﻿namespace HypermediaEngine.Abstractions;
+﻿namespace SynergyFx.HypermediaEngine.Abstractions;
 
 public interface ICollectionResponseHandler<T> : IResponseHandler
     where T : notnull

@@ -1,8 +1,8 @@
-﻿using HypermediaEngine.Responses;
+﻿using Microsoft.AspNetCore.Http;
 
-using Microsoft.AspNetCore.Http;
+using SynergyFx.HypermediaEngine.Responses;
 
-namespace HypermediaEngine.Abstractions;
+namespace SynergyFx.HypermediaEngine.Abstractions;
 
 public abstract class AbstractObjectResponseHandler<T>
     : IResponseHandler where T : notnull

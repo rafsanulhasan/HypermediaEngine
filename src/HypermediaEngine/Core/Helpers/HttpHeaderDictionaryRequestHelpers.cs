@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 
-namespace HypermediaEngine.Helpers;
+namespace SynergyFx.HypermediaEngine.Helpers;
 
 public static class HttpHeaderDictionaryRequestHelpers
 {
@@ -14,7 +14,7 @@ public static class HttpHeaderDictionaryRequestHelpers
                 return defaultValue;
             }
 
-            if (header.TryGetValue(key, out var value))
+            if (header.TryGetValue(key, out StringValues value))
             {
                 return value;
             }

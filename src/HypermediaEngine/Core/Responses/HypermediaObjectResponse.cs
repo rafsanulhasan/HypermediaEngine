@@ -1,4 +1,4 @@
-namespace HypermediaEngine.Responses;
+namespace SynergyFx.HypermediaEngine.Responses;
 
 /// <summary>
 /// Represents a hypermedia-enriched response wrapping a single resource of type <typeparamref name="T"/>.

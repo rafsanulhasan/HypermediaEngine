@@ -1,9 +1,8 @@
+using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Builders;
+using SynergyFx.HypermediaEngine.Responses;
 
-using HypermediaEngine.Abstractions;
-using HypermediaEngine.Builders;
-using HypermediaEngine.Responses;
-
-namespace HypermediaEngine.Services;
+namespace SynergyFx.HypermediaEngine.Services;
 
 /// <summary>
 /// Provides methods for creating hypermedia responses and collections, enabling the inclusion of links and metadata in

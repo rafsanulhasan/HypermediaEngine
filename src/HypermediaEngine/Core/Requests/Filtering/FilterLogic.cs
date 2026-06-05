@@ -3,14 +3,26 @@ using Ardalis.SmartEnum.SystemTextJson;
 
 using System.Text.Json.Serialization;
 
-namespace HypermediaEngine.Requests.Filtering;
+namespace SynergyFx.HypermediaEngine.Requests.Filtering;
 
 [JsonConverter(typeof(SmartEnumNameConverter<FilterLogic, int>))]
 public sealed class FilterLogic : SmartEnum<FilterLogic, int>
 {
-    public static readonly FilterLogic And = new(nameof(And), 1 << 1);
-    public static readonly FilterLogic Or = new(nameof(Or), 1 << 2);
+    public const string AndKey = nameof(And);
+    public const string OrKey = nameof(Or);
 
-    private FilterLogic(string name, int value)
-        : base(name, value) { }
+    public static readonly FilterLogic And = new(AndKey, 1 << 1, "&&");
+    public static readonly FilterLogic Or = new(OrKey, 1 << 2, "||");
+    internal static new IReadOnlyCollection<FilterLogic> List => [And, Or];
+
+    private FilterLogic(string name, int value, string @operator)
+        : base(name, value)
+    {
+        Operator = @operator;
+    }
+
+    public string Operator { get; private set; }
+
+    public static implicit operator string(FilterLogic filterLogic) => filterLogic.Name;
+    public static implicit operator FilterLogic(string filterLogic) => List.Single(fl => fl.Name == filterLogic);
 }

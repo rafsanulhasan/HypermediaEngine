@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<AssemblyName>$(AssemblyName).AspNetCore</AssemblyName>
+		<AssemblyName>SynergyFx.HypermediaEngine.AspNetCore</AssemblyName>
 		<PackageId>$(AssemblyName).AspNetCore</PackageId>
 		<Description>A Hypermedia Engine that allows developers to make .NET APIs HATEOAS compatible. It works with objects and arrays, automatically generates links and metadata.</Description>
 	</PropertyGroup>
@@ -65,7 +65,7 @@
 	<ItemGroup>
 		<Compile Update="Responses\Handlers\CollectionResponseHandler.Queryable{T}.cs">
 			<DependentUpon>Responses\Handlers\CollectionResponseHandler.cs</DependentUpon>
-		</Compile>		
+		</Compile>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -93,10 +93,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Update="Meziantou.Analyzer">
-	    <PrivateAssets>all</PrivateAssets>
-	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	  </PackageReference>
+		<InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+		<InternalsVisibleTo Include="Microsoft.Extensions.Logging.Abstractions" />
+		<InternalsVisibleTo Include="SynergyFx.Tests.UnitTests" />
+		<InternalsVisibleTo Include="SynergyFx.Tests.IntegrationTests" />
 	</ItemGroup>
 
 </Project>

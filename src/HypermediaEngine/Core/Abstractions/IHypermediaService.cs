@@ -1,6 +1,6 @@
-using HypermediaEngine.Responses;
+using SynergyFx.HypermediaEngine.Responses;
 
-namespace HypermediaEngine.Abstractions;
+namespace SynergyFx.HypermediaEngine.Abstractions;
 
 /// <summary>
 /// Defines methods for creating hypermedia responses and collections in a hypermedia-driven API.

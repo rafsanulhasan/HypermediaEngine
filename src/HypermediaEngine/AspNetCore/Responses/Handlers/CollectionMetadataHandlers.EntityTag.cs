@@ -1,8 +1,7 @@
-﻿using EntityTagCaching.Models;
+﻿using SynergyFx.EntityTagCaching.Models;
+using SynergyFx.HypermediaEngine.Abstractions;
 
-using HypermediaEngine.Abstractions;
-
-namespace HypermediaEngine.Responses.Handlers;
+namespace SynergyFx.HypermediaEngine.Responses.Handlers;
 
 #pragma warning disable MA0048 // File name must match type name
 internal sealed class CollectionETagMetadataHandler<T>(IHypermediaCollectionBuilder<T> builder)

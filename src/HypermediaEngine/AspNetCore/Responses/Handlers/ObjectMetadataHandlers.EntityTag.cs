@@ -1,12 +1,11 @@
-﻿using EntityTagCaching.Models;
-
-using HypermediaEngine.Abstractions;
-
-using LanguageExt.Common;
+﻿using LanguageExt.Common;
 
 using Microsoft.Extensions.Logging;
 
-namespace HypermediaEngine.Responses.Handlers;
+using SynergyFx.EntityTagCaching.Models;
+using SynergyFx.HypermediaEngine.Abstractions;
+
+namespace SynergyFx.HypermediaEngine.Responses.Handlers;
 
 internal class ObjectEtagMetadataHandler<T>(ILogger<ObjectEtagMetadataHandler<T>> logger)
     : AbstractObjectMetadataHandler<T> where T : notnull

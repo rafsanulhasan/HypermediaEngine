@@ -1,19 +1,18 @@
-using EntityTagCaching.Models;
-
-using HypermediaEngine.Abstractions;
-using HypermediaEngine.Requests;
-using HypermediaEngine.Requests.Filtering;
-using HypermediaEngine.Requests.Paging;
-using HypermediaEngine.Responses.Metadata;
-using HypermediaEngine.Responses.Rules;
-
 using Marten.Linq;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace HypermediaEngine.Responses.Handlers;
+using SynergyFx.EntityTagCaching.Models;
+using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Requests;
+using SynergyFx.HypermediaEngine.Requests.Filtering;
+using SynergyFx.HypermediaEngine.Requests.Paging;
+using SynergyFx.HypermediaEngine.Responses.Metadata;
+using SynergyFx.HypermediaEngine.Responses.Rules;
+
+namespace SynergyFx.HypermediaEngine.Responses.Handlers;
 
 internal sealed class MartenQueryableResponseHandler<T>(
     IHttpContextAccessor httpContextAccessor,
@@ -21,14 +20,13 @@ internal sealed class MartenQueryableResponseHandler<T>(
     IEnumerable<AbstractCollectionMetadataHandler<T>> metadataHandlers,
     IEnumerable<AbstractCollectionLinkHandler<T>> linkHandlers,
     IHypermediaCollectionBuilder<T> builder,
-    ICollectionResponseHandler<T> nextHandler,
     ILogger<MartenQueryableResponseHandler<T>> logger
-) : AbstractCollectionResponseHandler<T, IMartenQueryable<T>>(httpContextAccessor, metadataHandlers, linkHandlers, builder, nextHandler)
+) : AbstractCollectionResponseHandler<T, IMartenQueryable<T>>(httpContextAccessor, metadataHandlers, linkHandlers, builder, null)
     where T : notnull
 {
     public override async ValueTask<object?> HandleCollectionResponseAsync(IMartenQueryable<T> response)
     {
-        using var handler = await WithPopulatedQueryParamsAsync().ConfigureAwait(false);
+        using AbstractCollectionResponseHandler<T, IMartenQueryable<T>> handler = await WithPopulatedQueryParamsAsync().ConfigureAwait(false);
 
         QueryParams ??= handler.QueryParams
                      ?? new QueryParams(paging: OffsetPaging.Default);

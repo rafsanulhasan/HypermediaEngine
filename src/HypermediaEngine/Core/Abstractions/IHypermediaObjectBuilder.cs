@@ -1,6 +1,8 @@
 using HypermediaEngine.Responses;
 
-namespace HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Responses;
+
+namespace SynergyFx.HypermediaEngine.Abstractions;
 
 /// <summary>
 /// Provides a fluent interface for constructing hypermedia responses that include data, links, and metadata.

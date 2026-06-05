@@ -1,8 +1,8 @@
-﻿using HypermediaEngine.Abstractions;
+﻿using Microsoft.AspNetCore.Http;
 
-using Microsoft.AspNetCore.Http;
+using SynergyFx.HypermediaEngine.Abstractions;
 
-namespace HypermediaEngine.Responses.Handlers;
+namespace SynergyFx.HypermediaEngine.Responses.Handlers;
 
 #pragma warning disable MA0048 // File name must match type name
 internal sealed class SimpleObjectResponseHandler(IHttpContextAccessor httpContextAccessor)

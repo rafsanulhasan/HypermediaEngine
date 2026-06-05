@@ -4,7 +4,7 @@ using Microsoft.OpenApi;
 using System.Globalization;
 using System.Text;
 
-namespace HypermediaEngine.OpenApi.SchemaTransformers;
+namespace SynergyFx.HypermediaEngine.OpenApi.SchemaTransformers;
 
 internal sealed class OneOfSchemaTransformer
     : IOpenApiSchemaTransformer

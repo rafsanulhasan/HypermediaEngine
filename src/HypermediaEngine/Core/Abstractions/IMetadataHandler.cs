@@ -1,6 +1,6 @@
-﻿using HypermediaEngine.Responses;
+﻿using SynergyFx.HypermediaEngine.Responses;
 
-namespace HypermediaEngine.Abstractions;
+namespace SynergyFx.HypermediaEngine.Abstractions;
 
 public interface IObjectMetadataHandler<T>
     where T : notnull

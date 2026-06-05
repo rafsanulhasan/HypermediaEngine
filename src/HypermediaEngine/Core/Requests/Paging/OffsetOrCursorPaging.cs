@@ -5,7 +5,7 @@ using OneOf;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
-namespace HypermediaEngine.Requests.Paging;
+namespace SynergyFx.HypermediaEngine.Requests.Paging;
 
 public sealed class OffsetOrCursorPaging
     : OneOfBase<OffsetPaging, CursorPaging>

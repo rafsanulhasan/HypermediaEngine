@@ -1,14 +1,14 @@
-﻿using HypermediaEngine.Attributes;
-using HypermediaEngine.Requests;
-using HypermediaEngine.Requests.Paging;
-using HypermediaEngine.Responses;
-using HypermediaEngine.Responses.Handlers;
-using HypermediaEngine.Responses.Metadata;
-
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Attributes;
+using SynergyFx.HypermediaEngine.Requests;
+using SynergyFx.HypermediaEngine.Requests.Paging;
+using SynergyFx.HypermediaEngine.Responses;
+using SynergyFx.HypermediaEngine.Responses.Handlers;
+using SynergyFx.HypermediaEngine.Responses.Metadata;
+
+namespace SynergyFx.HypermediaEngine.Abstractions;
 
 internal abstract class AbstractCollectionResponseHandler<T, TCollection>(
     IHttpContextAccessor httpContextAccessor,
@@ -43,8 +43,8 @@ internal abstract class AbstractCollectionResponseHandler<T, TCollection>(
                 => await HandleCollectionResponseAsync(ok.Value).ConfigureAwait(false),
             JsonHttpResult<TCollection> json when json.Value is not null
                 => await HandleCollectionResponseAsync(json.Value).ConfigureAwait(false),
-             _ when _nextHandler is not null => await _nextHandler.HandleResponseAsync(response).ConfigureAwait(false),
-             _ => response,
+            _ when _nextHandler is not null => await _nextHandler.HandleResponseAsync(response).ConfigureAwait(false),
+            _ => response,
         };
     }
 
@@ -87,19 +87,19 @@ internal abstract class AbstractCollectionResponseHandler<T, TCollection>(
         {
             return this;
         }
+        _ = OffsetOrCursorPaging.TryParse(
+            HttpContext.Request.QueryString.ToString(),
+            out OffsetOrCursorPaging offsetOrCursorPaging);
         try
         {
             QueryBody? body = await HttpContext.Request
-                .ReadFromJsonAsync<QueryBody>(HttpContext.RequestAborted)
+                .ReadFromJsonAsync(QueryParamsSerializerContext.Default.QueryBody, HttpContext.RequestAborted)
                 .ConfigureAwait(false);
-            _ = OffsetOrCursorPaging.TryParse(
-                HttpContext.Request.QueryString.ToString(),
-                out OffsetOrCursorPaging offsetOrCursorPaging);
             QueryParams = new QueryParams(body: body, paging: offsetOrCursorPaging);
         }
-        catch (Exception)
+        catch(Exception ex) 
         {
-            QueryParams = new(paging: OffsetOrCursorPaging.Default);
+            QueryParams = new(paging: offsetOrCursorPaging);
         }
         return this;
     }

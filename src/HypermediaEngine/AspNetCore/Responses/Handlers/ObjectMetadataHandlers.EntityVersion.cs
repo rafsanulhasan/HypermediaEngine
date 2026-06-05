@@ -1,8 +1,7 @@
-﻿using EntityTagCaching.Models;
+﻿using SynergyFx.EntityTagCaching.Models;
+using SynergyFx.HypermediaEngine.Abstractions;
 
-using HypermediaEngine.Abstractions;
-
-namespace HypermediaEngine.Responses.Handlers;
+namespace SynergyFx.HypermediaEngine.Responses.Handlers;
 
 internal class ObjectEntityVersionMetadataHandler<T> 
     : AbstractObjectMetadataHandler<T> where T : notnull

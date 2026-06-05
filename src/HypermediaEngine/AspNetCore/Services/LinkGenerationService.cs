@@ -1,6 +1,4 @@
-﻿using HypermediaEngine.Abstractions;
-using HypermediaEngine.Helpers;
-using HypermediaEngine.Responses;
+﻿using HypermediaEngine.Responses;
 
 using LanguageExt;
 using LanguageExt.Common;
@@ -9,7 +7,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 
-namespace HypermediaEngine.Services;
+using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Helpers;
+
+namespace SynergyFx.HypermediaEngine.Services;
 
 /// <inheritdoc />
 internal sealed class LinkGenerationService(

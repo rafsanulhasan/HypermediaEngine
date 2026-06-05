@@ -1,6 +1,6 @@
 ﻿using Ardalis.SmartEnum;
 
-namespace HypermediaEngine.Responses.Rules;
+namespace SynergyFx.HypermediaEngine.Responses.Rules;
 
 public sealed class CollectonPipelineRules
     : SmartEnum<CollectonPipelineRules, int>

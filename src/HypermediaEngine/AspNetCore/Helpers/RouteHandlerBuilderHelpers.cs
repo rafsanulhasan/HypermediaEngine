@@ -1,12 +1,12 @@
-﻿using HypermediaEngine.Http;
-using HypermediaEngine.Responses;
-
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+
+using SynergyFx.HypermediaEngine.Http;
+using SynergyFx.HypermediaEngine.Responses;
 
 using System.Net.Mime;
 
-namespace HypermediaEngine.Helpers;
+namespace SynergyFx.HypermediaEngine.Helpers;
 
 internal static class RouteHandlerBuilderHelpers
 {

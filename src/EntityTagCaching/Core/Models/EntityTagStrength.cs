@@ -1,6 +1,6 @@
 ﻿using Ardalis.SmartEnum;
 
-namespace EntityTagCaching.Models;
+namespace SynergyFx.EntityTagCaching.Models;
 
 public sealed class EntityTagStrength : SmartEnum<EntityTagStrength, int>
 {

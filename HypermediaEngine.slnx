@@ -1,8 +1,9 @@
 <Solution>
   <Folder Name="/samples/">
-    <Project Path="samples/AppHost/Sample.AppHost.csproj" />
+    <Project Path="docker-compose.dcproj" Id="fea0c318-ffed-4d39-8781-265718ca43dd">
+      <Build />
+    </Project>
     <Project Path="samples/DotNetRestAPI/DotNetRestAPI.csproj" />
-    <Project Path="samples/ServiceDefaults/DotNetSample.ServiceDefaults.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
@@ -28,6 +29,7 @@
   </Folder>
   <Folder Name="/tests/">
     <File Path="tests/Directory.Build.props" />
-    <Project Path="tests\HypermediaEngine.Tests\HypermediaEngine.Tests.csproj" />
+    <Project Path="tests/IntegrationTests/IntegrationTests.csproj" />
+    <Project Path="tests/UnitTests/UnitTests.csproj" />
   </Folder>
 </Solution>

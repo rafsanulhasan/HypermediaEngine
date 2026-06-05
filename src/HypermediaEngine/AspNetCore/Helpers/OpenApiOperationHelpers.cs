@@ -1,12 +1,12 @@
-using HypermediaEngine.Http;
-
 using Microsoft.OpenApi;
+
+using SynergyFx.HypermediaEngine.Http;
 
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Net.Mime;
 
-namespace HypermediaEngine.Helpers;
+namespace SynergyFx.HypermediaEngine.Helpers;
 
 internal static class OpenApiOperationHelpers
 {

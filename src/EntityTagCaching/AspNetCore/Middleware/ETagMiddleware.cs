@@ -1,12 +1,12 @@
-using EntityTagCaching.Abstractions;
-
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
 
+using SynergyFx.EntityTagCaching.Abstractions;
+
 using System.Text;
 
-namespace EntityTagCaching.Middleware;
+namespace SynergyFx.EntityTagCaching.Middleware;
 
 /// <summary>
 /// Middleware that adds ETag headers to HTTP GET responses to enable efficient client-side caching and support
@@ -51,7 +51,7 @@ public sealed class ETagMiddleware(RequestDelegate next)
                 using StreamReader reader = new(buffer, Encoding.UTF8);
                 string responseBody = await reader.ReadToEndAsync();
 
-                var etagService = context.RequestServices.GetService<IETagService>();
+                IETagService? etagService = context.RequestServices.GetService<IETagService>();
                 if (etagService is not null 
                  && !string.IsNullOrEmpty(responseBody))
                 {

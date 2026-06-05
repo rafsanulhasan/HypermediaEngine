@@ -1,11 +1,12 @@
-﻿using HypermediaEngine.Abstractions;
-using HypermediaEngine.Requests;
-using HypermediaEngine.Requests.Paging;
-using HypermediaEngine.Responses.Metadata;
+﻿using LanguageExt;
 
-using LanguageExt;
+using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Requests;
+using SynergyFx.HypermediaEngine.Requests.Paging;
+using SynergyFx.HypermediaEngine.Requests.Sorting;
+using SynergyFx.HypermediaEngine.Responses.Metadata;
 
-namespace HypermediaEngine.Responses.Rules.EnumerableRules;
+namespace SynergyFx.HypermediaEngine.Responses.Rules.EnumerableRules;
 
 internal sealed class EnumerableSortingRule<T>(ICollectionResponsePipeline<T> next)
     : ICollectionResponsePipeline<T>
@@ -15,8 +16,7 @@ internal sealed class EnumerableSortingRule<T>(ICollectionResponsePipeline<T> ne
     {
         IEnumerable<T> pagedItems = context.PagedItems.Match(
             Some: items => items,
-            None: () => context.PagedItems
-                .Match(Some: items => items, None: () => context.Items)
+            None: () => context.Items
         );
 
         (IEnumerable<T> sortedItems, QueryParams queryParams) = context.QueryParams.Match(
@@ -28,7 +28,7 @@ internal sealed class EnumerableSortingRule<T>(ICollectionResponsePipeline<T> ne
                 }
 
                 IEnumerable<T> sorted = pagedItems;
-                foreach (var sort in queryParams.Body.Sorting)
+                foreach (SortField sort in queryParams.Body.Sorting)
                 {
                     sorted = sorted.OrderByDynamic(
                         "{Field} {Direction}",

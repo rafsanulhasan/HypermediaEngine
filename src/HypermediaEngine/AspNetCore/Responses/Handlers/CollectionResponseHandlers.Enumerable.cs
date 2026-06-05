@@ -1,19 +1,14 @@
-using EntityTagCaching.Models;
-
-using HypermediaEngine.Abstractions;
-using HypermediaEngine.Requests;
-using HypermediaEngine.Requests.Filtering;
-using HypermediaEngine.Requests.Paging;
-using HypermediaEngine.Responses.Metadata;
-using HypermediaEngine.Responses.Rules;
-
-using Marten.Linq;
-
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace HypermediaEngine.Responses.Handlers;
+using SynergyFx.EntityTagCaching.Models;
+using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Helpers;
+using SynergyFx.HypermediaEngine.Responses.Metadata;
+using SynergyFx.HypermediaEngine.Responses.Rules;
+
+namespace SynergyFx.HypermediaEngine.Responses.Handlers;
 
 #pragma warning disable MA0048 // File name must match type name
 internal sealed class EnumerableCollectionResponseHandler<T>(
@@ -28,10 +23,7 @@ internal sealed class EnumerableCollectionResponseHandler<T>(
 {
     public override async ValueTask<object?> HandleCollectionResponseAsync(IEnumerable<T> response)
     {
-        using var handler = await WithPopulatedQueryParamsAsync().ConfigureAwait(false);
-
-        QueryParams ??= handler.QueryParams
-                     ?? new QueryParams(paging: OffsetPaging.Default);
+        await WithPopulatedQueryParamsAsync().ConfigureAwait(false);
 
         CollectionResponseContext<T> context = new(response)
         {
@@ -45,9 +37,9 @@ internal sealed class EnumerableCollectionResponseHandler<T>(
         );
         ListResponseMetadata metadata = new(EntityTag.Empty)
         {
-            Filters = context.Filter.Match<FilterNode?>(node => node, () => null),
-            Paging = context.PagingMetadata.Match<PagingMetadata?>(meta => meta, () => null),
-            Sorting = context.SortingMetadata.Match<IReadOnlyList<SortingMetadata>?>(node => node, () => null),
+            Filters = context.Filter.Flatten(),
+            Paging = context.PagingMetadata.Flatten(),
+            Sorting = context.SortingMetadata.Flatten<SortingMetadata, IReadOnlyList<SortingMetadata>>(),
         };
         Builder = Builder.WithMetadata(metadata);
         ApplyMetadata(response, metadata);

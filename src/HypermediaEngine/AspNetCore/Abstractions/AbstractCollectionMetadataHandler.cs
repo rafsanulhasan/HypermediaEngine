@@ -1,6 +1,6 @@
-﻿using HypermediaEngine.Responses;
+﻿using SynergyFx.HypermediaEngine.Responses;
 
-namespace HypermediaEngine.Abstractions;
+namespace SynergyFx.HypermediaEngine.Abstractions;
 
 internal abstract class AbstractCollectionMetadataHandler<T>(IHypermediaCollectionBuilder<T> builder)
     : ICollectionMetadataHandler<T> where T : notnull

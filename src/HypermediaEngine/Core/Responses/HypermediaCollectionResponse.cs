@@ -1,10 +1,12 @@
-namespace HypermediaEngine.Responses;
+using System.Text.Json.Serialization;
+
+namespace SynergyFx.HypermediaEngine.Responses;
 
 /// <summary>
 /// Represents a hypermedia collection response, containing a list of items and related metadata.
 /// </summary>
 /// <typeparam name="T">The type of the items in the collection.</typeparam>
-public sealed record class HypermediaCollectionResponse<T> 
+public sealed record class HypermediaCollectionResponse<T>
     where T : notnull
 {
     /// <summary>
@@ -72,6 +74,12 @@ public sealed record class HypermediaCollectionResponse<T>
     {
         Items = items;
         TotalCount = items.Length;
+    }
+
+    [JsonConstructor]
+    internal HypermediaCollectionResponse()
+    {
+        Items = [];
     }
 
     /// <summary>

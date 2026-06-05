@@ -3,7 +3,7 @@ using Ardalis.SmartEnum.SystemTextJson;
 
 using System.Text.Json.Serialization;
 
-namespace HypermediaEngine.Responses;
+namespace SynergyFx.HypermediaEngine.Responses;
 
 /// <summary>
 /// Represents standard IANA link relation types used in hypermedia responses.

@@ -1,4 +1,4 @@
-﻿namespace HypermediaEngine.Abstractions;
+﻿namespace SynergyFx.HypermediaEngine.Abstractions;
 
 public abstract class HateoasLinkAttribute(
     string name,

@@ -52,4 +52,3 @@ The same role names are used across platforms to keep delegation predictable:
 
 - `.claude/**`
 - `.github/**`
-- `.agents/**`

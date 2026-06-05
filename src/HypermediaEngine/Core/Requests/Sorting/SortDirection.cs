@@ -1,6 +1,6 @@
 using Ardalis.SmartEnum;
 
-namespace HypermediaEngine.Requests.Sorting;
+namespace SynergyFx.HypermediaEngine.Requests.Sorting;
 
 public sealed class SortDirection : SmartEnum<SortDirection, int>
 {

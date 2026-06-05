@@ -1,4 +1,5 @@
-using HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Responses;
 
 using System.Text.Json.Serialization;
 

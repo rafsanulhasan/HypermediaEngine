@@ -1,22 +1,21 @@
 using Asp.Versioning;
 
-using EntityTagCaching.Models;
-
-using HypermediaEngine.Http;
-using HypermediaEngine.Responses;
-
 using LanguageExt;
 
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
 
+using SynergyFx.EntityTagCaching.Models;
+using SynergyFx.HypermediaEngine.Http;
+using SynergyFx.HypermediaEngine.Responses;
+
 using System.Globalization;
 using System.Net.Mime;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
-namespace HypermediaEngine.Helpers;
+namespace SynergyFx.HypermediaEngine.Helpers;
 
 public static class OpenApiOperationTransformerContextHelpers
 {

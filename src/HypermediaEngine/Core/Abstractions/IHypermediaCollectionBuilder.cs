@@ -1,6 +1,8 @@
 using HypermediaEngine.Responses;
 
-namespace HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Responses;
+
+namespace SynergyFx.HypermediaEngine.Abstractions;
 
 /// <summary>
 /// Defines a builder for constructing hypermedia collection responses, allowing the addition of items, links, and

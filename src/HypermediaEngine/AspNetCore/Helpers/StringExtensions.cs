@@ -3,7 +3,7 @@ using Microsoft.Extensions.Primitives;
 
 using System.Text;
 
-namespace HypermediaEngine.Helpers;
+namespace SynergyFx.HypermediaEngine.Helpers;
 
 public static class UriHelpers
 {

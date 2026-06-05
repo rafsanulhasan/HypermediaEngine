@@ -1,0 +1,21 @@
+  services:
+    #rafsandb:
+      #image: mcr.microsoft.com/mssql/server:2017-latest
+      #container_name: rafsanulhasan-mssql-db-server
+    postgres:
+      image: postgres:17-alpine
+      container_name: restapi_postgres
+      restart: always
+      environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+        POSTGRES_DB: RestAPI
+      ports:
+        - "4432:5432"  # Maps internal port 5432 to your host machine's port 4432
+      volumes:
+        - restapi-vol:/var/lib/postgresql/data
+      # 🔥 Speed-up Arguments: Disables safety disk flushing for fast test/dev execution
+      command: ["postgres", "-c", "fsync=off", "-c", "synchronous_commit=off", "-c", "full_page_writes=off"]
+    sample:
+      image: rafsanulhasan/hypermediaengine/sample:latest
+      container_name: hypermediaengine_sample

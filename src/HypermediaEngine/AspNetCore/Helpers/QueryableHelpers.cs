@@ -1,10 +1,10 @@
-﻿using HypermediaEngine.Requests.Filtering;
-using HypermediaEngine.Requests.Paging;
-using HypermediaEngine.Requests.Sorting;
+﻿using SynergyFx.HypermediaEngine.Requests.Filtering;
+using SynergyFx.HypermediaEngine.Requests.Paging;
+using SynergyFx.HypermediaEngine.Requests.Sorting;
 
 using System.Linq.Dynamic.Core;
 
-namespace HypermediaEngine.Helpers;
+namespace SynergyFx.HypermediaEngine.Helpers;
 
 public static class QueryableHelpers
 {

@@ -1,20 +1,20 @@
 using Asp.Versioning;
 
-using HypermediaEngine.Abstractions;
-using HypermediaEngine.Helpers;
-using HypermediaEngine.Responses.Handlers;
-
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 
+using SynergyFx.HypermediaEngine.Abstractions;
+using SynergyFx.HypermediaEngine.Helpers;
+using SynergyFx.HypermediaEngine.Responses.Handlers;
+
 using System.Net.Mime;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace HypermediaEngine.Attributes;
+namespace SynergyFx.HypermediaEngine.Attributes;
 
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = true, AllowMultiple = false)]
 public sealed class ProducesHalAttribute<T>

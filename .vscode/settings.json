@@ -50,5 +50,10 @@
   "chat.includeReferencedInstructions": false,
   "chat.promptFilesLocations": {
     ".claude/commands": true
+  },
+  "chat.tools.terminal.autoApprove": {
+    "git --no-pager worktree": true,
+    "git worktree": true,
+    "git -C \"e:\\Projects\\personal\\HypermediaEngine.worktrees\\copilot-remove-all-worktree\"": true
   }
 }

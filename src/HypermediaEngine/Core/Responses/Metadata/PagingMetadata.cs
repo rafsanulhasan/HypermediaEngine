@@ -1,10 +1,10 @@
 using Ardalis.SmartEnum.SystemTextJson;
 
-using HypermediaEngine.Requests.Paging;
+using SynergyFx.HypermediaEngine.Requests.Paging;
 
 using System.Text.Json.Serialization;
 
-namespace HypermediaEngine.Responses.Metadata;
+namespace SynergyFx.HypermediaEngine.Responses.Metadata;
 
 public sealed record class PagingMetadata
 {

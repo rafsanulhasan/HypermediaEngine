@@ -1,10 +1,4 @@
-﻿using EntityTagCaching.Models;
-
-using HypermediaEngine.Helpers;
-using HypermediaEngine.Http;
-using HypermediaEngine.Responses;
-
-using LanguageExt;
+﻿using LanguageExt;
 using LanguageExt.Common;
 
 using Microsoft.AspNetCore.Http;
@@ -14,9 +8,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 
+using SynergyFx.EntityTagCaching.Models;
+using SynergyFx.HypermediaEngine.Helpers;
+using SynergyFx.HypermediaEngine.Http;
+using SynergyFx.HypermediaEngine.Responses;
+
 using System.Text.Json;
 
-namespace EntityTagCaching.Attributes;
+namespace SynergyFx.EntityTagCaching.Attributes;
 
 [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 public sealed class EntityTagCachingAttribute<T> : Attribute, IEndpointFilter

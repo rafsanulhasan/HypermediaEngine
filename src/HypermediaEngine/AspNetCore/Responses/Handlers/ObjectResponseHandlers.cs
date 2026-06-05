@@ -1,6 +1,6 @@
 ﻿using Ardalis.SmartEnum;
 
-namespace HypermediaEngine.AspNetCore.Responses.Handlers;
+namespace SynergyFx.HypermediaEngine.Responses.Handlers;
 
 public sealed class ObjectResponseHandlers : SmartEnum<ObjectResponseHandlers, int>
 {

@@ -1,10 +1,10 @@
-﻿using HypermediaEngine.Requests;
-using HypermediaEngine.Requests.Filtering;
-using HypermediaEngine.Responses.Metadata;
+﻿using LanguageExt;
 
-using LanguageExt;
+using SynergyFx.HypermediaEngine.Requests;
+using SynergyFx.HypermediaEngine.Requests.Filtering;
+using SynergyFx.HypermediaEngine.Responses.Metadata;
 
-namespace HypermediaEngine.Responses;
+namespace SynergyFx.HypermediaEngine.Responses;
 
 public sealed record class CollectionResponseContext<T>
     where T : notnull

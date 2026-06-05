@@ -1,6 +1,4 @@
-﻿using EntityTagCaching.Abstractions;
-
-using LanguageExt;
+﻿using LanguageExt;
 using LanguageExt.Common;
 
 using Microsoft.AspNetCore.Http;
@@ -8,12 +6,14 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi;
 
+using SynergyFx.EntityTagCaching.Abstractions;
+
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace EntityTagCaching.Models;
+namespace SynergyFx.EntityTagCaching.Models;
 
 [JsonConverter(typeof(EntityTagJsonConverter))]
 [StructLayout(LayoutKind.Auto)]

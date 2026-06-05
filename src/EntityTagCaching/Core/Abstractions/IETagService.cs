@@ -1,4 +1,4 @@
-namespace EntityTagCaching.Abstractions;
+namespace SynergyFx.EntityTagCaching.Abstractions;
 
 /// <summary>
 /// Defines methods for generating and validating entity tags (ETags) used for web resource caching and conditional HTTP

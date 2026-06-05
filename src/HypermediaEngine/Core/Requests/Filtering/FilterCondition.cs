@@ -1,4 +1,6 @@
-namespace HypermediaEngine.Requests.Filtering;
+using System.Text.Json;
+
+namespace SynergyFx.HypermediaEngine.Requests.Filtering;
 
 public sealed record class FilterCondition(
     string Field,

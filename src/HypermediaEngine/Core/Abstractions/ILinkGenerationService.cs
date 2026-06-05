@@ -5,7 +5,7 @@ using LanguageExt.Common;
 
 using Microsoft.AspNetCore.Http;
 
-namespace HypermediaEngine.Abstractions;
+namespace SynergyFx.HypermediaEngine.Abstractions;
 
 /// <summary>
 /// Interface for generating hypermedia links.

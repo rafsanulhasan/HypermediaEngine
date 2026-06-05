@@ -1,9 +1,8 @@
-using EntityTagCaching.Models;
+using SynergyFx.EntityTagCaching.Models;
+using SynergyFx.HypermediaEngine.Requests.Filtering;
+using SynergyFx.HypermediaEngine.Responses.Metadata;
 
-using HypermediaEngine.Requests.Filtering;
-using HypermediaEngine.Responses.Metadata;
-
-namespace HypermediaEngine.Responses;
+namespace SynergyFx.HypermediaEngine.Responses;
 
 #pragma warning disable MA0048 // File name must match type name
 public abstract partial record class ResponseMetadata(

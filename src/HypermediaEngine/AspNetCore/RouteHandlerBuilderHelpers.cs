@@ -1,20 +1,20 @@
-﻿using HypermediaEngine.Attributes;
-using HypermediaEngine.Helpers;
-using HypermediaEngine.Http;
-using HypermediaEngine.OpenApi.OperationTransformers;
-using HypermediaEngine.Requests;
-using HypermediaEngine.Responses;
-
-using LanguageExt;
+﻿using LanguageExt;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi;
 
+using SynergyFx.HypermediaEngine.Attributes;
+using SynergyFx.HypermediaEngine.Helpers;
+using SynergyFx.HypermediaEngine.Http;
+using SynergyFx.HypermediaEngine.OpenApi.OperationTransformers;
+using SynergyFx.HypermediaEngine.Requests;
+using SynergyFx.HypermediaEngine.Responses;
+
 using System.Net.Mime;
 
-namespace HypermediaEngine;
+namespace SynergyFx.HypermediaEngine;
 
 public static class RouteHandlerBuilderHelpers
 {

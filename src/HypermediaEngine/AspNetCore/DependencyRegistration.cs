@@ -1,8 +1,8 @@
-using HypermediaEngine.Builders;
-
 using Microsoft.Extensions.DependencyInjection;
 
-namespace HypermediaEngine;
+using SynergyFx.HypermediaEngine.Builders;
+
+namespace SynergyFx.HypermediaEngine;
 
 /// <summary>
 /// Dependency registration for Hypermedia Engine services and configurations.

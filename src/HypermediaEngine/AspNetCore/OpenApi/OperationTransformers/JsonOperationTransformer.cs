@@ -1,14 +1,14 @@
-﻿using HypermediaEngine.Helpers;
-
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
 
+using SynergyFx.HypermediaEngine.Helpers;
+
 using System.Globalization;
 using System.Net.Mime;
 
-namespace HypermediaEngine.OpenApi.OperationTransformers;
+namespace SynergyFx.HypermediaEngine.OpenApi.OperationTransformers;
 
 internal sealed class JsonOperationTransformer<T>(bool isList, bool withExample)
         : JsonOperationTransformer(typeof(T), isList, withExample)

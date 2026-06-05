@@ -7,19 +7,41 @@ using Bogus;
 using DotNetRestAPI;
 using DotNetRestAPI.Controllers;
 
-using HypermediaEngine;
-using HypermediaEngine.OpenApi;
-
-using LanguageExt;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 using Scalar.AspNetCore;
 
-var builder = WebApplication.CreateBuilder(args);
+using SynergyFx.HypermediaEngine;
+using SynergyFx.HypermediaEngine.OpenApi;
 
-builder.AddServiceDefaults();
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+builder
+    .Configuration
+    .AddJsonFile("appsettings.json", false, true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, true)
+    .AddEnvironmentVariables();
+
+builder.Services.AddTransient(_ => TimeProvider.System);
+
+string? connectionString = builder.Configuration.GetConnectionString("DB");
+
+//builder.AddServiceDefaults();
 
 // Add services to the container.
-
+builder.Services.AddNpgsql<AppDbContext>(
+    connectionString,
+    npgsqlBuilder =>
+    {
+        npgsqlBuilder.UseParameterizedCollectionMode(ParameterTranslationMode.MultipleParameters);
+        npgsqlBuilder.CommandTimeout(600);
+    },
+    dbCtxBuilder =>
+    {
+        dbCtxBuilder.EnableSensitiveDataLogging(true);
+        dbCtxBuilder.EnableDetailedErrors(true);
+    });
 builder.Services.AddRouting(opttions =>
 {
     opttions.AppendTrailingSlash = false;
@@ -80,7 +102,11 @@ builder.Services.RegisterHypermediaEngineToEndpoints();
 builder.Services.AddEndpointsApiExplorer();
 WebApplication app = builder.Build();
 
-app.MapDefaultEndpoints();
+await using AsyncServiceScope scope = app.Services.CreateAsyncScope();
+AppDbContext db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+await db.Database.EnsureCreatedAsync();
+
+//app.MapDefaultEndpoints();
 
 // Configure the HTTP request pipeline.
 
@@ -98,14 +124,52 @@ ApiVersionSet apiVersionSet = app
     .Build();
 
 app
-    .MapPost("/api/endpoints/weather", (TimeProvider timeProvider) =>
+    .MapPost("/api/endpoints/weather/array", (TimeProvider timeProvider, [FromQuery] int count = 100) =>
     {
         Faker<WeatherForecast> faker = new();
-        faker.RuleFor(w => w.Date, f => timeProvider.GetUtcNow().AddDays(f.Random.Int(1, 30)))
-             .RuleFor(w => w.TemperatureC, f => f.Random.Int(-20, 55))
-             .RuleFor(w => w.Summary, f => f.Lorem.Sentence(3));
+        faker.RuleFor(w => w.Id, Guid.CreateVersion7())
+             .RuleFor(w => w.Date, () => timeProvider.GetUtcNow())
+             .RuleFor(w => w.TemperatureC, f => f.Random.Int(-20, -1))
+             .RuleFor(w => w.Summary, () => "Lorem");
+        Faker<WeatherForecast> faker2 = new();
+        faker2.RuleFor(w => w.Id, Guid.CreateVersion7())
+              .RuleFor(w => w.Date, () => timeProvider.GetUtcNow())
+              .RuleFor(w => w.TemperatureC, f => f.Random.Int(0, 20))
+              .RuleFor(w => w.Summary, () => "Lorem ispum");
+        Faker<WeatherForecast> faker3 = new();
+        faker3.RuleFor(w => w.Id, Guid.CreateVersion7())
+              .RuleFor(w => w.Date, () => timeProvider.GetUtcNow())
+              .RuleFor(w => w.TemperatureC, f => f.Random.Int(21, 40))
+              .RuleFor(w => w.Summary, f => f.Lorem.Sentence(3));
+        Faker<WeatherForecast> faker4 = new();
+        faker4.RuleFor(w => w.Id, Guid.CreateVersion7())
+              .RuleFor(w => w.Date, () => timeProvider.GetUtcNow())
+              .RuleFor(w => w.TemperatureC, f => f.Random.Int(41, 55))
+              .RuleFor(w => w.Summary, () => "abc");
+        Faker<WeatherForecast> faker5 = new();
+        faker5.RuleFor(w => w.Id, Guid.CreateVersion7())
+              .RuleFor(w => w.Date, () => timeProvider.GetUtcNow())
+              .RuleFor(w => w.TemperatureC, f => f.Random.Int(61, 75))
+              .RuleFor(w => w.Summary, () => "Lorem last ispum");
 
-        return Enumerable.Range(1, 20).Select(_ => faker.Generate()).ToArray();
+        int perChunk = (int)Math.Ceiling((double)count / 5);
+        List<WeatherForecast> chunk1 = faker.Generate(perChunk);
+        List<WeatherForecast> chunk2 = faker2.Generate(perChunk);
+        List<WeatherForecast> chunk3 = faker3.Generate(perChunk);
+        List<WeatherForecast> chunk4 = faker4.Generate(perChunk);
+        List<WeatherForecast> chunk5 = faker5.Generate(perChunk);
+        chunk5[^1].TemperatureC = 60;
+
+        WeatherForecast[] response =
+        [
+            ..chunk1,
+            ..chunk2,
+            ..chunk3,
+            ..chunk4,
+            ..chunk5,
+        ];
+
+        return response;
     })
     .ProducesJsonHal<WeatherForecast>(isList: true)
     .WithPagingParams()

@@ -15,7 +15,17 @@ if ($input_data.stop_hook_active -eq $true) {
     exit 0
 }
 
-$testResult = & dotnet test 2>&1
+# Run the dedicated testing solution when available to avoid ambiguous root-level discovery.
+$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$repoRootPath = Resolve-Path (Join-Path $scriptDir "..\..")
+$testingSolutionPath = Join-Path $repoRootPath "HypermediaEngine.Testing.slnx"
+
+if (Test-Path $testingSolutionPath) {
+    $testResult = & dotnet test $testingSolutionPath 2>&1
+}
+else {
+    $testResult = & dotnet test 2>&1
+}
 if ($LASTEXITCODE -ne 0) {
     $output = @{
         hookSpecificOutput = @{

@@ -1,12 +1,12 @@
-﻿using EntityTagCaching.Abstractions;
-
-using LanguageExt;
+﻿using LanguageExt;
 using LanguageExt.Common;
+
+using SynergyFx.EntityTagCaching.Abstractions;
 
 using System.Security.Cryptography;
 using System.Text.Json;
 
-namespace EntityTagCaching.Models;
+namespace SynergyFx.EntityTagCaching.Models;
 
 #pragma warning disable CA1031 // Do not catch general exception types
 public static class EntityTagHelpers

@@ -1,8 +1,14 @@
-﻿using HypermediaEngine.Requests.Paging;
+﻿using Ardalis.SmartEnum.SystemTextJson;
 
 using Microsoft.AspNetCore.Mvc;
 
-namespace HypermediaEngine.Requests;
+using SynergyFx.HypermediaEngine.Requests;
+using SynergyFx.HypermediaEngine.Requests.Filtering;
+using SynergyFx.HypermediaEngine.Requests.Paging;
+
+using System.Text.Json.Serialization;
+
+namespace SynergyFx.HypermediaEngine.Requests;
 
 public sealed record class QueryParams
 {
@@ -18,4 +24,13 @@ public sealed record class QueryParams
     //[JsonConverter(typeof(OneOfBaseJsonConverter))]
     [FromQuery]
     public OffsetOrCursorPaging? Paging { get; set; }
+}
+
+[JsonSerializable(typeof(QueryParams))]
+[JsonSourceGenerationOptions(
+    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+    Converters = [typeof(SmartEnumNameConverter<FilterOperator, int>)])]
+public sealed partial class QueryParamsSerializerContext
+    : JsonSerializerContext
+{
 }

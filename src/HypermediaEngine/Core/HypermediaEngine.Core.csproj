@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<AssemblyName>$(AssemblyName).Core</AssemblyName>
+		<AssemblyName>SynergyFx.HypermediaEngine.Core</AssemblyName>
 		<PackageId>$(AssemblyName).Core</PackageId>
 		<Description>A Hypermedia Engine that allows developers to make .NET APIs HATEOAS compatible. It works with objects and arrays, automatically generates links and metadata.</Description>
 	</PropertyGroup>
@@ -23,23 +23,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<InternalsVisibleTo Include="EntityTagCaching.AspNetCore" />
 		<InternalsVisibleTo Include="Microsoft.AspNetCore.Http" />
-		<InternalsVisibleTo Include="HypermediaEngine.AspNetCore" />
-		<InternalsVisibleTo Include="HypermediaEngine.AspNetCore.Mvc" />
-		<InternalsVisibleTo Include="HypermediaEngine.Tests" />
+		<InternalsVisibleTo Include="SynergyFx.EntityTagCaching.AspNetCore" />
+		<InternalsVisibleTo Include="SynergyFx.HypermediaEngine.AspNetCore" />
+		<InternalsVisibleTo Include="SynergyFx.HypermediaEngine.AspNetCore.Mvc" />
+		<InternalsVisibleTo Include="SynergyFx.Tests.UnitTests" />
+		<InternalsVisibleTo Include="SynergyFx.Tests.IntegrationTests" />
+		<InternalsVisibleTo Include="System.Net.Http.Json" />
 		<InternalsVisibleTo Include="System.Text.Json" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\EntityTagCaching\Core\EntityTagCaching.Core.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <PackageReference Update="Meziantou.Analyzer">
-	    <PrivateAssets>all</PrivateAssets>
-	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	  </PackageReference>
+		<ProjectReference Include="..\..\EntityTagCaching\Core\EntityTagCaching.Core.csproj" />
 	</ItemGroup>
 
 </Project>
